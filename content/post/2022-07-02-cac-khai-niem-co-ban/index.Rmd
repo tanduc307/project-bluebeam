@@ -8,14 +8,18 @@ tags:
 - xác_suất
 - thống_kê
 - thí_nghiệm
+bibliography: D:/GITHUB/project-bluebeam/zoterobib/xacsuat.bib
+link-citations: yes
+nocite: |
+  @R-bookdown
 ---
 # Some basic concepts
 
 • An *experimental unit* refers to the unit of experimental material to which a treatment is applied. Một đơn vị thí nghiệm là thuật ngữ chỉ đến một đơn vị/một cái nào đó đang được thí nghiệm, có thể là một chiếc lá, một cái cây, một khu vực chứa nhiều cây, một cái chậu, một mặt bằng trong nhà lưới, một cá thể động vật, vài cá thể động vật hoặc một quần thể sinh vật nào đó.
 
-• It can be a single leaf, a whole plant, an area of ground containing many plants, a pot or a flat in the green house, a single animal, several animal, or an entire herd [@little1978].
+• It can be a single leaf, a whole plant, an area of ground containing many plants, a pot or a flat in the green house, a single animal, several animal, or an entire herd [@littleAgriculturalExperimentationDesign1978, pp. 11-13]. 
 
-• The term *plot* is synonymous with experimental unit and is frequently used in referring to plant experimental units. "Plot" is sometimes incorrectly used in referring to an entire experiment that really consists of several plots.
+• The term *plot* is synonymous with experimental unit and is frequently used in referring to plant experimental units. "Plot" is sometimes incorrectly used in referring to an entire experiment that really consists of several plots [@phamxuankieuGiaoTrinhXac2005].
 
 [• A measurable characteristic of an experimental unit is called a *variable*.]{style="color: blue;"}
 
@@ -74,3 +78,5 @@ tags:
 The imposing formula for describing a normal frequency curve is
 
 $$f = \frac{N}{{(\sigma \sqrt {2\pi } )}}{e^{ - {{(y - \mu )}^2}/2{\sigma ^2}}}$$
+
+# Tài liệu tham khảo
