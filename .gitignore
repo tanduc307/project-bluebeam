@@ -2,3 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
+*.aux
+*.log
+*.out
+*.gz
+*.pygtex
+*.pygstyle
+latex/test
+homework/.cache
