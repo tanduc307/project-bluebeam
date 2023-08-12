@@ -97,14 +97,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pdftools)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tools)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tools<span class="sc">::</span><span class="fu">texi2dvi</span>(<span class="at">file =</span> <span class="st">"cong-thuc-phuong-sai_2.tex"</span>, <span class="at">pdf =</span> <span class="cn">TRUE</span>, <span class="at">clean =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics("curve.pdf")</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># xfun::embed_file("curve.pdf")</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pdftools<span class="sc">::</span><span class="fu">pdf_render_page</span>(<span class="st">"cong-thuc-phuong-sai_2.pdf"</span>, <span class="at">dpi =</span> <span class="dv">300</span>) <span class="ot">-&gt;</span> bitmap</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>png<span class="sc">::</span><span class="fu">writePNG</span>(bitmap, <span class="st">"cong-thuc-phuong-sai_2.png"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"cong-thuc-phuong-sai_2.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tools<span class="sc">::</span><span class="fu">texi2dvi</span>(<span class="at">file =</span> <span class="st">"population_variance.tex"</span>, <span class="at">pdf =</span> <span class="cn">TRUE</span>, <span class="at">clean =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pdftools<span class="sc">::</span><span class="fu">pdf_render_page</span>(<span class="st">"population_variance.pdf"</span>, <span class="at">dpi =</span> <span class="dv">300</span>) <span class="ot">-&gt;</span> bitmap</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>png<span class="sc">::</span><span class="fu">writePNG</span>(bitmap, <span class="st">"population_variance.png"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"population_variance.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cong-thuc-phuong-sai_2.png" class="img-fluid" width="800"></p>
+<p><img src="population_variance.png" class="img-fluid" width="800"></p>
 </div>
 </div>
 
