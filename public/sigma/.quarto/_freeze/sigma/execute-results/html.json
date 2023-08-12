@@ -1,12 +1,18 @@
 {
-  "hash": "b61b406a4aae6491f1332073b5ad7a48",
+  "hash": "3122b745369cdcb4da6bbb09569bd9fe",
   "result": {
-    "markdown": "---\ntitle: \"sigma\"\n---\n\n\n## Quarto\n\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 2\n```\n:::\n:::\n",
-    "supporting": [],
+    "markdown": "---\ntitle: \"Công thức xác suất thống kê\"\nformat:\n  html:\n    page-layout: full\n---\n\n\n<script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script>\n<script>mermaid.initialize({startOnLoad:true});</script>\n\n\n::: {.cell}\n::: {.cell-output-display}\n```{=html}\n<div id=\"htmlwidget-9818e6082e83ab651dba\" style=\"width:100%;height:100%;\" class=\"DiagrammeR html-widget \"></div>\n<script type=\"application/json\" data-for=\"htmlwidget-9818e6082e83ab651dba\">{\"x\":{\"diagram\":\"\\n\\n%%{init: { 'theme': 'neutral', \\n\\n           'securityLevel': 'loose', \\n           \\n           'flowchart': {'htmlLabels': true}, \\n           \\n           'sequence': {'useMaxWidth': true},\\n           \\n           'themeVariables': {'nodeBorder': '#000000', 'mainBkg': '#ffffff', 'nodeTextColor': '#000000', 'fontFamily': 'times', \\n           'fontSize': '30px' \\n           \\n           }\\n           \\n           } }%%\\n\\nflowchart LR\\n\\n   A[<img src='cong-thuc-phuong-sai_1.png' width='100%' height='100%'/>] \\n\\n\\n\"},\"evals\":[],\"jsHooks\":[]}</script>\n```\n:::\n:::\n\n\n<!-- ### cong-thuc-phuong-sai_1.png -->\n\n\n::: {.cell}\n\n:::\n\n\n### Tài liệu tham khảo\n\n1. `https://mermaid.js.org/config/theming.html`\n\n2. `https://www.redgregory.com/notion/2022/5/17/how-to-add-images-to-a-mermaid-graph-in-notion`\n\n3. `https://stackoverflow.com/questions/62941962/how-do-you-specify-mermaid-configuration-within-gitlab-markdown`",
+    "supporting": [
+      "sigma_files"
+    ],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],
-    "includes": {},
+    "includes": {
+      "include-in-header": [
+        "<script src=\"sigma_files/libs/htmlwidgets-1.6.2/htmlwidgets.js\"></script>\r\n<script src=\"sigma_files/libs/d3-3.3.8/d3.min.js\"></script>\r\n<script src=\"sigma_files/libs/dagre-0.4.0/dagre-d3.min.js\"></script>\r\n<link href=\"sigma_files/libs/mermaid-0.3.0/dist/mermaid.css\" rel=\"stylesheet\" />\r\n<script src=\"sigma_files/libs/mermaid-0.3.0/dist/mermaid.slim.min.js\"></script>\r\n<link href=\"sigma_files/libs/DiagrammeR-styles-0.2/styles.css\" rel=\"stylesheet\" />\r\n<script src=\"sigma_files/libs/chromatography-0.1/chromatography.js\"></script>\r\n<script src=\"sigma_files/libs/DiagrammeR-binding-1.0.10/DiagrammeR.js\"></script>\r\n"
+      ]
+    },
     "engineDependencies": {},
     "preserve": {},
     "postProcess": true

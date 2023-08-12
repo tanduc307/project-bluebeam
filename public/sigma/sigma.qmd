@@ -1,11 +1,116 @@
 ---
-title: "sigma"
+title: "Công thức xác suất thống kê"
+format:
+  html:
+    page-layout: full
 ---
 
-## Quarto
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+library(DiagrammeR)
 
-```{r}
-1 + 1
+# 'fontSize': '30px' trong mermaid bị lỗi
+
+DiagrammeR::mermaid("
+
+%%{init: { 'theme': 'neutral', 
+
+           'securityLevel': 'loose', 
+           
+           'flowchart': {'htmlLabels': true}, 
+           
+           'sequence': {'useMaxWidth': true},
+           
+           'themeVariables': {'nodeBorder': '#000000', 'mainBkg': '#ffffff', 'nodeTextColor': '#000000', 'fontFamily': 'times', 
+           'fontSize': '30px' 
+           
+           }
+           
+           } }%%
+
+flowchart LR
+
+   A[<img src='cong-thuc-phuong-sai_1.png' width='100%' height='100%'/>] 
+
+
+",
+                    width = "100%",
+                    height = "100%")
+
 ```
+
+<!-- ### cong-thuc-phuong-sai_1.png -->
+
+```{r, echo = FALSE, results="hide", message=FALSE, warning=FALSE}
+library(tikzDevice)
+options(tikzMetricPackages = c("\\usepackage[utf8]{vietnam}",
+                               "\\usepackage[T1]{fontenc}", "\\usetikzlibrary{calc}",
+                               "\\usepackage{amssymb}"))
+library(RConics)
+library(latex2exp)
+library(grid)
+library(gridtext)
+
+tikz("cong-thuc-phuong-sai_1.tex", width = 5, height = 5, standAlone = TRUE,
+     engine = "luatex",
+     packages = c("\\usepackage{tikz}",
+                  "\\usepackage[active,tightpage,psfixbb]{preview}",
+                  "\\PreviewEnvironment{pgfpicture}",
+                  "\\setlength\\PreviewBorder{0pt}",
+                  "\\usepackage[utf8]{vietnam}",
+                  "\\usepackage{amssymb}"))
+
+
+x <- 0:10
+y <- 0:10
+
+par(pty = "s")
+par(xaxt = "none")
+par(yaxt = "none")
+par(xpd = TRUE)
+par(oma = c(1,1,1,1))
+par(mar = c(1,1,1,1))
+
+plot(x, y,
+     type = "n",
+     pty = "n",
+     bty = "n",
+     xlab = "",
+     ylab = "",
+     xaxs = "i",
+     yaxs = "i"
+)
+
+# box("plot", col = "red")
+# box("figure", col = "blue")
+
+# points(5, 5, col = "red", pch = 19)
+
+text(x = 5, y = 5, adj = c(0.5, 0.5),
+     labels = "${\\sigma ^2} = {{\\sum\\limits_{i = 1}^N {{{({x_i} - \\mu )}^2}} } \\over N}$ 
+     Trong đó:
+     • $\\sigma$: là phương sai",
+     cex = 3)
+
+dev.off()
+
+tools::texi2pdf("cong-thuc-phuong-sai_1.tex")
+
+library(pdftools)
+pdf_convert("cong-thuc-phuong-sai_1.pdf", format = "png",
+            pages = NULL, filenames = "cong-thuc-phuong-sai_1.png",
+            dpi = 300, opw = "", upw = "",
+            antialias = TRUE,
+            verbose = TRUE)
+```
+
+### Tài liệu tham khảo
+
+1. `https://mermaid.js.org/config/theming.html`
+
+2. `https://www.redgregory.com/notion/2022/5/17/how-to-add-images-to-a-mermaid-graph-in-notion`
+
+3. `https://stackoverflow.com/questions/62941962/how-do-you-specify-mermaid-configuration-within-gitlab-markdown`

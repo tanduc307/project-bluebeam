@@ -8,5 +8,7 @@
 *.gz
 *.pygtex
 *.pygstyle
+*.js
+*.css
 latex/test
 homework/.cache
