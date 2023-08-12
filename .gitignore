@@ -10,5 +10,7 @@
 *.pygstyle
 *.js
 *.css
+*.json
+*.woff
 latex/test
 homework/.cache

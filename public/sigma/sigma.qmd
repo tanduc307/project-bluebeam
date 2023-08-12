@@ -24,16 +24,19 @@ DiagrammeR::mermaid("
            
            'sequence': {'useMaxWidth': true},
            
-           'themeVariables': {'nodeBorder': '#000000', 'mainBkg': '#ffffff', 'nodeTextColor': '#000000', 'fontFamily': 'times', 
-           'fontSize': '30px' 
+           'themeVariables': {'nodeBorder': '#fef37f',
+                              'mainBkg': '#fef37f', 
+                              'nodeTextColor': '#f92f0b', 
+           'fontFamily': 'arial', 
+           'fontSize': '10px' 
            
            }
            
            } }%%
 
-flowchart LR
 
-   A[<img src='cong-thuc-phuong-sai_1.png' width='100%' height='100%'/>] 
+flowchart LR
+   A[Phương sai <img src='https://applyr.netlify.app/sigma/cong-thuc-phuong-sai_1.png' width='100%' height='100%'/>]  
 
 
 ",
@@ -106,6 +109,12 @@ pdf_convert("cong-thuc-phuong-sai_1.pdf", format = "png",
             antialias = TRUE,
             verbose = TRUE)
 ```
+
+
+
+
+
+
 
 ### Tài liệu tham khảo
 

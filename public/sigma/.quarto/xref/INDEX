@@ -1,5 +1,8 @@
 {
   "sigma.qmd": {
     "sigma.html": "7cce4ef4"
+  },
+  "render.qmd": {
+    "render.html": "c86a562e"
   }
 }

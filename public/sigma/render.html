@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Công thức xác suất thống kê</title>
+<title>render</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,66 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="sigma_files/libs/clipboard/clipboard.min.js"></script>
-<script src="sigma_files/libs/quarto-html/quarto.js"></script>
-<script src="sigma_files/libs/quarto-html/popper.min.js"></script>
-<script src="sigma_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="sigma_files/libs/quarto-html/anchor.min.js"></script>
-<link href="sigma_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="sigma_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="sigma_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="sigma_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="sigma_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script src="sigma_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
-<script src="sigma_files/libs/d3-3.3.8/d3.min.js"></script>
-<script src="sigma_files/libs/dagre-0.4.0/dagre-d3.min.js"></script>
-<link href="sigma_files/libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
-<script src="sigma_files/libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
-<link href="sigma_files/libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="sigma_files/libs/chromatography-0.1/chromatography.js"></script>
-<script src="sigma_files/libs/DiagrammeR-binding-1.0.10/DiagrammeR.js"></script>
+<script src="render_files/libs/clipboard/clipboard.min.js"></script>
+<script src="render_files/libs/quarto-html/quarto.js"></script>
+<script src="render_files/libs/quarto-html/popper.min.js"></script>
+<script src="render_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="render_files/libs/quarto-html/anchor.min.js"></script>
+<link href="render_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="render_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="render_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="render_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="render_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
 
-<body>
+<body class="fullcontent">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-<main class="content column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Công thức xác suất thống kê</h1>
+<h1 class="title">render</h1>
 </div>
 
 
@@ -68,23 +94,19 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true});</script>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pdftools)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tools)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tools<span class="sc">::</span><span class="fu">texi2dvi</span>(<span class="at">file =</span> <span class="st">"cong-thuc-phuong-sai_2.tex"</span>, <span class="at">pdf =</span> <span class="cn">TRUE</span>, <span class="at">clean =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics("curve.pdf")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># xfun::embed_file("curve.pdf")</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pdftools<span class="sc">::</span><span class="fu">pdf_render_page</span>(<span class="st">"cong-thuc-phuong-sai_2.pdf"</span>, <span class="at">dpi =</span> <span class="dv">300</span>) <span class="ot">-&gt;</span> bitmap</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>png<span class="sc">::</span><span class="fu">writePNG</span>(bitmap, <span class="st">"cong-thuc-phuong-sai_2.png"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"cong-thuc-phuong-sai_2.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="htmlwidget-8ba32cbde5449b466354" style="width:100%;height:100%;" class="DiagrammeR html-widget "></div>
-<script type="application/json" data-for="htmlwidget-8ba32cbde5449b466354">{"x":{"diagram":"\n\n%%{init: { 'theme': 'neutral', \n\n           'securityLevel': 'loose', \n           \n           'flowchart': {'htmlLabels': true}, \n           \n           'sequence': {'useMaxWidth': true},\n           \n           'themeVariables': {'nodeBorder': '#fef37f',\n                              'mainBkg': '#fef37f', \n                              'nodeTextColor': '#f92f0b', \n           'fontFamily': 'arial', \n           'fontSize': '10px' \n           \n           }\n           \n           } }%%\n\n\nflowchart LR\n   A[Phương sai <img src='https://applyr.netlify.app/sigma/cong-thuc-phuong-sai_1.png' width='100%' height='100%'/>]  \n\n\n"},"evals":[],"jsHooks":[]}</script>
+<p><img src="cong-thuc-phuong-sai_2.png" class="img-fluid" width="800"></p>
 </div>
 </div>
-<!-- ### cong-thuc-phuong-sai_1.png -->
-<section id="tài-liệu-tham-khảo" class="level3">
-<h3 class="anchored" data-anchor-id="tài-liệu-tham-khảo">Tài liệu tham khảo</h3>
-<ol type="1">
-<li><p><code>https://mermaid.js.org/config/theming.html</code></p></li>
-<li><p><code>https://www.redgregory.com/notion/2022/5/17/how-to-add-images-to-a-mermaid-graph-in-notion</code></p></li>
-<li><p><code>https://stackoverflow.com/questions/62941962/how-do-you-specify-mermaid-configuration-within-gitlab-markdown</code></p></li>
-</ol>
-</section>
 
 </main>
 <!-- /main column -->

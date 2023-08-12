@@ -1,0 +1,14 @@
+---
+title: "render"
+---
+
+```{r, out.width="800px", warning=FALSE, message=FALSE}
+library(pdftools)
+library(tools)
+tools::texi2dvi(file = "cong-thuc-phuong-sai_2.tex", pdf = TRUE, clean = FALSE)
+# knitr::include_graphics("curve.pdf")
+# xfun::embed_file("curve.pdf")
+pdftools::pdf_render_page("cong-thuc-phuong-sai_2.pdf", dpi = 300) -> bitmap
+png::writePNG(bitmap, "cong-thuc-phuong-sai_2.png")
+knitr::include_graphics("cong-thuc-phuong-sai_2.png")
+```
