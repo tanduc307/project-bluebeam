@@ -18,20 +18,20 @@
 
 \node[text = drawColor, anchor = base, inner sep = 0pt, outer sep = 0pt, scale = 3.00, align = center] at (400, 360){
 
-\textbf{Công thức tính phương sai của quần thể} \\ \textbf{\textcolor{red}{(\textcolor{blue}{p}opulation \textcolor{blue}{var}iance)}} \\
+\textbf{Công thức tính phương sai của mẫu} \\ \textbf{\textcolor{red}{(\textcolor{blue}{s}ample \textcolor{blue}{var}iance)}} \\
 
 };
 
 \node[rectangle, color = border_color, draw, text = drawColor, anchor = base, inner sep = 0pt, outer sep = 0pt, scale = 4.00, align = center,
-minimum width = 3 cm, minimum height = 1.3 cm, line width = 1 mm] (r) at (400, 260) {${\sigma ^2} = {{\sum\limits_{i = 1}^N {{{({x_i} - \mu )}^2}} } \over N}$ };
+minimum width = 3 cm, minimum height = 1.3 cm, line width = 1 mm] (r) at (400, 260) {${s^2} = {{\sum\limits_{i = 1}^n {{{({x_i} - \bar{x})}^2}} } \over n - 1}$ };
 
 \node[text = drawColor, anchor = base, inner sep = 0pt, outer sep = 0pt, scale = 3.00, align = left] at (400, 50){
 
 Trong đó: \\ 
-$\sigma$: là phương sai (đơn vị đo của $x_i$ bình phương) \\
-$x_i$: là giá trị đo được thứ $i$ (có đơn vị đo) \\
-$\mu$: là trung bình tổng thể (cùng đơn vị đo với $x_i$) \\
-$N$: là tổng số cá thể trong quần thể
+$s$: là phương sai của mẫu (đơn vị đo bình phương) \\
+$x_i$: là giá trị đo được của cá thể thứ $i$ (có đơn vị đo) \\
+$\bar{x}$: là trung bình của mẫu (sample mean) \\
+$n$: là tổng số cá thể trong mẫu (sample size)
  };
 
 
@@ -43,3 +43,4 @@ $N$: là tổng số cá thể trong quần thể
 
 % https://latexdraw.com/draw-a-rectangle-in-tikz/
 % https://tex.stackexchange.com/questions/527281/tikz-rectangle-that-fits-exacly-into-linewidth-including-boundary
+% https://www.onlinemathlearning.com/variance.html

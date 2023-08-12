@@ -10,3 +10,12 @@ pdftools::pdf_render_page("population_variance.pdf", dpi = 300) -> bitmap
 png::writePNG(bitmap, "population_variance.png")
 knitr::include_graphics("population_variance.png")
 ```
+
+```{r, out.width="800px", warning=FALSE, message=FALSE}
+library(pdftools)
+library(tools)
+tools::texi2dvi(file = "sample_variance.tex", pdf = TRUE, clean = FALSE)
+pdftools::pdf_render_page("sample_variance.pdf", dpi = 300) -> bitmap
+png::writePNG(bitmap, "sample_variance.png")
+knitr::include_graphics("sample_variance.png")
+```
