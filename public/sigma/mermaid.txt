@@ -1,0 +1,31 @@
+---
+title: Xác suất thống kê căn bản | www.tuhocr.com
+---
+
+%%{init: { 'theme': 'base', 
+
+           'securityLevel': 'loose', 
+           
+           'flowchart': {'htmlLabels': true}, 
+           
+           'sequence': {'useMaxWidth': true},
+           
+           'themeVariables': {'fontFamily': 'times'     
+           }
+           
+           } }%%
+
+
+flowchart LR
+
+   A[<b>Phương sai của quần thể</b>
+   <a href='https://applyr.netlify.app/sigma/population_variance.png'>
+   <img src='https://applyr.netlify.app/sigma/population_variance.png' width='100%' height='100%'/>
+   </a>] 
+   <--Cần phân biệt
+   khi đang nói về 
+   phương sai loại nào?--> 
+   B[<b>Phương sai của mẫu</b>
+   <a href='https://applyr.netlify.app/sigma/sample_variance.png'>
+   <img src='https://applyr.netlify.app/sigma/sample_variance.png' width='100%' height='100%'/>
+   </a>]
