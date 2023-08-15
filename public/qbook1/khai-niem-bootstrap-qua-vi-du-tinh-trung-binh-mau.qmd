@@ -40,6 +40,8 @@ mean_mau_quan_sat <- mean(can_nang)
 mean_mau_quan_sat
 ```
 
+**Thực hiện bootstrap với 1000 lần lặp lại cho sample size là 10 cá thể**
+
 ```{r}
 sample_size <- length(can_nang)
 
@@ -64,6 +66,8 @@ data_boot$`Kết quả trung bình` <- ket_qua_trung_binh
 # write.table(x = data_boot, file = "data_boot.tsv", 
 #             row.names = F, sep = "\t\t", quote = FALSE)
 
+write.csv(data_boot, "data_boot.csv")
+
 library(kableExtra)
 kable(data_boot, "simple") -> ok
 
@@ -74,8 +78,7 @@ write.table(ok, "data_boot.txt", quote = FALSE, row.names = FALSE)
 cat data_boot.txt | sed 1d > data_boot_ok.txt # run dòng lệnh này trong bash để bỏ dòng đầu tiên
 ```
 
-Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết quả trung bình tương ứng.
-
+Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết quả trung bình tương ứng. [View](data_boot_ok.txt)
 
 ### **Bước 2: Vẽ đồ thị**
 
