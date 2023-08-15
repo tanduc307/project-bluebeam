@@ -1,0 +1,17 @@
+# **Bài 1** {.unnumbered}
+
+**Đề bài: Self‐reported injuries among left‐ and right‐handed people were compared in a survey of 1986 college students in British Columbia, Canada. Of the 180 left‐handed students, 93 reported at least one injury, and 619 of the 1716 right‐handed students reported at least one injury in the same period. Arrange the data in a 2 × 2 table and calculate the proportion of people with at least one injury during the period of observation for each group.** [@le2016, p. 32]
+
+Tạm dịch: Một báo cáo về tỷ lệ chấn thương giữa những người thuận tay trái và tay phải vào năm 1986 khảo sát ở những sinh viên đại học. Kết quả cho thấy 180 sinh viên thuận tay trái thì có đến 93 trường hợp được báo cáo bị ít nhất là một loại chấn thương. Trong số 1716 sinh viên thuận tay phải thì có 619 trường hợp báo cáo bị ít nhất một chấn thương trong cùng giai đoạn này. 
+
+Câu hỏi: Hãy sắp xếp dữ liệu thành bảng 2 × 2 và tính toán tỷ lệ bị chấn thương của mỗi nhóm (proportion of people with at least one injury for each group).
+
+```{r}
+1+1
+```
+
+```{r}
+# Bố trí thí nghiệm
+
+```
+

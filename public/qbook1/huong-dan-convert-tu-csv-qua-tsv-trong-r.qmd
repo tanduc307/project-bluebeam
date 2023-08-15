@@ -1,0 +1,60 @@
+---
+format:
+  html:
+    toc: false
+    theme: default
+    page-layout: full
+    embed-resources: true
+---    
+
+# **Hướng dẫn convert từ file `csv` qua `tsv` trong R** {.unnumbered}
+
+Ví dụ bạn có 1 file [`file_example_1.csv`](https://tuhocr.netlify.app/file_example_1.csv) có cấu trúc như sau:
+
+![](file_example_1.png)
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+knitr::include_graphics("file_example_1.png")
+```
+
+Giờ bạn muốn convert thành dạng này, tức là thay thế dấu phân cách (delimiter) từ dấu phẩy `,` mặc định phân cách giữa các cột trong file `csv` (xem ở Notepad) thành khoảng trắng (tab) để giúp nhìn các cột rõ hơn như sau.
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+
+## import file csv
+
+file_example_1 <- read.csv("file_example_1.csv", sep = ",")
+
+library(crimeutils) # package giúp add trailing zeros
+
+## convert từng cột trong matrix để đủ zeros sau dấu thập phân
+
+apply(X = file_example_1, MARGIN = 2, FUN = pad_decimals) -> yes_1
+
+## xử lý cột đầu tiên để digits = 0
+
+crimeutils::pad_decimals(as.numeric(yes_1[, 1]), digits = 0) -> yes_1[, 1]
+
+## export ra file tsv với 2 tab
+
+write.table(x = yes_1, file = "file_example_1.tsv", row.names = FALSE, sep = "\t\t", quote = FALSE)
+```
+
+![](file_example_2.png)
+
+**Lúc này bạn có thể upload file `tsv` hay `txt` lên website để thuận tiện thể hiện full dataset. [Link](https://tuhocr.netlify.app/file_example_1.txt)**
+
+![](file_example_3.png)
+
+
+
+
+
+
+
+
+
+
+
+
+

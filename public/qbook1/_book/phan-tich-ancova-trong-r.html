@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thống kê sinh học: Từ lý thuyết đến ứng dụng - Bài 15: Phân tích ANCOVA trong R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" rel="next">
+<link href="./phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html" rel="prev">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./phan-tich-ancova-trong-r.html"><strong>Bài 15: Phân tích ANCOVA trong R</strong></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./"></a><a href="https://thongkesinhhoc.quarto.pub/">Thống kê sinh học: Từ lý thuyết đến ứng dụng</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Giới thiệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./co-so-ly-thuyet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cơ sở lý thuyết</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./khoang-tin-cay.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 4: Khoảng tin cậy là gì?</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 14: Phân tích ANOVA 2 yếu tố kiểu RCBD trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-ancova-trong-r.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><strong>Bài 15: Phân tích ANCOVA trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 26: Workflow phân tích thống kê qua dataset <code>iris</code></strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./huong-dan-phan-tich-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 27: Hướng dẫn phân tích logistic regression</strong></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tài liệu tham khảo</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><strong>Bài 15: Phân tích ANCOVA trong R</strong></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="phân-biệt-giữa-ancova-và-anova" class="level3">
+<h3 class="anchored" data-anchor-id="phân-biệt-giữa-ancova-và-anova">Phân biệt giữa ANCOVA và ANOVA</h3>
+<p>Phân tích hiệp phương sai Analysis of Covariance (ANCOVA) là trường hợp mở rộng của phân tích phương sai Analysis of Variance (ANOVA) khi cho phép phân tích thêm biến C (continuous) tác động lên biến Y (continuous) để tìm ra sự khác biệt giữa các nhóm trong biến X (category).</p>
+<p>Ứng dụng dễ thấy nhất là nếu thực hiện phân tích phương sai ANOVA 1 yếu tố thông thường, giữa các nhóm trong biến X tác động lên biến Y mà có p-value &gt; 0.05 chẳng hạn, tức là không thỏa điều kiện về ý nghĩa thống kê, thì ta có thể đánh giá thêm xem biến Y bản chất có bị ảnh hưởng bởi 1 biến C nào đó (ở dạng continuous) hay không, khi đó ta đưa biến C vào để hiệu chỉnh lại kết quả từ Y, rồi thực hiện phép phân tích ANCOVA để tìm ra p-value lúc này ở dạng kết quả hiệu chỉnh cho phép đánh giá chính xác hơn sự khác biệt giữa các nhóm trong biến X (category).</p>
+<p>ANCOVA có hai loại one-way và two-way tương tự như ANOVA, tương ứng cho số lượng yếu tố X trong mô hình.</p>
+<p><strong>Các giả định của ANCOVA</strong></p>
+<ol type="1">
+<li><p><strong>Linearity between the covariate and the outcome variable</strong> at each level of the grouping variable. This can be checked by creating a grouped scatter plot of the covariate and the outcome variable.</p></li>
+<li><p><strong>Homogeneity of regression slopes.</strong> The slopes of the regression lines, formed by the covariate and the outcome variable, should be the same for each group. This assumption evaluates that there is no interaction between the outcome and the covariate. The plotted regression lines by groups should be parallel.</p></li>
+<li><p><strong>The outcome variable should be approximately normally distributed.</strong> This can be checked using the Shapiro-Wilk test of normality on the model residuals.</p></li>
+<li><p><strong>Homoscedasticity</strong> or homogeneity of residuals variance for all groups. The residuals are assumed to have a constant variance (homoscedasticity)</p></li>
+<li><p><strong>No significant outliers</strong> in the groups</p></li>
+</ol>
+</section>
+<section id="case-study-cho-one-way-ancova" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-cho-one-way-ancova">Case study cho one-way ANCOVA</h3>
+<blockquote class="blockquote">
+<p>Researchers investigated the effect of exercises in reducing the level of anxiety. Therefore, they conducted an experiment, where they measured the anxiety score of three groups of individuals practicing physical exercises at different levels (grp1: low, grp2: moderate and grp3: high). The anxiety score was measured pre- and 6-months post-exercise training programs. It is expected that any reduction in the anxiety by the exercises programs would also depend on the participant’s basal level of anxiety score. In this analysis we use the pretest anxiety score as the covariate and are interested in possible differences between group with respect to the post-test anxiety scores.</p>
+</blockquote>
+<p>Tạm dịch: Nghiên cứu này từ dataset <code>anxiety</code> của package <code>datarium</code>. Mục tiêu của nghiên cứu là khảo sát ảnh hưởng của việc tập thể dục lên khả năng giảm căng thẳng của sinh viên.</p>
+<p>Trong đó theo dõi 45 sinh viên, chia làm 3 nhóm (15 bạn/nhóm) ở 3 mức độ khác nhau về việc tập thể dục, ký hiệu tương ứng là <code>grp1</code> tập thể dục ít, <code>grp2</code> tập thể dục trung bình, <code>grp3</code> tập thể dục nhiều. Sau đó các nhà nghiên cứu đo điểm căng thẳng của từng bạn sinh viên xem như thế nào ở 6 tháng trước khi bắt đầu tập thể dục (<code>pretest</code>) và 6 tháng sau khi tập thể dụng (<code>postest</code>).</p>
+<p>Câu hỏi đặt ra là: kết quả của việc tập thể dục theo các cường độ khác nhau như vậy (ít, vừa, nhiều) có làm giảm căng thẳng hay không?</p>
+<p>Nếu bình thường chỉ phân tích ANOVA thì ta chỉ lấy biến <code>postest</code> là biến y để làm cơ sở đưa vào phân tích one-way ANOVA với yếu tố là mức độ tập thể dục. Tuy nhiên rõ ràng giữa các bạn sinh viên này thì <strong><em>trước khi tham gia chương trình tập thể dục này các bạn đã có mức độ căng thẳng khác nhau rồi (đo thông qua <code>pretest</code>)</em></strong> nên nếu chúng ta không hiệu chỉnh giá trị này thì kết quả thu được từ phân tích phương sai sẽ bị ảnh hưởng (lỡ nhóm tập thể dục nhiều, theo lý thuyết sẽ giảm căng thẳng, nhưng vì các bạn sinh viên chọn ngẫu nhiên trong nhóm này có sự căng thẳng <strong><em>nền</em></strong> trước đó dẫn đến cho dù có tập thể dục nhiều thì điểm căng thẳng cũng không giảm). Đây là lý do vì sao chúng ta cần đưa covariate (gọi là hiệp biến) ở đây là yếu tố căng thẳng nền vào, hoặc có thể đưa thêm yếu tố độ tuổi vào cũng được, nghĩa là covariate có thể từ 1 trở lên để tác động đến biến y sau cùng, giúp điều chỉnh kết quả của y (postest) tương ứng với từng nhóm trong biến x (mức độ tập thể dục) được chính xác hơn.</p>
+<p><strong>Dữ liệu cụ thể</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>anxiety <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"ancova_example_1.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>anxiety </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   id group pretest posttest
+1   1  grp1    14.1     14.1
+2   2  grp1    14.5     14.3
+3   3  grp1    15.7     14.9
+4   4  grp1    16.0     15.3
+5   5  grp1    16.5     15.7
+6   6  grp1    16.9     16.2
+7   7  grp1    17.0     16.5
+8   8  grp1    17.0     16.6
+9   9  grp1    17.3     16.5
+10 10  grp1    17.3     16.7
+11 11  grp1    17.8     17.3
+12 12  grp1    17.9     17.5
+13 13  grp1    19.1     19.3
+14 14  grp1    19.4     19.0
+15 15  grp1    19.8     19.4
+16 16  grp2    13.7     12.7
+17 17  grp2    14.7     13.1
+18 18  grp2    14.9     13.6
+19 19  grp2    15.1     13.6
+20 20  grp2    15.8     14.2
+21 21  grp2    16.4     14.9
+22 22  grp2    16.6     16.1
+23 23  grp2    16.9     16.1
+24 24  grp2    16.9     16.3
+25 25  grp2    17.2     15.9
+26 26  grp2    17.8     17.4
+27 27  grp2    17.8     16.9
+28 28  grp2    18.2     17.1
+29 29  grp2    18.4     17.3
+30 30  grp2    19.3     17.7
+31 31  grp3    14.6     11.7
+32 32  grp3    15.0     11.9
+33 33  grp3    15.5     11.0
+34 34  grp3    15.7     12.1
+35 35  grp3    16.4     12.3
+36 36  grp3    16.9     13.6
+37 37  grp3    17.1     14.3
+38 38  grp3    17.3     14.2
+39 39  grp3    17.5     14.4
+40 40  grp3    17.6     13.8
+41 41  grp3    17.8     14.3
+42 42  grp3    17.9     13.8
+43 43  grp3    18.4     15.4
+44 44  grp3    18.5     15.1
+45 45  grp3    19.0     15.5</code></pre>
+</div>
+</div>
+</section>
+<section id="kiểm-tra-giả-thuyết-thống-kê" class="level3">
+<h3 class="anchored" data-anchor-id="kiểm-tra-giả-thuyết-thống-kê"><strong>Kiểm tra giả thuyết thống kê</strong></h3>
+<section id="linearity-assumption" class="level4">
+<h4 class="anchored" data-anchor-id="linearity-assumption">1. Linearity assumption</h4>
+<p>There was a linear relationship between pre-test and post-test anxiety score for each training group, as assessed by visual inspection of a scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggscatter</span>(<span class="at">data =</span> anxiety, <span class="at">x =</span> <span class="st">"pretest"</span>, <span class="at">y =</span> <span class="st">"posttest"</span>, <span class="at">color =</span> <span class="st">"group"</span>, <span class="at">add =</span> <span class="st">"reg.line"</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_regline_equation</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span>  <span class="fu">paste</span>(..eq.label.., ..rr.label.., <span class="at">sep =</span> <span class="st">"~~~~~~~~~~"</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> group),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">NULL</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="phan-tich-ancova-trong-r_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="homogeneity-of-regression-slopes" class="level4">
+<h4 class="anchored" data-anchor-id="homogeneity-of-regression-slopes">2. Homogeneity of regression slopes</h4>
+<p>This assumption checks that there is no significant interaction between the covariate and the grouping variable.</p>
+<p>There was homogeneity of regression slopes as the interaction term was not statistically significant, F(2, 39) = 0.13, p = 0.88.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>anxiety <span class="sc">%&gt;%</span> <span class="fu">anova_test</span>(posttest <span class="sc">~</span> group<span class="sc">*</span>pretest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA Table (type II tests)
+
+         Effect DFn DFd       F        p p&lt;.05   ges
+1         group   2  39 209.314 1.40e-21     * 0.915
+2       pretest   1  39 572.828 6.36e-25     * 0.936
+3 group:pretest   2  39   0.127 8.81e-01       0.006</code></pre>
+</div>
+</div>
+</section>
+<section id="normality-of-residuals" class="level4">
+<h4 class="anchored" data-anchor-id="normality-of-residuals">3. Normality of residuals</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model, the covariate goes first</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(posttest <span class="sc">~</span> pretest <span class="sc">+</span> group, <span class="at">data =</span> anxiety)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the model diagnostic metrics</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>model.metrics <span class="ot">&lt;-</span> <span class="fu">augment</span>(model)[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>)]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>model.metrics <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(model.metrics)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>model.metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   posttest pretest group       .resid      .cooksd   .std.resid
+1      14.1    14.1  grp1  0.549556955 1.008643e-01  1.457068239
+2      14.3    14.5  grp1  0.338455577 3.095139e-02  0.885202791
+3      14.9    15.7  grp1 -0.294848556 1.334801e-02 -0.749866153
+4      15.3    16.0  grp1 -0.203174590 5.675944e-03 -0.514543486
+5      15.7    16.5  grp1 -0.317051312 1.206505e-02 -0.799162006
+6      16.2    16.9  grp1 -0.228152690 5.919695e-03 -0.574088378
+7      16.5    17.0  grp1 -0.030928035 1.082522e-04 -0.077810670
+8      16.6    17.0  grp1  0.069071965 5.399278e-04  0.173775537
+9      16.5    17.3  grp1 -0.339254068 1.311360e-02 -0.853697710
+10     16.7    17.3  grp1 -0.139254068 2.209467e-03 -0.350418434
+11     17.3    17.8  grp1 -0.053130791 3.483819e-04 -0.134045731
+12     17.5    17.9  grp1  0.044093865 2.461007e-04  0.111341667
+13     19.3    19.1  grp1  0.610789731 7.558967e-02  1.572623744
+14     19.0    19.4  grp1  0.002463698 1.425655e-06  0.006392114
+15     19.4    19.8  grp1 -0.008637680 2.154133e-05 -0.022683279
+16     12.7    13.7  grp2  0.201780151 1.330855e-02  0.534203822
+17     13.1    14.7  grp2 -0.425973294 3.561620e-02 -1.095079357
+18     13.6    14.9  grp2 -0.131523983 3.095512e-03 -0.336670267
+19     13.6    15.1  grp2 -0.337074672 1.862872e-02 -0.859563007
+20     14.2    15.8  grp2 -0.456502083 2.661806e-02 -1.153075147
+21     14.9    16.4  grp2 -0.373154150 1.590854e-02 -0.939084242
+22     16.1    16.6  grp2  0.621295161 4.364296e-02  1.563046354
+23     16.1    16.9  grp2  0.312969127 1.119730e-02  0.787636564
+24     16.3    16.9  grp2  0.512969127 3.008104e-02  1.290968359
+25     15.9    17.2  grp2 -0.195356906 4.550936e-03 -0.492313232
+26     17.4    17.8  grp2  0.687991027 6.659086e-02  1.743825167
+27     16.9    17.8  grp2  0.187991027 4.971911e-03  0.476493837
+28     17.1    18.2  grp2 -0.023110351 8.781534e-05 -0.058939936
+29     17.3    18.4  grp2 -0.028661040 1.474391e-04 -0.073375382
+30     17.7    19.3  grp2 -0.553639140 8.575232e-02 -1.451061685
+31     11.7    14.6  grp3  0.620311647 9.507982e-02  1.613950448
+32     11.9    15.0  grp3  0.409210269 3.392908e-02  1.053609373
+33     11.0    15.5  grp3 -1.004666453 1.631872e-01 -2.560468115
+34     12.1    15.7  grp3 -0.110217142 1.812547e-03 -0.279990633
+35     12.3    16.4  grp3 -0.629644554 4.784434e-02 -1.587371864
+36     13.6    16.9  grp3  0.156478724 2.773679e-03  0.393690617
+37     14.3    17.1  grp3  0.650928035 4.795104e-02  1.637645152
+38     14.2    17.3  grp3  0.345377346 1.367987e-02  0.869284480
+39     14.4    17.5  grp3  0.339826657 1.360708e-02  0.856054572
+40     13.8    17.6  grp3 -0.362948688 1.581104e-02 -0.914851288
+41     14.3    17.8  grp3 -0.068499377 5.897635e-04 -0.172926642
+42     13.8    17.9  grp3 -0.671274721 5.820829e-02 -1.696230176
+43     15.4    18.4  grp3  0.414848556 2.642395e-02  1.055053126
+44     15.1    18.5  grp3  0.012073212 2.330621e-05  0.030755387
+45     15.5    19.0  grp3 -0.101803510 2.073307e-03 -0.261953948</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assess normality of residuals using shapiro wilk test</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro_test</span>(model.metrics<span class="sc">$</span>.resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  variable             statistic p.value
+  &lt;chr&gt;                    &lt;dbl&gt;   &lt;dbl&gt;
+1 model.metrics$.resid     0.975   0.444</code></pre>
+</div>
+</div>
+<p>The Shapiro Wilk test was not significant (p &gt; 0.05), so we can assume normality of residuals.</p>
+</section>
+<section id="homogeneity-of-variances" class="level4">
+<h4 class="anchored" data-anchor-id="homogeneity-of-variances">4. Homogeneity of variances</h4>
+<p>ANCOVA assumes that the variance of the residuals is equal for all groups. This can be checked using the Levene’s test.</p>
+<p>The Levene’s test was not significant (p &gt; 0.05), so we can assume homogeneity of the residual variances for all groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.metrics <span class="sc">%&gt;%</span> <span class="fu">levene_test</span>(.resid <span class="sc">~</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+factor.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+    df1   df2 statistic     p
+  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
+1     2    42      2.27 0.116</code></pre>
+</div>
+</div>
+</section>
+<section id="outliers" class="level4">
+<h4 class="anchored" data-anchor-id="outliers">5. Outliers</h4>
+<p>There were no outliers in the data, as assessed by no cases with standardized residuals greater than 3 in absolute value.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model.metrics <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(.std.resid) <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] posttest   pretest    group      .resid     .cooksd    .std.resid
+&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tính-toán-ancova" class="level3">
+<h3 class="anchored" data-anchor-id="tính-toán-ancova">Tính toán ANCOVA</h3>
+<p>Sau khi dataset đã thỏa các điều kiện để thực hiện ANCOVA, giờ ta đưa vào model để tính ra kết quả.</p>
+<p>After adjustment for pre-test anxiety score, there was a statistically significant difference in post-test anxiety score between the groups, F(2, 41) = 218.63, p &lt; 0.0001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>res.aov <span class="ot">&lt;-</span> anxiety <span class="sc">%&gt;%</span> <span class="fu">anova_test</span>(posttest <span class="sc">~</span> pretest <span class="sc">+</span> group) <span class="co"># pretest là covariate phải đặt phía trước.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">get_anova_table</span>(res.aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA Table (type II tests)
+
+   Effect DFn DFd       F        p p&lt;.05   ges
+1 pretest   1  41 598.321 4.48e-26     * 0.936
+2   group   2  41 218.629 1.35e-22     * 0.914</code></pre>
+</div>
+</div>
+<p><strong>Thực hiện phân hạng Post-hoc test</strong></p>
+<p>Pairwise comparisons can be performed to identify which groups are different. The Bonferroni multiple testing correction is applied.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pairwise comparisons</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>pwc <span class="ot">&lt;-</span> anxiety <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">emmeans_test</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    posttest <span class="sc">~</span> group, <span class="at">covariate =</span> pretest,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pwc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  term        .y.   group1 group2    df statistic        p    p.adj p.adj.signif
+* &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+1 pretest*gr… post… grp1   grp2      41      4.24 1.26e- 4 3.77e- 4 ***         
+2 pretest*gr… post… grp1   grp3      41     19.9  1.19e-22 3.58e-22 ****        
+3 pretest*gr… post… grp2   grp3      41     15.5  9.21e-19 2.76e-18 ****        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the adjusted means of each group</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Also called as the estimated marginal means (emmeans)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">get_emmeans</span>(pwc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 8
+  pretest group emmean    se    df conf.low conf.high method      
+    &lt;dbl&gt; &lt;fct&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       
+1    16.9 grp1    16.4 0.106    41     16.2      16.7 Emmeans test
+2    16.9 grp2    15.8 0.107    41     15.6      16.0 Emmeans test
+3    16.9 grp3    13.5 0.106    41     13.2      13.7 Emmeans test</code></pre>
+</div>
+</div>
+</section>
+<section id="trình-bày-kết-quả" class="level3">
+<h3 class="anchored" data-anchor-id="trình-bày-kết-quả">Trình bày kết quả</h3>
+<p>An ANCOVA was run to determine the effect of exercises on the anxiety score after controlling for basal anxiety score of participants.</p>
+<p><strong>After adjustment for pre-test anxiety score, there was a statistically significant difference in post-test anxiety score between the groups, F(2, 41) = 218.63, p &lt; 0.0001.</strong></p>
+<p>Post hoc analysis was performed with a Bonferroni adjustment. The mean anxiety score was statistically significantly greater in grp1 (16.4 +/- 0.15) compared to the grp2 (15.8 +/- 0.12) and grp3 (13.5 +/_ 0.11), p &lt; 0.001.</p>
+<p><mark><strong>Tạm dịch: Sau khi thực hiện phép phân tích ANCOVA với việc hiệu chỉnh biến <code>pretest</code> thì ta thấy kết quả tập thể dục của các nhóm thật sự khác biệt nhau, trong đó nhóm tập thể dục nhiều (<code>grp3</code>) có chỉ số căng thẳng thấp nhất.</strong></mark></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization: line plots with p-values</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pwc <span class="ot">&lt;-</span> pwc <span class="sc">%&gt;%</span> <span class="fu">add_xy_position</span>(<span class="at">x =</span> <span class="st">"group"</span>, <span class="at">fun =</span> <span class="st">"mean_se"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggline</span>(<span class="fu">get_emmeans</span>(pwc), <span class="at">x =</span> <span class="st">"group"</span>, <span class="at">y =</span> <span class="st">"emmean"</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(pwc, <span class="at">hide.ns =</span> <span class="cn">TRUE</span>, <span class="at">tip.length =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">get_test_label</span>(res.aov, <span class="at">detailed =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="fu">get_pwc_label</span>(pwc)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="phan-tich-ancova-trong-r_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="tài-liệu-tham-khảo" class="level4">
+<h4 class="anchored" data-anchor-id="tài-liệu-tham-khảo">Tài liệu tham khảo</h4>
+<ol type="1">
+<li><p><a href="https://studyr.netlify.app/river/Crawley%20-%202013%20-%20The%20R%20Book.pdf">The R Book - 2013</a></p></li>
+<li><p><a href="https://www.thegreatcourses.com/courses/learning-statistics-concepts-and-applications-in-r.html">Learning Statistics Concepts and Applications in R</a></p></li>
+<li><p><a href="https://www.datanovia.com/en/lessons/ancova-in-r/">ANCOVA in R</a></p></li>
+<li><p><a href="https://www.youtube.com/playlist?list=PLIeGtxpvyG-LnuBJ7TayqusxOERwpTvAv">Statistics PL 17 ANCOVA</a></p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><strong>Bài 14: Phân tích ANOVA 2 yếu tố kiểu RCBD trong R</strong></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" class="pagination-link">
+        <span class="nav-page-text"><strong>Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</strong></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

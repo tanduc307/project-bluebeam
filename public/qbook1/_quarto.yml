@@ -1,0 +1,43 @@
+project:
+  type: book
+
+book:
+  title: "Thống kê sinh học: Từ lý thuyết đến ứng dụng"
+  author: "Duc Nguyen | Founder of tuhocr.com"
+  site-url: https://www.tuhocr.com/
+  date: "2023-08-03"
+  cover-image: cover.png
+  favicon: favicon.png
+  # comments:
+  #   hypothesis:
+  #     theme: clean
+  chapters:
+    - index.qmd
+    - part: co-so-ly-thuyet.qmd
+      chapters:
+        - khoang-tin-cay.qmd
+        - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
+        - phan-tich-ancova-trong-r.qmd
+        - bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd
+        - workflow-phan-tich-thong-ke-qua-dataset-iris.qmd
+        # - huong-dan-phan-tich-logistic-regression.qmd
+        - example-partial-least-squares-and-principal-component-regression.qmd
+    - references.qmd
+    
+  sidebar:
+    style: "docked"
+    search: true
+    title: "<a href='https://thongkesinhhoc.quarto.pub/'>Thống kê sinh học: Từ lý thuyết đến ứng dụng</a>"
+          
+bibliography: references.bib
+
+format:
+  html:
+    toc: false
+    theme: default
+    page-layout: full
+  # pdf:
+  #   documentclass: scrreprt
+
+
+

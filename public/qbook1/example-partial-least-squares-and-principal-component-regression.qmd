@@ -1,0 +1,200 @@
+# **Bài 28: Example for Partial Least Squares and Principal Component Regression** {.unnumbered}
+
+### **Bước 1: Import dữ liệu**
+
+Sử dụng các bộ dữ liệu:
+
+`yarn` A data set with 28 near-infrared spectra (NIR) of PET yarns, measured at 268 wavelengths, as predictors, and density as response (density). The data set also includes a logical variable train which can be used to split the data into a training data set of size 21 and test data set of size 7. **[View](https://tuhocr.netlify.app/dataset/yarn_output.html)**
+
+`oliveoil` A data set with 5 quality measurements (chemical) and 6 panel sensory panel variables (sensory) made on 16 olive oil samples. **[View](https://tuhocr.netlify.app/dataset/oliveoil_output.html)**
+
+`gasoline` A data set consisting of octane number (octane) and NIR spectra (NIR) of 60 gasoline samples. Each NIR spectrum consists of 401 diffuse reflectance measurements from 900 to 1700 nm. **[View](https://tuhocr.netlify.app/dataset/gasoline_output.html)**
+
+**Thể hiện dữ liệu thô**
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+library(pls)
+data(yarn)
+data(oliveoil)
+data(gasoline)
+
+write.csv(yarn, "yarn.csv")
+write.csv(oliveoil, "oliveoil.csv")
+write.csv(gasoline, "gasoline.csv") ## lý do phải export và import vì dataset gasoline bị nén cột lại ở dạng AsIs
+
+yarn <- read.csv("yarn.csv")
+oliveoil <- read.csv("oliveoil.csv")
+gasoline <- read.csv("gasoline.csv")
+
+###
+
+library(kableExtra)
+
+yarn %>%
+    kbl() %>%
+    kable_styling(bootstrap_options = c("striped", 
+                                        "hover", 
+                                        "condensed", 
+                                        "bordered", 
+                                        "responsive")) %>%
+    kable_classic(full_width = FALSE, html_font = "arial") -> yarn_output
+
+save_kable(yarn_output, file = "yarn_output.html")
+
+oliveoil %>%
+    kbl() %>%
+    kable_styling(bootstrap_options = c("striped", 
+                                        "hover", 
+                                        "condensed", 
+                                        "bordered", 
+                                        "responsive")) %>%
+    kable_classic(full_width = FALSE, html_font = "arial") -> oliveoil_output
+
+save_kable(oliveoil_output, file = "oliveoil_output.html")
+
+gasoline %>%
+    kbl() %>%
+    kable_styling(bootstrap_options = c("striped", 
+                                        "hover", 
+                                        "condensed", 
+                                        "bordered", 
+                                        "responsive")) %>%
+    kable_classic(full_width = FALSE, html_font = "arial") -> gasoline_output
+
+save_kable(gasoline_output, file = "gasoline_output.html")
+
+```
+
+### **Bước 2: Mô tả dữ liệu**
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(pls)
+data(yarn)
+data(oliveoil)
+data(gasoline)
+
+yarn <- read.csv("yarn.csv")
+oliveoil <- read.csv("oliveoil.csv")
+gasoline <- read.csv("gasoline.csv")
+```
+
+`gasoline` là dataset có các dòng là các hợp chất octane ở nồng độ khác nhau, tổng cộng có 60 hợp chất như vậy, mỗi hợp chất được bước sóng từ 900 nm đến 1700 nm. Như vậy, ta muốn vẽ một đồ thị mô tả biến thiên độ hấp thụ theo từng hợp chất (từng dòng, như vậy sẽ có 60 dòng) với trục y là độ hấp thụ và trục x là bước sóng thì ta cần transpose dữ liệu về dạng sau. **[View](https://tuhocr.netlify.app/dataset/matrix_gasoline_output.html)**
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+t(gasoline[, -c(1, 2)]) -> matrix_gasoline
+
+gsub("\\.nm", "", row.names(matrix_gasoline)) -> ok_1
+
+gsub("NIR.", "", ok_1) -> ok_2
+
+as.numeric(ok_2) -> row.names(matrix_gasoline)
+
+paste0("octane.", gasoline$octane) -> colnames(matrix_gasoline)
+```
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+matrix_gasoline %>%
+  kbl() %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                      "hover", 
+                                      "condensed", 
+                                      "bordered", 
+                                      "responsive")) %>%
+  kable_classic(full_width = FALSE, html_font = "arial") -> matrix_gasoline_output
+
+save_kable(matrix_gasoline_output, file = "matrix_gasoline_output.html")
+```
+
+**Vẽ đồ thị độ hấp thụ theo bước sóng và hợp chất octane**
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE, fig.width=9, fig.height=9}
+
+matplot(matrix_gasoline, type = "l", lty = 1, 
+        ylab = "Độ hấp thụ", xlab = "Bước sóng (nm)", xaxt = "n", 
+        col = 1:length(colnames(matrix_gasoline))) 
+
+ind <- seq(from = 900, to = 1700, by = 100)
+ind <- ind[ind >= 900 & ind <= 1700]
+ind <- (ind - 898) / 2
+
+axis(1, 
+     at = ind, 
+     labels = row.names(matrix_gasoline)[ind])
+
+legend(x = "topleft",
+       legend = colnames(matrix_gasoline),
+       cex = 1, 
+       xpd = TRUE,
+       col = 1:length(colnames(matrix_gasoline)),
+       lty = 1, lwd = 1.5,
+       ncol = 4,
+       horiz = FALSE)
+
+```
+
+### **Bước 3: Ráp code theo vignettes**
+
+We will do a PLSR on the gasoline data to illustrate the use of **pls** package.
+
+```{r}
+options(digits = 4)
+options(width = 200)
+
+data(gasoline) ## vì các function bên dưới dùng cột NIR ở dạng AsIs nên ta gọi lại dataset này.
+
+gasTrain <- gasoline[1:50, ]
+
+gasTest <- gasoline[51:60, ]
+
+# A typical way of fitting a PLSR model is
+
+gas1 <- plsr(octane ~ NIR, ncomp = 10, data = gasTrain, validation = "LOO")
+
+summary(gas1)
+```
+
+The validation results here are Root Mean Squared Error of Prediction (RMSEP). 
+
+There are two cross-validation estimates: `CV` is the ordinary CV estimate, and `adjCV` is a bias-corrected CV estimate.
+
+It is often simpler to judge the RMSEPs by plotting them. This plots the estimated RMSEPs as functions of the number of components.
+
+```{r}
+plot(RMSEP(gas1), legendpos = "topright")
+```
+
+Once the number of components has been chosen, one can inspect different aspects of the
+fit by plotting predictions, scores, loadings, etc. The default plot is a prediction plot. This shows the cross-validated predictions with two components versus measured values.
+
+```{r}
+plot(gas1, ncomp = 2, asp = 1, line = TRUE)
+
+plot(gas1, plottype = "scores", comps = 1:3)
+
+explvar(gas1)
+```
+
+```{r}
+plot(gas1, "loadings", comps = 1:2, legendpos = "topleft", labels = "numbers", xlab = "nm")
+abline(h = 0)
+```
+
+A fitted model is often used to predict the response values of new observations.
+
+```{r}
+predict(gas1, ncomp = 2, newdata = gasTest)
+```
+
+Because we know the true response values for these samples, we can calculate the test set
+RMSEP.
+
+```{r}
+RMSEP(gas1, newdata = gasTest)
+```
+
+For two components, we get **0.244**, which is quite close to the cross-validated estimate above
+**0.2966**.
+
+#### Tài liệu tham khảo
+
+1. `https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf`

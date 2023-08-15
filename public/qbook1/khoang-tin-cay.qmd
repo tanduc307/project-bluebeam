@@ -1,0 +1,15 @@
+# **Bài 4: Khoảng tin cậy là gì?** {.unnumbered}
+
+Về bản chất khoảng tin cậy là giá trị thực (real value) của con số trung bình tính được từ mẫu, **nếu** giả sử lặp lại quá trình lấy mẫu rất nhiều lần thì các con số trung bình này dao động trong một khoảng giá trị nào đó, thì đó là khoảng tin cậy (confidence interval).
+
+Độ tin cậy 95% (confidence level) có nghĩa là giá trị cận trên và cận dưới mà bao phủ 95% giá trị trung bình của các lần lấy mẫu này.
+
+Chi tiết tham khảo: [@crawley2015_p77_confidence_intervals, p. 61]
+
+{{< video https://youtu.be/TqOeMYtOc1w >}}
+
+[@statquest_confidence_intervals]
+
+{{< video https://youtu.be/cr9QjU0yDt0 >}}
+
+[@nguyenvanlam_confidence_intervals]

@@ -4,5 +4,11 @@
   },
   "render.qmd": {
     "render.html": "c86a562e"
+  },
+  "math.qmd": {
+    "math.html": "f5552580"
+  },
+  "test_raw.md": {
+    "test_raw.html": "7d91f8bc"
   }
 }

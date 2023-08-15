@@ -1,0 +1,66 @@
+## Cơ sở lý thuyết {.unnumbered} 
+
+Nội dung của phần này sẽ điểm qua các định nghĩa nền tảng về xác suất và thống kê vốn cũng vừa quen vừa lạ với phần lớn mọi người. Vì các định nghĩa này rất quan trọng nên mình sẽ không trình bày lại ở đây mà sẽ dẫn nguồn đến các tài liệu gốc để các bạn xem trực tiếp từ nhận định của chuyên gia trong lĩnh vực xác suất thống kê, sau đó bạn sẽ tự rút ra được kết luận cho mình. Các chủ đề còn lại mình sẽ trình bày theo cách hiểu của mình để giúp bạn có thêm 1 góc nhìn từ người trong cuộc đang tìm cách ứng dụng R để xử lý bài toán thống kê cho các tình huống thường gặp.
+
+Nội dung các chủ đề này được thường xuyên sắp xếp để đảm bảo tính logic và hệ thống. Các chủ đề được xây dựng theo module để dần bao quát toàn bộ chương trình.
+
+1. Xác suất là gì?
+
+2. Thống kê là gì?
+
+3. Cách tính số cỡ mẫu như thế nào để đạt ý nghĩa thống kê?
+
+4. Khoảng tin cậy (confidence interval) độ tin cậy (confidence level), mức ý nghĩa (significant level) là gì?
+
+5. Phân bố chuẩn (có tham số) và phân bố không chuẩn (phi tham số) là gì?
+
+6. Phương sai, độ lệch chuẩn, sai số chuẩn là gì?
+
+7. Hệ số biến thiên (CV) và p-value là gì?
+
+8. R^2^ và R^2^ điều chỉnh khác nhau ra sao?
+
+9. Quy trình để lựa chọn các phương pháp kiểm định thống kê phù hợp với dataset (statistical selection tool for raw data)
+
+10. Hồi quy là gì? Phân biệt giữa hồi quy đơn biến tuyến tính và phi tuyến. Phân biệt giữa hồi quy đơn biến và đa biến.
+
+11. Hiệp phương sai (covariance) và độ tương quan (correlation) là gì?
+
+12. Phân tích phương sai ANOVA 1 yếu tố
+
+13. Định nghĩa MANOVA, ANCOVA, MANCOVA
+
+14. Phân tích ANOVA 2 yếu tố kiểu RCBD trong R
+
+15. Phân tích ANCOVA trong R
+
+16. Định nghĩa về nested design analysis
+
+17. Hồi quy logistic 
+
+18. Phân tích Power Analysis
+
+19. Phương pháp bootstrap
+
+20. Phương pháp clustering
+
+21. Phương pháp PCA
+
+22. Factor analysis
+
+23. Cách tính chỉ số OR
+
+24. Phương pháp tối ưu hóa
+
+25. Pooled sample standard error
+
+26. Workflow phân tích thống kê qua dataset `iris`
+
+
+
+
+
+
+
+
+

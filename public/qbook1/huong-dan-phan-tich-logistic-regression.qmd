@@ -1,0 +1,53 @@
+# **Bài 27: Hướng dẫn phân tích logistic regression** {.unnumbered}
+
+## Cơ sở lý thuyết
+
+Chương 10 về logistic regression trong giáo trình [@le2016_p351_logistic_regression, p. 351]
+
+Ngoài ra, các bạn xem playlist trên StatQuest cũng giảng về chủ đề này rất kỹ.
+
+[`https://youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe`](https://youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe)
+
+<img src="image_data/logistic_statquest.png" width="100%" height="100%"/>
+
+
+## Example dataset
+
+Trong bài hướng dẫn này mình sử dụng dataset `titanic` theo quy trình phân tích logistic regression ở trang này.[^perform_logistic]
+
+>Logistic regression is a method for fitting a regression curve, y = f(x), when y is a categorical variable. The typical use of this model is predicting y given a set of predictors x. The predictors can be continuous, categorical or a mix of both.
+
+Tạm dịch: Hồi quy logistic là một phương pháp dùng để fitting đường cong hồi quy $y = f(x)$, trong đó biến $y$ là biến phân loại còn biến $x$ có thể là biến phân loại and/or biến liên tục. Dạng sử dụng điển hình của mô hình hồi quy logistic là ta sẽ dự đoán giá trị của $y$ từ các chỉ tiêu $x$ đầu vào.
+
+>The categorical variable y, in general, can assume different values. In the simplest case scenario y is binary meaning that it can assume either the value 1 or 0. A classical example used in machine learning is email classification: given a set of attributes for each email such as a number of words, links, and pictures, the algorithm should decide whether the email is spam (1) or not (0). In this post, we call the model "binomial logistic regression", since the variable to predict is binary, however, logistic regression can also be used to predict a dependent variable which can assume more than 2 values. In this second case, we call the model "multinomial logistic regression". A typical example, for instance, would be classifying films between "Entertaining", "borderline" or "boring".
+
+Tạm dịch: Thông thường biến $y$ có hai giá trị $0$ hoặc $1$, nên gọi là binomial logistic regression, đây là mô hình đơn giản nhất của hồi quy logistic. Nếu $y$ có nhiều giá trị hơn thì gọi là "multinomial logistic regression".
+
+Để thực hiện hồi quy logistic trong R, ta sẽ sử dụng function `glm()` viết tắt của chữ Generalized Linear Models, hay còn gọi là mô hình hồi quy tuyến tính tổng quát, vốn bao gồm cả hai phương pháp hồi quy logistic và hồi quy tuyến tính.[^glm]
+
+
+## Bước 1: In bộ dữ liệu
+
+```{r}
+print(iris) # in full dataset
+```
+
+#### Tài liệu tham khảo
+
+[^perform_logistic]: [`https://datascienceplus.com/perform-logistic-regression-in-r/`](https://datascienceplus.com/perform-logistic-regression-in-r/)
+
+[^glm]: [`https://www.facebook.com/Huong.Dan.Tu.Hoc.R/posts/252583177691707`](https://www.facebook.com/Huong.Dan.Tu.Hoc.R/posts/252583177691707)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

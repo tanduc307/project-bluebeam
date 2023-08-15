@@ -1,0 +1,185 @@
+# **Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R** {.unnumbered}
+
+### Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa
+
+<span style="color: blue">**Phương pháp bề mặt đáp ứng (Response surface)**</span>
+
+`https://xdulieu.com/thiet-ke-thi-nghiem/tn5-be-mat-dap-ung/index.html`
+
+<span style="color: blue">**Hướng dẫn cách sử dụng package `rsm` để xử lý thí nghiệm tối ưu hóa**</span>
+
+`https://r-inthelab.net/2022/06/15/response-surface-designs-and-their-analysis-with-r/`
+
+### Tình huống thường gặp
+
+Bạn làm việc trong lĩnh vực công nghệ vi sinh, muốn tìm ra công thức nuôi cấy tế bào vi khuẩn tối ưu bằng phương pháp bề mặt đáp ứng (bố trí theo kiểu Box-Behnken design) với các yếu tố lần lượt là nhiệt độ, glucose, peptone, thời gian. Bình thường nếu làm trên Statgraphics thì cũng được, tuy nhiên giờ bạn muốn làm trên R thì như thế nào, có dễ thực hiện hay không.
+
+Bạn tham khảo cách làm như sau nhé.
+
+### Cách thực hiện
+
+<span style="color: red">**Bước 1: Thiết kế thí nghiệm gồm 4 yếu tố, 3 mức để làm cơ sở cho bố trí thực nghiệm**</span>
+
+```{r, message=FALSE, warning=FALSE}
+library(rsm)
+
+# Box-Behnken Design
+
+bo_tri_thi_nghiem <- bbd(
+    k  = 4,            # 4 yếu tố
+    n0 = 3,            # 3 điểm trung tâm
+    block = FALSE,     # No blocks 
+    randomize = FALSE, # Not randomized
+    coding = list(
+        x1 ~ (nhiet_do - 40) / 5,
+        x2 ~ (glucose - 100)/ 30,
+        x3 ~ (peptone - 30) / 15,
+        x4 ~ (thoi_gian - 24) / 12
+    )
+)
+
+print(bo_tri_thi_nghiem)
+```
+
+<span style="color: red">**Bước 2: Thí nghiệm thực tế và đưa dữ liệu vào R**</span>
+
+```{r, message=FALSE, warning=FALSE}
+## Ở đây mình chạy số liệu mô phỏng về mật độ tế bào (log CFU/mL)
+
+set.seed(14)
+log_te_bao <- sample(seq(from = 3, to = 10, length.out= 1000), size = 27, replace = TRUE)
+
+bo_tri_thi_nghiem$log_te_bao <- log_te_bao
+
+print(bo_tri_thi_nghiem)
+```
+
+<span style="color: red">**Bước 3: Tính toán model tối ưu hóa**</span>
+
+```{r, message=FALSE, warning=FALSE}
+ket_qua_model <- rsm(log_te_bao ~ SO(x1, x2, x3, x4), 
+                   data = bo_tri_thi_nghiem)
+
+summary(ket_qua_model)
+```
+
+<span style="color: red">**Bước 4: Vẽ đồ thị**</span>
+
+**Thể hiện toàn bộ tương quan giữa các yếu tố với output *mật độ tế bào***
+
+```{r, message=FALSE, warning=FALSE, fig.height = 6, fig.width = 10}
+par(mfrow = c(2, 3))         # 2 x 3 pictures on one plot
+persp(
+    ket_qua_model,           # Our model
+    ~ x1 + x2 + x3 + x4,     # A formula to obtain the 6 possible graphs
+    col = topo.colors(100),  # Color palette
+    contours = "colors",     # Include contours with the same color palette
+    # xlabs = c("Nhiệt độ (°C)", 
+    #           "Glucse (g/L)", 
+    #           "Peptone (g/L)", 
+    #           "Thời gian (giờ)" ), 
+    # zlab = "Mật độ tế bào (log CFU/mL)",
+    expand = 1,
+    cex = 0.8
+)
+```
+
+**Đồ thị tương quan giữa peptone và nhiệt độ**
+
+```{r, message=FALSE, warning=FALSE}
+ok <- persp(
+    ket_qua_model,            # Our model
+    ~ x1 + x3,    # A formula to obtain the 6 possible graphs
+    col = topo.colors(100), # Color palette
+    contours = "colors",     # Include contours with the same color palette
+    xlabs = c("\n\nNhiệt độ (°C)", 
+              "\n\nPeptone (g/L)"), 
+    # zlab = "\n\nMật độ tế bào (log CFU/mL)", # Dùng \n để cách hàng
+    cex.lab = 0.9,
+    expand = 0.8,
+    # theta = 30, phi = 30 # Xoay đồ thị,
+    ticktype = "detailed",
+    nticks = 4
+)
+par(xpd = NA, srt  = 95)  ## disable clipping and set string rotation
+text(-0.28, 0.02,"Mật độ tế bào (log CFU/mL)")
+
+## trích xuất tọa độ x, y, z
+ok$`x1 ~ x3`$x -> x
+ok$`x1 ~ x3`$y -> y
+ok$`x1 ~ x3`$z -> z
+```
+
+**Đồ thị tương quan giữa glucose và nhiệt độ**
+
+```{r, message=FALSE, warning=FALSE}
+persp(
+    ket_qua_model,            # Our model
+    ~ x1 + x2,    # A formula to obtain the 6 possible graphs
+    col = topo.colors(100), # Color palette
+    contours = "colors",     # Include contours with the same color palette
+    xlabs = c("\n\nNhiệt độ (°C)", 
+              "\n\nGlucose (g/L)"), 
+    # zlab = "\n\nMật độ tế bào (log CFU/mL)", # Dùng \n để cách hàng
+    cex.lab = 0.9,
+    expand = 0.8,
+    # theta = 30, phi = 30 # Xoay đồ thị,
+    ticktype = "detailed",
+    nticks = 4
+)
+par(xpd = NA, srt  = 95)  ## disable clipping and set string rotation
+text(-0.28, 0.02,"Mật độ tế bào (log CFU/mL)")
+```
+
+**Đồ thị đường đồng mức**
+
+```{r, message=FALSE, warning=FALSE, fig.height = 5, fig.width = 10}
+par(mfrow = c(2,3))       # 2 x 3 pictures on one plot
+contour(
+  ket_qua_model,            # Our model
+  ~ x1 + x2 + x3 + x4,    # A formula to obtain the 6 possible graphs 
+  image = TRUE,           # If image = TRUE, apply color to each contour
+  )
+```
+
+**Tìm điểm tối ưu**
+
+```{r, message=FALSE, warning=FALSE}
+opt_point <- summary(ket_qua_model)$canonical$xs
+# opt_point
+ 
+op_point_ru <- code2val(
+    opt_point,                     # Optimal point in coded units
+    codings = codings(bo_tri_thi_nghiem)  # Formulas to convert to factor units
+)
+op_point_ru
+```
+
+**Dự đoán kết quả đầu ra từ điểm tối ưu**
+
+```{r, message=FALSE, warning=FALSE}
+opt_point_df <- data.frame(  # predict() needs a data frame with the points 
+    x1 = opt_point[1],         # to be predicted 
+    x2 = opt_point[2],
+    x3 = opt_point[3],
+    x4 = opt_point[4]
+)
+
+best_response <- predict(
+    ket_qua_model,           # Our model
+    opt_point_df             # Data frame with points to be predicted 
+)
+
+names(best_response) <- "log_te_bao"
+best_response
+```
+
+**<mark>Kết quả trên có nghĩa là với điều kiện nuôi cấy ở `nhiệt độ` 40.1 (°C), `thời gian` 31.3 giờ, sử dụng môi trường nuôi cấy có `glucose` 87.1 g/L và `peptone` 13.5 g/L thì sẽ thu được kết quả tối ưu là 7.13 log CFU/mL hay là 1.3 × 10<sup>7</sup> CFU/mL.</mark>** 
+
+#### Tài liệu tham khảo
+
+1. `https://cran.r-project.org/web/packages/plot3D/`
+
+2. `http://www.sthda.com/english/wiki/impressive-package-for-3d-and-4d-graph-r-software-and-data-visualization`
+
+3. `https://plotly.com/r/3d-surface-plots/`

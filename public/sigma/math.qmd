@@ -1,0 +1,9 @@
+---
+title: "math"
+format: 
+  html:
+    page-layout: full
+---
+
+
+$${\sigma ^2} = {{\sum\limits_{i = 1}^N {{{({x_i} - \mu )}^2}} } \over N}$$

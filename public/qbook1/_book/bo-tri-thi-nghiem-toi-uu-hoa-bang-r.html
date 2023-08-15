@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thống kê sinh học: Từ lý thuyết đến ứng dụng - Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" rel="next">
+<link href="./phan-tich-ancova-trong-r.html" rel="prev">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html"><strong>Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</strong></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./"></a><a href="https://thongkesinhhoc.quarto.pub/">Thống kê sinh học: Từ lý thuyết đến ứng dụng</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Giới thiệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./co-so-ly-thuyet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cơ sở lý thuyết</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./khoang-tin-cay.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 4: Khoảng tin cậy là gì?</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 14: Phân tích ANOVA 2 yếu tố kiểu RCBD trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-ancova-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 15: Phân tích ANCOVA trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><strong>Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 26: Workflow phân tích thống kê qua dataset <code>iris</code></strong></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tài liệu tham khảo</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><strong>Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R</strong></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa" class="level3">
+<h3 class="anchored" data-anchor-id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa">Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa</h3>
+<p><span style="color: blue"><strong>Phương pháp bề mặt đáp ứng (Response surface)</strong></span></p>
+<p><code>https://xdulieu.com/thiet-ke-thi-nghiem/tn5-be-mat-dap-ung/index.html</code></p>
+<p><span style="color: blue"><strong>Hướng dẫn cách sử dụng package <code>rsm</code> để xử lý thí nghiệm tối ưu hóa</strong></span></p>
+<p><code>https://r-inthelab.net/2022/06/15/response-surface-designs-and-their-analysis-with-r/</code></p>
+</section>
+<section id="tình-huống-thường-gặp" class="level3">
+<h3 class="anchored" data-anchor-id="tình-huống-thường-gặp">Tình huống thường gặp</h3>
+<p>Bạn làm việc trong lĩnh vực công nghệ vi sinh, muốn tìm ra công thức nuôi cấy tế bào vi khuẩn tối ưu bằng phương pháp bề mặt đáp ứng (bố trí theo kiểu Box-Behnken design) với các yếu tố lần lượt là nhiệt độ, glucose, peptone, thời gian. Bình thường nếu làm trên Statgraphics thì cũng được, tuy nhiên giờ bạn muốn làm trên R thì như thế nào, có dễ thực hiện hay không.</p>
+<p>Bạn tham khảo cách làm như sau nhé.</p>
+</section>
+<section id="cách-thực-hiện" class="level3">
+<h3 class="anchored" data-anchor-id="cách-thực-hiện">Cách thực hiện</h3>
+<p><span style="color: red"><strong>Bước 1: Thiết kế thí nghiệm gồm 4 yếu tố, 3 mức để làm cơ sở cho bố trí thực nghiệm</strong></span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsm)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Box-Behnken Design</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>bo_tri_thi_nghiem <span class="ot">&lt;-</span> <span class="fu">bbd</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">k  =</span> <span class="dv">4</span>,            <span class="co"># 4 yếu tố</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n0 =</span> <span class="dv">3</span>,            <span class="co"># 3 điểm trung tâm</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">block =</span> <span class="cn">FALSE</span>,     <span class="co"># No blocks </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">randomize =</span> <span class="cn">FALSE</span>, <span class="co"># Not randomized</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">coding =</span> <span class="fu">list</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        x1 <span class="sc">~</span> (nhiet_do <span class="sc">-</span> <span class="dv">40</span>) <span class="sc">/</span> <span class="dv">5</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        x2 <span class="sc">~</span> (glucose <span class="sc">-</span> <span class="dv">100</span>)<span class="sc">/</span> <span class="dv">30</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        x3 <span class="sc">~</span> (peptone <span class="sc">-</span> <span class="dv">30</span>) <span class="sc">/</span> <span class="dv">15</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        x4 <span class="sc">~</span> (thoi_gian <span class="sc">-</span> <span class="dv">24</span>) <span class="sc">/</span> <span class="dv">12</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bo_tri_thi_nghiem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   run.order std.order nhiet_do glucose peptone thoi_gian
+1          1         1       35      70      30        24
+2          2         2       45      70      30        24
+3          3         3       35     130      30        24
+4          4         4       45     130      30        24
+5          5         5       40     100      15        12
+6          6         6       40     100      45        12
+7          7         7       40     100      15        36
+8          8         8       40     100      45        36
+9          9         9       35     100      30        12
+10        10        10       45     100      30        12
+11        11        11       35     100      30        36
+12        12        12       45     100      30        36
+13        13        13       40      70      15        24
+14        14        14       40     130      15        24
+15        15        15       40      70      45        24
+16        16        16       40     130      45        24
+17        17        17       35     100      15        24
+18        18        18       45     100      15        24
+19        19        19       35     100      45        24
+20        20        20       45     100      45        24
+21        21        21       40      70      30        12
+22        22        22       40     130      30        12
+23        23        23       40      70      30        36
+24        24        24       40     130      30        36
+25        25        25       40     100      30        24
+26        26        26       40     100      30        24
+27        27        27       40     100      30        24
+
+Data are stored in coded form using these coding formulas ...
+x1 ~ (nhiet_do - 40)/5
+x2 ~ (glucose - 100)/30
+x3 ~ (peptone - 30)/15
+x4 ~ (thoi_gian - 24)/12</code></pre>
+</div>
+</div>
+<p><span style="color: red"><strong>Bước 2: Thí nghiệm thực tế và đưa dữ liệu vào R</strong></span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Ở đây mình chạy số liệu mô phỏng về mật độ tế bào (log CFU/mL)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">14</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>log_te_bao <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">3</span>, <span class="at">to =</span> <span class="dv">10</span>, <span class="at">length.out=</span> <span class="dv">1000</span>), <span class="at">size =</span> <span class="dv">27</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>bo_tri_thi_nghiem<span class="sc">$</span>log_te_bao <span class="ot">&lt;-</span> log_te_bao</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bo_tri_thi_nghiem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   run.order std.order nhiet_do glucose peptone thoi_gian log_te_bao
+1          1         1       35      70      30        24   4.849850
+2          2         2       45      70      30        24   8.885886
+3          3         3       35     130      30        24   4.863864
+4          4         4       45     130      30        24   5.599600
+5          5         5       40     100      15        12   9.572573
+6          6         6       40     100      45        12   8.262262
+7          7         7       40     100      15        36   8.024024
+8          8         8       40     100      45        36   6.006006
+9          9         9       35     100      30        12   3.553554
+10        10        10       45     100      30        12   6.048048
+11        11        11       35     100      30        36   3.175175
+12        12        12       45     100      30        36   6.461461
+13        13        13       40      70      15        24   5.466466
+14        14        14       40     130      15        24   6.419419
+15        15        15       40      70      45        24   9.292292
+16        16        16       40     130      45        24   5.431431
+17        17        17       35     100      15        24   7.288288
+18        18        18       45     100      15        24   3.686687
+19        19        19       35     100      45        24   6.587588
+20        20        20       45     100      45        24   3.735736
+21        21        21       40      70      30        12   6.293293
+22        22        22       40     130      30        12   9.138138
+23        23        23       40      70      30        36   6.811812
+24        24        24       40     130      30        36   4.268268
+25        25        25       40     100      30        24   7.393393
+26        26        26       40     100      30        24   7.512513
+27        27        27       40     100      30        24   6.538539
+
+Data are stored in coded form using these coding formulas ...
+x1 ~ (nhiet_do - 40)/5
+x2 ~ (glucose - 100)/30
+x3 ~ (peptone - 30)/15
+x4 ~ (thoi_gian - 24)/12</code></pre>
+</div>
+</div>
+<p><span style="color: red"><strong>Bước 3: Tính toán model tối ưu hóa</strong></span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ket_qua_model <span class="ot">&lt;-</span> <span class="fu">rsm</span>(log_te_bao <span class="sc">~</span> <span class="fu">SO</span>(x1, x2, x3, x4), </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> bo_tri_thi_nghiem)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ket_qua_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+rsm(formula = log_te_bao ~ SO(x1, x2, x3, x4), data = bo_tri_thi_nghiem)
+
+             Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)  7.148148   1.061205  6.7359 2.086e-05 ***
+x1           0.341592   0.530603  0.6438   0.53183    
+x2          -0.489907   0.530603 -0.9233   0.37404    
+x3          -0.095179   0.530603 -0.1794   0.86063    
+x4          -0.676760   0.530603 -1.2755   0.22629    
+x1:x2       -0.825075   0.919031 -0.8978   0.38697    
+x1:x3        0.187437   0.919031  0.2040   0.84181    
+x1:x4        0.197948   0.919031  0.2154   0.83308    
+x2:x3       -1.203453   0.919031 -1.3095   0.21489    
+x2:x4       -1.347097   0.919031 -1.4658   0.16842    
+x3:x4       -0.176927   0.919031 -0.1925   0.85056    
+x1^2        -1.720512   0.795904 -2.1617   0.05155 .  
+x2^2        -0.147439   0.795904 -0.1852   0.85613    
+x3^2         0.159117   0.795904  0.1999   0.84489    
+x4^2        -0.110652   0.795904 -0.1390   0.89173    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Multiple R-squared:  0.5306,    Adjusted R-squared:  -0.01707 
+F-statistic: 0.9688 on 14 and 12 DF,  p-value: 0.528
+
+Analysis of Variance Table
+
+Response: log_te_bao
+                    Df Sum Sq Mean Sq F value  Pr(&gt;F)
+FO(x1, x2, x3, x4)   4  9.885  2.4713  0.7315 0.58767
+TWI(x1, x2, x3, x4)  6 16.197  2.6996  0.7990 0.58878
+PQ(x1, x2, x3, x4)   4 19.742  4.9354  1.4608 0.27431
+Residuals           12 40.542  3.3785                
+Lack of fit         10 39.977  3.9977 14.1630 0.06771
+Pure error           2  0.565  0.2823                
+
+Stationary point of response surface:
+        x1         x2         x3         x4 
+ 0.1775194 -0.4311620 -1.0998650  0.6045616 
+
+Stationary point in original units:
+ nhiet_do   glucose   peptone thoi_gian 
+ 40.88760  87.06514  13.50203  31.25474 
+
+Eigenanalysis:
+eigen() decomposition
+$values
+[1]  0.8592213  0.1237387 -0.9747800 -1.8276662
+
+$vectors
+         [,1]        [,2]       [,3]       [,4]
+x1  0.1472489  0.03064641  0.2349074 0.96031092
+x2 -0.6884443 -0.13747489 -0.6585456 0.27104034
+x3  0.5555084 -0.71986015 -0.4143418 0.03914888
+x4  0.4424620  0.67967846 -0.5826295 0.05298518</code></pre>
+</div>
+</div>
+<p><span style="color: red"><strong>Bước 4: Vẽ đồ thị</strong></span></p>
+<p><strong>Thể hiện toàn bộ tương quan giữa các yếu tố với output <em>mật độ tế bào</em></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))         <span class="co"># 2 x 3 pictures on one plot</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    ket_qua_model,           <span class="co"># Our model</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x4,     <span class="co"># A formula to obtain the 6 possible graphs</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">topo.colors</span>(<span class="dv">100</span>),  <span class="co"># Color palette</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">contours =</span> <span class="st">"colors"</span>,     <span class="co"># Include contours with the same color palette</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># xlabs = c("Nhiệt độ (°C)", </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           "Glucse (g/L)", </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           "Peptone (g/L)", </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           "Thời gian (giờ)" ), </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># zlab = "Mật độ tế bào (log CFU/mL)",</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="dv">1</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.8</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bo-tri-thi-nghiem-toi-uu-hoa-bang-r_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p><strong>Đồ thị tương quan giữa peptone và nhiệt độ</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ok <span class="ot">&lt;-</span> <span class="fu">persp</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ket_qua_model,            <span class="co"># Our model</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> x1 <span class="sc">+</span> x3,    <span class="co"># A formula to obtain the 6 possible graphs</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">topo.colors</span>(<span class="dv">100</span>), <span class="co"># Color palette</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">contours =</span> <span class="st">"colors"</span>,     <span class="co"># Include contours with the same color palette</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlabs =</span> <span class="fu">c</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">Nhiệt độ (°C)"</span>, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"</span><span class="sc">\n\n</span><span class="st">Peptone (g/L)"</span>), </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># zlab = "\n\nMật độ tế bào (log CFU/mL)", # Dùng \n để cách hàng</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex.lab =</span> <span class="fl">0.9</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fl">0.8</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># theta = 30, phi = 30 # Xoay đồ thị,</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ticktype =</span> <span class="st">"detailed"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nticks =</span> <span class="dv">4</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xpd =</span> <span class="cn">NA</span>, <span class="at">srt  =</span> <span class="dv">95</span>)  <span class="do">## disable clipping and set string rotation</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="sc">-</span><span class="fl">0.28</span>, <span class="fl">0.02</span>,<span class="st">"Mật độ tế bào (log CFU/mL)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bo-tri-thi-nghiem-toi-uu-hoa-bang-r_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## trích xuất tọa độ x, y, z</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ok<span class="sc">$</span><span class="st">`</span><span class="at">x1 ~ x3</span><span class="st">`</span><span class="sc">$</span>x <span class="ot">-&gt;</span> x</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>ok<span class="sc">$</span><span class="st">`</span><span class="at">x1 ~ x3</span><span class="st">`</span><span class="sc">$</span>y <span class="ot">-&gt;</span> y</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ok<span class="sc">$</span><span class="st">`</span><span class="at">x1 ~ x3</span><span class="st">`</span><span class="sc">$</span>z <span class="ot">-&gt;</span> z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Đồ thị tương quan giữa glucose và nhiệt độ</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">persp</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ket_qua_model,            <span class="co"># Our model</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> x1 <span class="sc">+</span> x2,    <span class="co"># A formula to obtain the 6 possible graphs</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">topo.colors</span>(<span class="dv">100</span>), <span class="co"># Color palette</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">contours =</span> <span class="st">"colors"</span>,     <span class="co"># Include contours with the same color palette</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlabs =</span> <span class="fu">c</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">Nhiệt độ (°C)"</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"</span><span class="sc">\n\n</span><span class="st">Glucose (g/L)"</span>), </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># zlab = "\n\nMật độ tế bào (log CFU/mL)", # Dùng \n để cách hàng</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex.lab =</span> <span class="fl">0.9</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fl">0.8</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># theta = 30, phi = 30 # Xoay đồ thị,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ticktype =</span> <span class="st">"detailed"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nticks =</span> <span class="dv">4</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xpd =</span> <span class="cn">NA</span>, <span class="at">srt  =</span> <span class="dv">95</span>)  <span class="do">## disable clipping and set string rotation</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="sc">-</span><span class="fl">0.28</span>, <span class="fl">0.02</span>,<span class="st">"Mật độ tế bào (log CFU/mL)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bo-tri-thi-nghiem-toi-uu-hoa-bang-r_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Đồ thị đường đồng mức</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))       <span class="co"># 2 x 3 pictures on one plot</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  ket_qua_model,            <span class="co"># Our model</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3 <span class="sc">+</span> x4,    <span class="co"># A formula to obtain the 6 possible graphs </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">image =</span> <span class="cn">TRUE</span>,           <span class="co"># If image = TRUE, apply color to each contour</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bo-tri-thi-nghiem-toi-uu-hoa-bang-r_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p><strong>Tìm điểm tối ưu</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>opt_point <span class="ot">&lt;-</span> <span class="fu">summary</span>(ket_qua_model)<span class="sc">$</span>canonical<span class="sc">$</span>xs</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># opt_point</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>op_point_ru <span class="ot">&lt;-</span> <span class="fu">code2val</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    opt_point,                     <span class="co"># Optimal point in coded units</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">codings =</span> <span class="fu">codings</span>(bo_tri_thi_nghiem)  <span class="co"># Formulas to convert to factor units</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>op_point_ru</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> nhiet_do   glucose   peptone thoi_gian 
+ 40.88760  87.06514  13.50203  31.25474 </code></pre>
+</div>
+</div>
+<p><strong>Dự đoán kết quả đầu ra từ điểm tối ưu</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>opt_point_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(  <span class="co"># predict() needs a data frame with the points </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x1 =</span> opt_point[<span class="dv">1</span>],         <span class="co"># to be predicted </span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x2 =</span> opt_point[<span class="dv">2</span>],</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x3 =</span> opt_point[<span class="dv">3</span>],</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x4 =</span> opt_point[<span class="dv">4</span>]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>best_response <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    ket_qua_model,           <span class="co"># Our model</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    opt_point_df             <span class="co"># Data frame with points to be predicted </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(best_response) <span class="ot">&lt;-</span> <span class="st">"log_te_bao"</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>best_response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>log_te_bao 
+  7.131852 </code></pre>
+</div>
+</div>
+<p><strong><mark>Kết quả trên có nghĩa là với điều kiện nuôi cấy ở <code>nhiệt độ</code> 40.1 (°C), <code>thời gian</code> 31.3 giờ, sử dụng môi trường nuôi cấy có <code>glucose</code> 87.1 g/L và <code>peptone</code> 13.5 g/L thì sẽ thu được kết quả tối ưu là 7.13 log CFU/mL hay là 1.3 × 10<sup>7</sup> CFU/mL.</mark></strong></p>
+<section id="tài-liệu-tham-khảo" class="level4">
+<h4 class="anchored" data-anchor-id="tài-liệu-tham-khảo">Tài liệu tham khảo</h4>
+<ol type="1">
+<li><p><code>https://cran.r-project.org/web/packages/plot3D/</code></p></li>
+<li><p><code>http://www.sthda.com/english/wiki/impressive-package-for-3d-and-4d-graph-r-software-and-data-visualization</code></p></li>
+<li><p><code>https://plotly.com/r/3d-surface-plots/</code></p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./phan-tich-ancova-trong-r.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><strong>Bài 15: Phân tích ANCOVA trong R</strong></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="pagination-link">
+        <span class="nav-page-text"><strong>Bài 26: Workflow phân tích thống kê qua dataset <code>iris</code></strong></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

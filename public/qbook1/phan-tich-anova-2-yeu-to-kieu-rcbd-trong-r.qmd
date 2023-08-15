@@ -1,0 +1,181 @@
+# **Bài 14: Phân tích ANOVA 2 yếu tố kiểu RCBD trong R** {.unnumbered}
+
+### **Bước 1: Import dữ liệu**
+
+```{r}
+library(readxl)
+data_anova <- read_excel("test.xlsx", 
+                         sheet = "anova-twoway", range = "D5:F53")
+data_anova <- as.data.frame(data_anova)
+data_anova$diet <- as.factor(data_anova$diet)
+data_anova$time <- as.factor(data_anova$time)
+data_anova -> my_data
+
+my_data
+```
+
+```{r}
+# Bố trí thí nghiệm
+table(data_anova$diet, data_anova$time)
+```
+
+### **Bước 2: Đánh giá mức độ phân bố chuẩn**
+
+Check the normality assumpttion
+
+<span style="color: blue">**Cách 1**</span>
+
+```{r, message=FALSE, warning=FALSE}
+library(car)
+leveneTest(stability ~ diet*time, data = my_data)
+```
+
+From the output above we can see that the p-value is (0.6936) not less than the significance level of 0.05. This means that there is no evidence to suggest that the variance across groups is statistically significantly different. Therefore, we can assume the homogeneity of variances in the different treatment groups.
+
+**Tạm dịch: Kết quả cho thấy p-value là 0.6936 lớn hơn 0.05 (giả thuyết cho là có sự phân bố không chuẩn - heterogeneity). Do đó bộ dataset này có sự phân bố chuẩn (homogeneity) trong sự khác biệt giữa các nghiệm thức.**
+
+<span style="color: blue">**Cách 2**</span>
+
+**Cần tính anova trước để có data vẽ đồ thị qqplot**
+
+```{r, message=FALSE, warning=FALSE}
+# Compute two-way ANOVA test
+res.aov2 <- aov(stability ~ diet + time, data = my_data)
+# summary(res.aov2)
+# anova(res.aov2)
+
+# Compute two-way ANOVA test with interaction effect
+res.aov3 <- aov(stability ~ diet + time + diet:time, data = my_data)
+# anova(res.aov3)
+```
+
+**Vẽ đồ thị**
+
+```{r, message=FALSE, warning=FALSE}
+plot(res.aov3, 1) ## Homogeneity of variances
+plot(res.aov3, 2) ## Check the normality assumpttion
+```
+
+Phát hiện các data point 6, 13, 15 là outlier, *có thể* loại ra để làm dataset phân bố chuẩn hơn.
+
+<span style="color: blue">**Cách 3**</span>
+
+```{r, message=FALSE, warning=FALSE}
+# Extract the residuals
+aov_residuals <- residuals(object = res.aov3)
+# Run Shapiro-Wilk test
+shapiro.test(x = aov_residuals) 
+```
+
+p-value từ test Shapiro-Wilk normality cho thấy nhỏ hơn 0.05 (giả thuyết là phân bố chuẩn), do đó về mặt ý nghĩa thống kê thì bộ dataset này có phân bố chuẩn.
+
+### **Bước 3: Khảo sát đặc điểm dữ liệu**
+
+**Histogram theo `time`**
+
+```{r, message=FALSE, warning=FALSE}
+library(lattice)
+histogram( ~ stability | time, data = my_data,
+           xlab = "Stability (%)", type = "density",
+           breaks = seq(from = 80, to = 95, by = 0.4),
+           panel = function(x, ...) {
+             panel.histogram(x, ...)
+             panel.mathdensity(dmath = dnorm, col = "black",
+                               args = list(mean=mean(x),sd=sd(x)))
+           } )
+```
+
+**Box plot with multiple groups**
+
+```{r, message=FALSE, warning=FALSE}
+library(ggpubr)
+ggboxplot(my_data, x = "diet", y = "stability", color = "time",
+          palette = c("#00AFBB", "#E7B800"))
+```
+
+**Line plots with multiple groups**
+
+```{r, message=FALSE, warning=FALSE}
+# Add error bars: mean_se
+# (other values include: mean_sd, mean_ci, median_iqr, ....)
+library("ggpubr")
+ggline(my_data, x = "diet", y = "stability", color = "time",
+       add = c("mean_sd", "dotplot"),
+       palette = c("#00AFBB", "#E7B800"))
+```
+
+**Box plot with two factor variables**
+
+```{r, message=FALSE, warning=FALSE, fig.width=9}
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 7, 1, 6))
+boxplot(stability ~ diet * time, data = my_data, frame = TRUE, 
+        col = c("#00AFBB", "#E7B800"), horizontal = TRUE, las = 1,
+        axisnames = TRUE, ylab = "", xlab = "Stability (%)")
+par(oldpar)
+```
+
+<span style="color: red">**Nếu muốn vẽ `boxplot` theo thứ tự các cột thì cần `reorder` cột factor `diet` theo `stability`**</span>
+
+```{r, message=FALSE, warning=FALSE, fig.width=9}
+my_data$diet <- reorder(my_data$diet, my_data$stability, decreasing = TRUE) 
+my_data$time <- reorder(my_data$time, my_data$stability, decreasing = TRUE) 
+
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 7, 1, 6))
+boxplot(stability ~ diet * time, data = my_data, frame = TRUE, 
+        col = c("#00AFBB", "#E7B800"), horizontal = TRUE, las = 1,
+        axisnames = TRUE, ylab = "", xlab = "Stability (%)")
+par(oldpar)
+```
+
+**Two-way interaction plot**
+
+```{r, message=FALSE, warning=FALSE, fig.width=9}
+interaction.plot(x.factor = my_data$diet, trace.factor = my_data$time, 
+                 response = my_data$stability, fun = mean, 
+                 type = "b", legend = TRUE, 
+                 xlab = "Diet", ylab ="Stability (%)",
+                 pch = c(1, 19), col = c("#00AFBB", "#E7B800"),
+                 ylim = c(50, 100))
+```
+
+### **Bước 4: Phân tích ANOVA 2 yếu tố CRD**
+
+**Tính p-value**
+
+```{r, message=FALSE, warning=FALSE}
+# Compute two-way ANOVA test
+res.aov2 <- aov(stability ~ diet + time, data = my_data)
+# summary(res.aov2)
+anova(res.aov2)
+
+# Compute two-way ANOVA test with interaction effect
+res.aov3 <- aov(stability ~ diet + time + diet:time, data = my_data)
+anova(res.aov3)
+```
+
+**Phân hạng**
+
+```{r, message=FALSE, warning=FALSE}
+library(agricolae)
+LSD.test(res.aov2, c("diet", "time"), console = TRUE) 
+
+duncan.test(res.aov2, c("diet", "time"), console = TRUE) 
+
+HSD.test(res.aov2, c("diet", "time"), console = TRUE) 
+```
+
+#### Tài liệu tham khảo
+
+1.  `http://www.sthda.com/english/wiki/two-way-anova-test-in-r`
+
+2.  `https://stackoverflow.com/questions/43123462/how-to-obtain-rmse-out-of-lm-result`
+
+3.  `https://online.stat.psu.edu/stat501/lesson/2/2.6`
+
+4.  `https://rcompanion.org/handbook/G_14.html`
+
+5.  RMSE (Root Mean Square Error) `https://agronomy4future.org/?p=15930`
+
+6.  `https://stats.stackexchange.com/questions/445200/coefficient-of-variation-for-beween-groups`

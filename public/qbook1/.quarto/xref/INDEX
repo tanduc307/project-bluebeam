@@ -1,0 +1,32 @@
+{
+  "index.qmd": {
+    "index.html": "02de8e79"
+  },
+  "co-so-ly-thuyet.qmd": {
+    "co-so-ly-thuyet.html": "e9c56430"
+  },
+  "khoang-tin-cay.qmd": {
+    "khoang-tin-cay.html": "67978f3b"
+  },
+  "phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd": {
+    "phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html": "831ea2bf"
+  },
+  "phan-tich-ancova-trong-r.qmd": {
+    "phan-tich-ancova-trong-r.html": "440da63a"
+  },
+  "bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd": {
+    "bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html": "a9bd2183"
+  },
+  "references.qmd": {
+    "references.html": "28d064c2"
+  },
+  "workflow-phan-tich-thong-ke-qua-dataset-iris.qmd": {
+    "workflow-phan-tich-thong-ke-qua-dataset-iris.html": "f734f953"
+  },
+  "huong-dan-phan-tich-logistic-regression.qmd": {
+    "huong-dan-phan-tich-logistic-regression.html": "74c43f87"
+  },
+  "example-partial-least-squares-and-principal-component-regression.qmd": {
+    "example-partial-least-squares-and-principal-component-regression.html": "b1f52a8d"
+  }
+}
