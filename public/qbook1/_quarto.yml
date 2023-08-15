@@ -5,7 +5,8 @@ book:
   title: "Thống kê sinh học: Từ lý thuyết đến ứng dụng"
   author: "Duc Nguyen | Founder of tuhocr.com"
   site-url: https://www.tuhocr.com/
-  date: "2023-08-03"
+  date: last-modified
+  date-format: "[Cập nhậpA:] YYYY MMMM DD"
   cover-image: cover.png
   favicon: favicon.png
   # comments:
@@ -18,10 +19,14 @@ book:
         - khoang-tin-cay.qmd
         - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
         - phan-tich-ancova-trong-r.qmd
+        - khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.qmd
         - bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd
         - workflow-phan-tich-thong-ke-qua-dataset-iris.qmd
         # - huong-dan-phan-tich-logistic-regression.qmd
         - example-partial-least-squares-and-principal-component-regression.qmd
+    - part: "Kỹ thuật xử lý dữ liệu"
+      chapters:
+        - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
     - references.qmd
     
   sidebar:

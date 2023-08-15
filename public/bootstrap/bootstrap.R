@@ -189,14 +189,14 @@ system("cat ok.txt | sed 1d")
 cat("cat ok.txt | sed 1d > wert.txt")
 
 
+readline("asdasd") -> as
+as
 
 
+?readline
+
+print('aa"aa"d')
+cat('aa"aa"d')
 
 
-
-
-
-
-
-
-
+?readline

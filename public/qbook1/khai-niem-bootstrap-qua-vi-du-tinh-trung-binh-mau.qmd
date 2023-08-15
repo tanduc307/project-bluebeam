@@ -1,0 +1,97 @@
+# **Bài 19: Khái niệm về bootstrap qua ví dụ tính trung bình mẫu** {.unnumbered}
+
+### **Định nghĩa: What is bootstrap?**
+
+Bootstrap is a resampling method where large numbers of samples of the same size are repeatedly drawn, with replacement, from a single original sample.
+
+The basic bootstrapping procedure is as follows:
+              
+1. Take *k* repeated replacement samples from a given dataset.
+
+2. Calculate the statistic of interest for each sample.
+
+3. These yields *k* different estimates for a given statistic, which you can then use to calculate the statistic’s standard error and create a confidence interval.
+
+<mark>Tạm dịch: Bootstrap là phương pháp tái lấy mẫu (cho phép lấy trùng) từ **1 mẫu gốc** để tạo ra rất nhiều mẫu *giả lập* nhằm tính toán giá trị thống kê mà bạn quan tâm (ví dụ trung bình), rồi từ đó ta sẽ tính khoảng tin cậy hay sai số chuẩn trên các kết quả trung bình *giả lập* trong ý tưởng phân phối của dữ liệu mẫu lớn này sẽ là phân phối chuẩn (Law of large numbers).</mark> 
+
+### **Bước 1: Mô tả ví dụ minh họa**
+
+Để hiểu khái niệm bootstrap một cách cơ bản nhất, ta sẽ xét qua ví dụ đo cân nặng của một đối tượng nghiên cứu nào đó rồi tính ra khoảng tin cậy. `https://thongkesinhhoc.quarto.pub/khoang-tin-cay.html`
+
+Ví dụ một nhà nghiên cứu muốn biết cân nặng trung bình của người dân ở một tỉnh nào đó, thì thông thường ta có thể cân toàn bộ người dân trong tỉnh đó (với số dân khoảng 400000 người) sau đó cộng lại lấy trung bình, ta sẽ có được trung bình quần thể $\mu$ là con số chính xác tuyệt đối đại diện cho trung bình của toàn bộ người dân ở tỉnh đó.
+
+Tuy nhiên vì không có kinh phí để đo đạc cùng lúc số lượng người lớn như vậy, mà nếu đo theo kiểu lần lượt thì cân nặng của dân số sẽ thay đổi (người đo đầu tiên với người đo thứ 1000 thì cân nặng của người đo đầu tiên đã khác ở thời điểm đó rồi) nên ngay cả cách tiếp cận đo khối lượng tổng thể dân số thì kết quả cũng không chính xác *nếu việc đo khối lượng không diễn ra cùng một lúc*.
+
+Như vậy, nếu ta chỉ có thể đo một vài người dân trong tỉnh đó (tất nhiên sẽ phải lấy mẫu ngẫu nhiên) rồi tìm cách *resampling* hay là tái lấy mẫu trên chính số liệu của lần đo thực này thì ta sẽ có rất nhiều mẫu *giả lập/simulation* để tính ra khoảng tin cậy mà giá trị trung bình $\mu$ của *quần thể* sẽ dao động trong đó.
+
+```{r}
+set.seed(123)
+
+## Giả sử ta đo 10  người
+
+can_nang <- c(60, 55, 71, 45, 89, 56, 73, 49, 69, 88)
+
+sample_size <- length(can_nang)
+
+n_boot <- 1000 # số lần sẽ resampling với replacement là TRUE
+
+data_boot <- data.frame() # lưu kết quả tái lấy mẫu này trong data frame
+
+for (i in 1:n_boot)
+{
+               cach_lay_mau <- sample(1:length(can_nang), replace = TRUE)
+               
+               data_boot <- rbind(data_boot, can_nang[cach_lay_mau])
+}
+
+colnames(data_boot) <- paste("Người thứ", 1:length(can_nang)) 
+rownames(data_boot) <- paste("Lần lấy mẫu giả lập thứ", 1:n_boot)
+
+apply(X = data_boot, MARGIN = 1, FUN = mean) -> ket_qua_trung_binh
+
+data_boot$`Kết quả trung bình` <- ket_qua_trung_binh
+
+# write.table(x = data_boot, file = "data_boot.tsv", 
+#             row.names = F, sep = "\t\t", quote = FALSE)
+
+library(kableExtra)
+kable(data_boot, "simple") -> ok
+
+write.table(ok, "data_boot.txt", quote = FALSE, row.names = FALSE)
+```
+
+```{bash}
+cat data_boot.txt | sed 1d > data_boot_ok.txt
+```
+
+### **Bước 2: Vẽ đồ thị**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### **Tài liệu tham khảo**
+
+1. `https://towardsdatascience.com/a-practical-guide-to-bootstrap-with-r-examples-bd975ec6dcea`
+
+2. `https://rpubs.com/evelynebrie/bootstrapping`
+
+3. `https://datasciencetut.com/how-to-perform-bootstrapping-in-r/`
+
+4. `https://bash-intro.rsquaredacademy.com/r-command-line.html`
