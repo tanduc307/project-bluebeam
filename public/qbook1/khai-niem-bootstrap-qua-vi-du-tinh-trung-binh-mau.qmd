@@ -30,7 +30,17 @@ set.seed(123)
 ## Giả sử ta đo 10  người
 
 can_nang <- c(60, 55, 71, 45, 89, 56, 73, 49, 69, 88)
+```
 
+```{r}
+## Kết quả trung bình từ mẫu quan sát
+
+mean_mau_quan_sat <- mean(can_nang)
+
+mean_mau_quan_sat
+```
+
+```{r}
 sample_size <- length(can_nang)
 
 n_boot <- 1000 # số lần sẽ resampling với replacement là TRUE
@@ -61,8 +71,11 @@ write.table(ok, "data_boot.txt", quote = FALSE, row.names = FALSE)
 ```
 
 ```{bash}
-cat data_boot.txt | sed 1d > data_boot_ok.txt
+cat data_boot.txt | sed 1d > data_boot_ok.txt # run dòng lệnh này trong bash để bỏ dòng đầu tiên
 ```
+
+Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết quả trung bình tương ứng.
+
 
 ### **Bước 2: Vẽ đồ thị**
 
