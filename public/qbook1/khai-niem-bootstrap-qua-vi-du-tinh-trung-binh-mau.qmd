@@ -22,7 +22,7 @@ Ví dụ một nhà nghiên cứu muốn biết cân nặng trung bình của ng
 
 Tuy nhiên vì không có kinh phí để đo đạc cùng lúc số lượng người lớn như vậy, mà nếu đo theo kiểu lần lượt thì cân nặng của dân số sẽ thay đổi (người đo đầu tiên với người đo thứ 1000 thì cân nặng của người đo đầu tiên đã khác ở thời điểm đó rồi) nên ngay cả cách tiếp cận đo khối lượng tổng thể dân số thì kết quả cũng không chính xác *nếu việc đo khối lượng không diễn ra cùng một lúc*.
 
-Như vậy, nếu ta chỉ có thể đo một vài người dân trong tỉnh đó (tất nhiên sẽ phải lấy mẫu ngẫu nhiên) rồi tìm cách *resampling* hay là tái lấy mẫu trên chính số liệu của lần đo thực này thì ta sẽ có rất nhiều mẫu *giả lập/simulation* để tính ra khoảng tin cậy mà giá trị trung bình $\mu$ của *quần thể* sẽ dao động trong đó.
+Như vậy, nếu ta chỉ có thể đo một vài người dân trong tỉnh đó (tất nhiên sẽ phải lấy mẫu ngẫu nhiên) rồi tìm cách *resampling* hay là tái lấy mẫu trên chính số liệu của lần đo thực này thì ta sẽ có rất nhiều mẫu *giả lập/simulation* để tính ra khoảng tin cậy mà nếu lấy mẫu ở lần tiếp theo thì giá trị trung bình của mẫu đó sẽ dao động trong khoảng này.
 
 ```{r}
 set.seed(123)
@@ -42,7 +42,7 @@ mean_mau_quan_sat
 
 **Thực hiện bootstrap với 1000 lần lặp lại cho sample size là 10 cá thể**
 
-```{r}
+```{r, eval=FALSE}
 sample_size <- length(can_nang)
 
 n_boot <- 1000 # số lần sẽ resampling với replacement là TRUE
@@ -74,33 +74,53 @@ kable(data_boot, "simple") -> ok
 write.table(ok, "data_boot.txt", quote = FALSE, row.names = FALSE)
 ```
 
-```{bash}
+```{bash, eval=FALSE}
 cat data_boot.txt | sed 1d > data_boot_ok.txt # run dòng lệnh này trong bash để bỏ dòng đầu tiên
 ```
 
-Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết quả trung bình tương ứng. [View](data_boot_ok.txt)
+**Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết quả trung bình tương ứng. [View](https://tuhocr.netlify.app/dataset/data_boot_ok.txt)**
 
-### **Bước 2: Vẽ đồ thị**
+### **Bước 2: Phân tích kết quả**
 
+```{r, echo=FALSE}
+data_boot <- read.csv("data_boot.csv")
 
+data_boot[, -1] -> data_boot_ok
 
+data_boot[, 1] -> row.names(data_boot_ok)
 
+data_boot_ok -> data_boot
+```
 
+**Đây là tần số của các con số trung bình từ 1000 lần lấy mẫu, từ đây ta sẽ tính ra các chỉ số khác như khoảng tin cậy, độ lệch chuẩn, sai số chuẩn của giá trị trung bình *nếu* được lấy mẫu trong thực tế sẽ dao động trong vùng đồ thị này.**
 
+```{r}
+hist(data_boot$Kết.quả.trung.bình)
+```
 
+Ta có thể thực hiện bootstrap bằng package `boot`
 
+```{r}
+library(boot)
 
+can_nang <- c(60, 55, 71, 45, 89, 56, 73, 49, 69, 88)
 
+can_nang_df <- as.data.frame(can_nang)
 
+meanfun <- function(data, i){
+               d <- data[i, ]
+               return(mean(d))   
+}
 
+set.seed(123)
+bo <- boot(data = can_nang_df, statistic = meanfun, R = 1000)
 
+bo
 
+plot(bo)
 
-
-
-
-
-
+boot.ci(bo, conf = 0.95, type = "bca")
+```
 
 ### **Tài liệu tham khảo**
 
@@ -111,3 +131,13 @@ Kết quả sau khi chạy bootstrap ta có 1000 mẫu giả lập với kết q
 3. `https://datasciencetut.com/how-to-perform-bootstrapping-in-r/`
 
 4. `https://bash-intro.rsquaredacademy.com/r-command-line.html`
+
+5. [Bootstrapping Main Ideas!!!](https://youtu.be/Xz0x-8-cgaQ)
+
+> A lot of people ask "What happens when the original collection of measurements is not representative of the underlying distribution?" It's important to remember that a confidence interval is not guaranteed to overlap the true, population mean. A 95% CI means that if we make a ton of CIs using the same method, 95% of them will overlap the true mean. This tells us that 5% of the time we'll be off. So yes, a sample that is totally bonkers is possible, but rare. Understanding this risk of making the wrong decision, and managing it, is what statistics is all about.
+Also, at 5:55 I say there are up to 8^8 combinations of observed values and possible means, but this assumes that order matters, and it doesn't. So 8^8 over counts the total number of useful combinations and the true number is 15 choose 8, which is 6435 (for details on this math, see: https://en.wikipedia.org/wiki/Multiset#Counting_multisets )
+
+>We take for granted all that went behind that idea of 95% CI that you stated - it was Jerzy Neyman's who came up with that definition. Have you read "The Lady Tasting Tea"? A bit of a history of some incredible mathematicians, including Ronald Fisher and Jerzy Neyman. The 95% comes up on page 123. Thanks for all your valuable statistics videos!
+
+> Video chi tiết `https://www.youtube.com/live/isEcgoCmlO0?feature=share`
+> Dùng bootstrap tính p-value `https://youtu.be/N4ZQQqyIf6k`
