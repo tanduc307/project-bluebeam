@@ -1,0 +1,29 @@
+project:
+  type: book
+
+book:
+  title: "Vẽ đồ thị xuất sắc với R"
+  author: "ThS. Nguyễn Tấn Đức"
+  date: last-modified
+  date-format: "[Cập nhập:] DD-MM-YYYY"
+  chapters:
+    - index.qmd
+    # - intro.qmd
+    # - summary.qmd
+    - p1.qmd
+    - p2.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  pdf:
+    documentclass: scrreprt
+    classoption: portrait
+    papersize: A4
+    # include-in-header: 
+    #   text: \usepackage[showframe, top=25.4mm, left=38.1mm, right=25.4mm, bottom=25.4mm]{geometry}
+
+
+
+
