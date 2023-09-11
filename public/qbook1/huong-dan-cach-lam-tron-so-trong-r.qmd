@@ -1,0 +1,53 @@
+# **Hướng dẫn cách làm tròn số trong R** {.unnumbered}
+
+Bài viết này làm rõ hơn cách làm tròn số trong R ở video `CÁCH LÀM TRÒN SỐ TRONG R | Lệnh round(), signif()` trong chuyên đề 1 [Coding in R](https://www.tuhocr.com/r-courses/coding-in-r).
+
+```{r, message=FALSE, warnings=FALSE, echo=FALSE}
+options(width = 600)
+```
+
+Giả sử bạn có vector `x` như sau. Khi in ra console thì mặc định sẽ có giá trị rất dài như bên dưới vì mặc định `digits = 7` và `scipen = 0` trong R đã thiết lập format khi in ra con số (numeric) có số lượng số sau dấu thập phân như vậy.
+
+```{r}
+x <- c(0.8992877, 0.023, -1.002, 1.236, 10.236000, 20.243, 10035.23)
+x
+```
+
+Bây giờ bạn muốn thu được vector numeric `x` chỉ gồm các con số có 2 số sau dấu thập phân thì ta sẽ áp dụng 1 trong các cách sau.
+
+<span style="color:darkgreen">**Cách 1: Sử dụng function `round()` trong base R, kết quả thu được là <span style="color:blue"><u>numeric vector</u>**</span></span>
+
+```{r}
+round(x, digits = 2) -> x_1
+x_1
+```
+
+<span style="color:darkgreen">**Cách 2: Sử dụng function `sprintf()` trong base R, kết quả là <span style="color:red"><u>character vector</u>**</span></span> **do đó cần convert qua vector numeric nếu cần dùng để tính toán tiếp theo.**
+
+```{r}
+sprintf("%.2f", x) -> x_2 
+x_2
+
+as.numeric(x_2) ## convert qua dạng numeric vector
+```
+
+<span style="color:darkgreen">**Cách 3: Sử dụng function `myround()` trong package `broman`, kết quả là <span style="color:red"><u>character vector</u>**</span></span>
+
+```{r message=FALSE, warning=FALSE}
+library(broman)
+broman::myround(x, digits = 2) -> x_3
+x_3
+
+as.numeric(x_2) ## convert qua dạng numeric vector
+```
+
+**<mark style="background-color: #FFFF00">Cả 3 cách này đều thu được kết quả y chang nhau.</mark>**
+
+```{r}
+identical(x_1, as.numeric(x_2))
+
+identical(x_1, as.numeric(x_3))
+
+identical(as.numeric(x_2), as.numeric(x_3))
+```
+

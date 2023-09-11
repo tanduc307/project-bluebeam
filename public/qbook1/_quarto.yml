@@ -27,6 +27,7 @@ book:
     - part: "Kỹ thuật xử lý dữ liệu"
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
+        - huong-dan-cach-lam-tron-so-trong-r.qmd
     - references.qmd
     
   sidebar:
