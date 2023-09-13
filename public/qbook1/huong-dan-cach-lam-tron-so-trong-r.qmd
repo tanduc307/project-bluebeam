@@ -38,7 +38,7 @@ library(broman)
 broman::myround(x, digits = 2) -> x_3
 x_3
 
-as.numeric(x_2) ## convert qua dạng numeric vector
+as.numeric(x_3) ## convert qua dạng numeric vector
 ```
 
 **<mark style="background-color: #FFFF00">Cả 3 cách này đều thu được kết quả y chang nhau.</mark>**
