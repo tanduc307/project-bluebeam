@@ -1,0 +1,291 @@
+# **Bài 14: Phân tích ANOVA 2 yếu tố trong R** {.unnumbered}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)
+```
+
+## Phân tích ANOVA 2 yếu tố trong R
+
+**Câu hỏi nghiên cứu: Xác định tổ hợp giữa cơ chất và vi sinh vật để thu được hoạt tính enzyme cao**
+
+### <span style="color:blue">Bước 1: Import dữ liệu</span>
+
+```{r}
+library(readxl)
+
+enzyme_df <- readxl::read_excel("activity.xlsx", col_names = TRUE)
+
+enzyme_df <- as.data.frame(enzyme_df)
+
+enzyme_df
+
+table(enzyme_df$substrate, enzyme_df$bacillus)
+```
+
+**Chuyển dạng factor cho các biến `substrate` và `bacillus`.**
+
+```{r}
+enzyme_df$substrate <- as.factor(enzyme_df$substrate)
+enzyme_df$bacillus <- as.factor(enzyme_df$bacillus)
+```
+
+### <span style="color:blue">Bước 2: Giả thuyết cho ANOVA 2 yếu tố</span>
+
+Nguồn: <https://statistics.laerd.com/spss-tutorials/two-way-anova-using-spss-statistics.php>
+
+* Assumption #1: Your dependent variable should be measured at the continuous level $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark> 
+
+* Assumption #2: Your two independent variables should each consist of two or more categorical, independent groups $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark> 
+
+* Assumption #3: You should have independence of observations, which means that there is no relationship between the observations in each group or between the groups themselves. $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark> 
+
+* Assumption #4: There should be no significant outliers. 
+
+* Assumption #5: Your dependent variable should be approximately normally distributed for each combination of the groups of the two independent variables. 
+
+* Assumption #6: There needs to be homogeneity of variances for each combination of the groups of the two independent variables. Again, whilst this sounds a little tricky, you can easily test this assumption in SPSS Statistics using Levene’s test for homogeneity of variances.
+
+### <span style="color:blue">Bước 3: Kiểm tra giả thuyết cho ANOVA</span>
+
+#### **<span style="color:red">Bước 3.1: Kiểm tra giả thuyết Assumption #5 normally distributed for each combination of the groups</span>** 
+
+```{r}
+# Compute two-way ANOVA test with interaction effect
+res.aov <- aov(enzyme ~ substrate * bacillus, data = enzyme_df)
+aov_residuals <- residuals(object = res.aov)
+shapiro.test(x = aov_residuals) 
+```
+
+Kết quả Shapiro-Wilk normality test cho thấy p-value là 0.1127 lớn hơn 0.05. Do đó bộ dataset này có sự phân bố chuẩn $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark>
+
+<https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test>
+
+> The Shapiro–Wilk test is a test of normality. The null-hypothesis of this test is that the population is normally distributed. Thus, if the p value is less than the chosen alpha level, then the null hypothesis is rejected and there is evidence that the data tested are not normally distributed. On the other hand, if the p value is greater than the chosen alpha level, then the null hypothesis (that the data came from a normally distributed population) can not be rejected (e.g., for an alpha level of .05, a data set with a p value of less than .05 rejects the null hypothesis that the data are from a normally distributed population – consequently, a data set with a p value more than the .05 alpha value fails to reject the null hypothesis that the data is from a normally distributed population).
+
+**<mark style="background-color: #FFFF00">Tóm lại trong Shapiro–Wilk test thì p-value nhỏ hơn 0.05 thì KHÔNG có phân bố chuẩn (do đó vi phạm giả thuyết). p-value lớn hơn 0.05 thì CÓ phân bố chuẩn.</mark>**
+
+#### **<span style="color:red">Bước 3.2: Kiểm tra giả thuyết Assumption #6 homogeneity of variances</span>** 
+
+```{r, message=FALSE, warning=FALSE}
+library(car)
+leveneTest(enzyme ~ substrate * bacillus, data = enzyme_df) 
+```
+Kết quả Levene's test cho thấy p-value là 0.8254 lớn hơn 0.05. Do đó bộ dataset này có không có sự khác biệt về phương sai giữa các tổ hợp các mức khác nhau của 2 biến $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark>
+
+<https://en.wikipedia.org/wiki/Levene%27s_test>
+
+> In statistics, Levene's test is an inferential statistic used to assess the equality of variances for a variable calculated for two or more groups. Some common statistical procedures assume that variances of the populations from which different samples are drawn are equal. Levene's test assesses this assumption. It tests the null hypothesis that the population variances are equal (called homogeneity of variance or homoscedasticity). If the resulting p-value of Levene's test is less than some significance level (typically 0.05), the obtained differences in sample variances are unlikely to have occurred based on random sampling from a population with equal variances. Thus, the null hypothesis of equal variances is rejected and it is concluded that there is a difference between the variances in the population.
+
+**<mark style="background-color: #FFFF00">Tóm lại trong Levene's test thì p-value nhỏ hơn 0.05 thì CÓ sự khác biệt về phương sai giữa các tổ hợp yếu tố (do đó vi phạm giả thuyết). p-value lớn hơn 0.05 thì KHÔNG CÓ sự khác biệt về phương sai giữa các tổ hợp các mức của 2 yếu tố.</mark>**
+
+#### **<span style="color:red">Bước 3.3: Kiểm tra giả thuyết Assumption #4 kiểm tra outlier</span>** 
+
+Có nhiều phương pháp để detect outliers trong dataset.
+
+**Cách 1: Multivariate Model Approach - Cook’s Distance**
+
+```{r}
+mod <- lm(enzyme ~ substrate * bacillus, data = enzyme_df)
+cooksd <- cooks.distance(mod)
+
+plot(cooksd, pch = "*", 
+     cex = 2, main = "Influential Obs by Cooks distance")  # plot cook's distance
+
+abline(h = 4*mean(cooksd, na.rm = TRUE), col="red")  # add cutoff line
+
+text(x = 1:length(cooksd) + 1, y = cooksd, 
+     labels = ifelse(cooksd > 4*mean(cooksd, na.rm = TRUE),
+                     names(cooksd), ""), col = "red")  # add labels
+
+influential <- cooksd > 4 * mean(cooksd, na.rm = TRUE)
+
+enzyme_df[influential, ] ## giá trị outlier
+```
+
+**Cách 2: Dùng function `car::outlierTest`**
+
+```{r}
+library(car)
+car::outlierTest(mod) -> ok
+# names(ok$p)
+enzyme_df[names(ok$p), ] ## giá trị outlier
+```
+
+**Cách 3: Dùng package `outliers`**
+
+```{r}
+### sử dụng function outlier() cho vector enzyme activity
+library(outliers)
+outliers::outlier(enzyme_df$enzyme, opposite = TRUE) -> yes_1
+
+enzyme_df |> subset(enzyme == yes_1) # vị trí outlier
+
+### sử dụng function scores() cho vector enzyme activity
+
+# outliers::scores(enzyme_df$enzyme, type = "chisq", prob = 0.95) 
+# outliers::scores(enzyme_df$enzyme, type = "t", prob = 0.95) 
+
+outliers::scores(enzyme_df$enzyme, type = "z", prob = 0.95) -> yes_2
+
+enzyme_df[yes_2, ]
+```
+
+**Cách 4: Dùng đồ thị Q-Q plot**
+
+```{r}
+mod <- lm(enzyme ~ substrate * bacillus, data = enzyme_df)
+
+par(mar = c(3, 3, 3, 3))
+
+plot(mod, 1)
+
+plot(mod, 2)
+
+plot(mod, 3)
+
+plot(mod, 4)
+
+plot(mod, 5)
+
+plot(mod, 6)
+
+# sort(abs(residuals(mod)), decreasing = TRUE) # save the residuals
+
+enzyme_df[c(2, 32, 50), ]
+```
+
+
+**Cách 5: Dùng function `car::influencePlot`**
+
+```{r, fig.width=8, fig.height=8}
+library(car)
+outs <- car::influencePlot(mod)
+enzyme_df[row.names(outs), ]
+```
+
+### <span style="color:blue">Bước 4: Kiểm tra đặc điểm dữ liệu</span>
+
+**Histogram theo các mức trong `substrate`**
+
+```{r}
+library(lattice)
+histogram( ~ enzyme | substrate, data = enzyme_df,
+           xlab = "Enzyme activity (FU/mL)", type = "density",
+           panel = function(x, ...) {
+             panel.histogram(x, ...)
+             panel.mathdensity(dmath = dnorm, col = "black",
+                               args = list(mean=mean(x),sd=sd(x)))
+           } )
+```
+
+**Histogram theo các mức trong `bacillus`**
+
+```{r}
+library(lattice)
+histogram( ~ enzyme | bacillus, data = enzyme_df,
+           xlab = "Enzyme activity (FU/mL)", type = "density",
+           panel = function(x, ...) {
+             panel.histogram(x, ...)
+             panel.mathdensity(dmath = dnorm, col = "black",
+                               args = list(mean=mean(x),sd=sd(x)))
+           } )
+```
+
+**Boxplot với tổ hợp các nghiệm thức**
+
+```{r}
+library(ggpubr)
+ggboxplot(enzyme_df, x = "bacillus", y = "enzyme", color = "substrate", ylab = "Enzyme activity (FU/mL)")
+```
+
+**Lineplot với tổ hợp các nghiệm thức**
+
+```{r}
+library("ggpubr")
+ggline(enzyme_df, x = "bacillus", y = "enzyme", color = "substrate", ylab = "Enzyme activity (FU/mL)",
+       add = c("mean_sd", "dotplot"))
+```
+
+**Box plot with two factor variables**
+
+```{r}
+enzyme_df$substrate <- reorder(enzyme_df$substrate, enzyme_df$enzyme, decreasing = FALSE) 
+enzyme_df$bacillus <- reorder(enzyme_df$bacillus, enzyme_df$enzyme, decreasing = FALSE) 
+
+par(mar = c(3, 12, 1, 1))
+
+boxplot(enzyme ~ substrate * bacillus, data = enzyme_df, frame = TRUE,
+        horizontal = TRUE, las = 1,
+        axisnames = TRUE, ylab = "", xlab = "Enzyme activity (FU/mL)")
+```
+
+**Two-way interaction plot**
+
+```{r}
+interaction.plot(x.factor = enzyme_df$bacillus, trace.factor = enzyme_df$substrate, 
+                 trace.label = "Substrate",
+                 response = enzyme_df$enzyme, fun = mean, 
+                 type = "b", legend = TRUE, 
+                 xlab = expression(italic(Bacillus) ~ ".sp"), ylab ="Enzyme activity (FU/mL)",
+                 pch = c(15, 16, 8, 17, 19), 
+                 col = c("red", "blue", "darkgreen", "purple", "yellow4"))
+```
+
+
+```{r}
+interaction.plot(x.factor = enzyme_df$substrate, trace.factor = enzyme_df$bacillus, 
+                 trace.label = "Bacillus .sp",
+                 response = enzyme_df$enzyme, fun = mean, 
+                 type = "b", legend = TRUE, 
+                 xlab = "Substrate", ylab ="Enzyme activity (FU/mL)",
+                 pch = c(15, 16, 8, 17, 19), 
+                 col = c("red", "blue", "darkgreen", "purple", "yellow4"))
+```
+
+### <span style="color:blue">Bước 5: Phân tích ANOVA 2 yếu tố CRD</span>
+
+**Tính p-value**
+
+```{r}
+# Compute two-way ANOVA test
+res.aov2 <- aov(enzyme ~ substrate + bacillus, data = enzyme_df)
+# summary(res.aov2)
+anova(res.aov2)
+
+# Compute two-way ANOVA test with interaction effect
+res.aov3 <- aov(enzyme ~ substrate * bacillus, data = enzyme_df)
+anova(res.aov3)
+```
+
+**Phân hạng**
+
+```{r}
+library(agricolae)
+LSD.test(res.aov2, c("substrate", "bacillus"), console = TRUE) 
+duncan.test(res.aov2, c("substrate", "bacillus"), console = TRUE) 
+HSD.test(res.aov2, c("substrate", "bacillus"), console = TRUE) 
+```
+
+#### Tài liệu tham khảo
+
+1. `https://thongkesinhhoc.quarto.pub/phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html`
+
+2. [Analysis of a Two-Factor Completely Randomized Design in R](https://www.youtube.com/watch?v=Ctx8CcJdOB4)
+
+3. [Outliers detection in R](https://rpubs.com/Alema/1000582)
+
+4. `https://www.r-bloggers.com/2016/12/outlier-detection-and-treatment-with-r/`
+
+5. `https://stats.stackexchange.com/questions/61055/r-how-to-interpret-the-qqplots-outlier-numbers`
+
+6.  `http://www.sthda.com/english/wiki/two-way-anova-test-in-r`
+
+7.  `https://stackoverflow.com/questions/43123462/how-to-obtain-rmse-out-of-lm-result`
+
+8.  `https://online.stat.psu.edu/stat501/lesson/2/2.6`
+
+9.  `https://rcompanion.org/handbook/G_14.html`
+
+10.  RMSE (Root Mean Square Error) `https://agronomy4future.org/?p=15930`
+
+11.  `https://stats.stackexchange.com/questions/445200/coefficient-of-variation-for-beween-groups`
