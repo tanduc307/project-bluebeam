@@ -1,0 +1,33 @@
+# **Hướng dẫn show all data trên console** {.unnumbered}
+
+**Đối với data frame dài hơn 1000 dòng thì khi in trên console bạn sẽ bị truncated, vì mặc định RStudio chỉ thể hiện max là 1000 dòng. Do vậy để thể hiện toàn bộ dữ liệu trên console thì bạn sẽ thực hiện như sau.**
+
+<span style="color:blue;">**Bước 1:**</span>
+
+![](rstudio-cs.jpg){fig-align="left"}
+
+<span style="color:blue;">**Bước 2:**</span>
+
+```{r, eval=FALSE}
+options(max.print = 1000000) # số lượng ký tự in trên console (thực hiện trong mỗi session)
+
+library(rstudioapi)
+rstudioapi::writeRStudioPreference("console_max_lines", as.integer(5000)) # show 5000 dòng
+# khởi động lại RStudio thì sẽ show all data được (dòng lệnh này chỉ cần thực hiện 1 lần duy nhất)
+```
+
+
+```{r}
+### các lệnh in data frame dạng bảng
+
+print(mtcars)
+kableExtra::kable(mtcars, "pipe") 
+# kableExtra::kable(mtcars, "simple")
+# knitr::kable(mtcars)
+# kableExtra::kbl(mtcars) # file html
+```
+
+
+### Tham khảo
+
+* Các thông số tùy chỉnh cho RStudio `https://docs.posit.co/ide/server-pro/session_user_settings/session_user_settings.html`

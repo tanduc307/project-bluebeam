@@ -4,8 +4,6 @@
 knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)
 ```
 
-## Phân tích ANOVA 2 yếu tố trong R
-
 **Câu hỏi nghiên cứu: Xác định tổ hợp giữa cơ chất và vi sinh vật để thu được hoạt tính enzyme cao**
 
 ### <span style="color:blue">Bước 1: Import dữ liệu</span>
@@ -268,7 +266,7 @@ HSD.test(res.aov2, c("substrate", "bacillus"), console = TRUE)
 
 #### Tài liệu tham khảo
 
-1. `https://thongkesinhhoc.quarto.pub/phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.html`
+1. `https://statsandr.com/blog/two-way-anova-in-r/`
 
 2. [Analysis of a Two-Factor Completely Randomized Design in R](https://www.youtube.com/watch?v=Ctx8CcJdOB4)
 
