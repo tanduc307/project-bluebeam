@@ -19,6 +19,7 @@ book:
         - khoang-tin-cay.qmd
         # - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
         - phan-tich-anova-2-yeu-to-trong-r.qmd
+        - so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.qmd
         - phan-tich-ancova-trong-r.qmd
         - khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.qmd
         - bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd

@@ -22,4 +22,4 @@
 # terminal
 # quarto publish quarto-pub 
 
-quarto publish quarto-pub --no-prompt
+# quarto publish quarto-pub --no-prompt

@@ -1,4 +1,4 @@
-# **Bài 15: Phân tích ANCOVA trong R** {.unnumbered}
+# **Bài 16: Phân tích ANCOVA trong R** {.unnumbered}
 
 ### Phân biệt giữa ANCOVA và ANOVA
 
