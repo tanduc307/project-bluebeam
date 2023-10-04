@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.tuhocr.com/index.html</loc>
-    <lastmod>2023-10-02T13:32:17.720Z</lastmod>
+    <lastmod>2023-10-04T07:55:09.854Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/co-so-ly-thuyet.html</loc>
@@ -55,5 +55,9 @@
   <url>
     <loc>https://www.tuhocr.com/references.html</loc>
     <lastmod>2023-10-02T13:32:18.094Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-phan-tich-t-test-trong-r.html</loc>
+    <lastmod>2023-10-04T07:55:51.788Z</lastmod>
   </url>
 </urlset>

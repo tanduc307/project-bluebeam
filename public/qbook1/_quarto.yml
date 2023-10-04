@@ -18,6 +18,7 @@ book:
       chapters:
         - khoang-tin-cay.qmd
         # - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
+        - huong-dan-phan-tich-t-test-trong-r.qmd
         - phan-tich-anova-2-yeu-to-trong-r.qmd
         - so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.qmd
         - phan-tich-ancova-trong-r.qmd

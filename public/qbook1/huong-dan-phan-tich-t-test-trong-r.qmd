@@ -1,0 +1,392 @@
+# **Bài 13: Hướng dẫn phân tích t-test trong R** {.unnumbered}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)
+options(width = 1000)
+```
+
+#### <span style="color:blue">**Bước 1: Cơ sở lý thuyết**</span>
+
+`https://www.jmp.com/en_ch/statistics-knowledge-portal/t-test.html`
+
+> <mark style="background-color: #FFFF00">**What is a t-test?**</mark>
+>
+> A t-test (also known as Student's t-test) is a tool for evaluating the means of one or two populations using hypothesis testing. A t-test may be used to evaluate whether a single group differs from a known value (a one-sample t-test), whether two groups differ from each other (an independent two-sample t-test), or whether there is a significant difference in paired measurements (a paired, or dependent samples t-test).
+>
+> <mark style="background-color: #FFFF00">**How are t-tests used?**</mark>
+> 
+> First, you define the hypothesis you are going to test and specify an acceptable risk of drawing a faulty conclusion. For example, when comparing two populations, you might hypothesize that their means are the same, and you decide on an acceptable probability of concluding that a difference exists when that is not true. Next, you calculate a test statistic from your data and compare it to a theoretical value from a t-distribution. Depending on the outcome, you either reject or fail to reject your null hypothesis. 
+>
+> <mark style="background-color: #FFFF00">**What if I have more than two groups?**</mark>
+>
+> You cannot use a t-test. Use a multiple comparison method. Examples are analysis of variance (ANOVA), Tukey-Kramer pairwise comparison, Dunnett's comparison to a control, and analysis of means (ANOM).  
+
+#### <span style="color:blue">**Bước 2: Đề bài về so sánh hai loài hoa qua các chỉ tiêu định lượng để tìm ra sự khác biệt bằng kiểm định t-test**</span>
+
+##### <span style="color:green">**Bước 2.1: Đặt giả thuyết thống kê cho kiểm định t-test 2 đuôi**</span>
+
+* ${H_0}$ : Trung bình tổng thể giữa hai mẫu *không khác nhau* về chỉ tiêu quan tâm $\mu_1 = \mu_2$ 
+
+* ${H_\alpha }$ : Trung bình tổng thể giữa hai mẫu *khác nhau* về chỉ tiêu quan tâm $\mu_1 \ne \mu_2$ 
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+
+flower <- read.csv("flower.csv")
+flower$Species <- factor(flower$Species)
+flower 
+
+```
+
+##### <span style="color:green">**Bước 2.2: Thống kê mô tả**</span>
+
+Thực hiện cho 1 chỉ tiêu `LBL`
+
+```{r}
+flower  <- flower[, -1]
+
+flower %>%
+  group_by(Species) %>%
+  summarise(
+    count = n(),
+    mean = mean(LBL, na.rm = TRUE),
+    sd = sd(LBL, na.rm = TRUE),
+    median = median(LBL, na.rm = TRUE),
+    IQR = IQR(LBL, na.rm = TRUE)
+  )
+```
+
+Nếu thực hiện tính toán các chỉ số thống kê cho lần lượt các cột trong data frame thì ta sẽ áp dụng lệnh họ apply.
+
+```{r}
+### khi sử dụng function với các lệnh trong dplyr thì bạn cần lưu ý quote string tham số 
+# https://shixiangwang.github.io/tidyeval-chinese/dplyr.html
+# https://stackoverflow.com/questions/67382081/how-to-pass-column-name
+#-as-argument-to-function-for-dplyr-verbs
+
+thong_ke_mo_ta <- function(input, group_input, chi_tieu) {
+  
+  input |> 
+    group_by(.data[[group_input]]) %>%
+    summarise(
+      count = n(),
+      mean = mean(.data[[chi_tieu]], na.rm = TRUE),
+      sd = sd(.data[[chi_tieu]], na.rm = TRUE),
+      median = median(.data[[chi_tieu]], na.rm = TRUE),
+      IQR = IQR(.data[[chi_tieu]], na.rm = TRUE)
+    ) -> df_ok
+  
+  return(df_ok)
+  
+}
+
+lapply(names(flower)[-1], FUN = thong_ke_mo_ta,
+       input = flower, group_input = "Species") -> ok
+
+names(ok) <- seq <- names(flower)[-1]
+
+ok
+```
+
+```{r}
+library(lattice)
+
+for(i in 1:length(names(flower)[-1])){
+  
+  print(histogram( as.formula(paste("~", names(flower)[-1][i], "|", "Species")), data = flower,
+             type = "density",
+             panel = function(x, ...) {
+               panel.histogram(x, ...)
+               panel.mathdensity(dmath = dnorm, col = "black",
+                                 args = list(mean=mean(x),sd=sd(x)))
+             } ))
+  
+}
+```
+
+#### <span style="color:blue">**Bước 3:Kiểm tra giả thuyết cho t-test**</span>
+
+<span style="background-color:dodgerblue; text-align:center;color:white;font-size:24px;">**Từ chỗ này trở đi ta sẽ tính riêng cho chỉ tiêu "LBL" cho "Flower A" và "Flower B". Các chỉ tiêu còn lại thực hiện tương tự.**</span>
+
+**Giả thuyết cho t-test 1 sample**
+
+While t-tests are relatively robust to deviations from assumptions, t-tests do assume that:
+
+* The data are continuous. 
+
+* The sample data have been randomly sampled from a population. 
+
+* The distribution is approximately normal.
+
+* There is homogeneity of variance (i.e., the variability of the data in each group is similar).
+
+    * <mark>the standard Student's t-test, which assumes that the variance of the two groups are equal.</mark>
+    
+    * <mark>the Welch's t-test, which is less restrictive compared to the original Student’s test. This is the test where you do not assume that the variance is the same in the two groups, which results in the fractional degrees of freedom.</mark>
+    
+**Giả thuyết cho t-test 2 samples** 
+
+`https://www.jmp.com/en_is/statistics-knowledge-portal/t-test/two-sample-t-test.html`
+
+* For two-sample t-tests, we must have independent samples. If the samples are not independent, then a paired t-test may be appropriate. $\Rightarrow$ <mark style="background-color: #FFFF00">Trong dataset này thì đây là 2 mẫu độc lập, unpaired</mark>
+
+* Data values must be independent. Measurements for one observation do not affect measurements for any other observation. $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark>
+
+* Data in each group must be obtained via a random sample from the population. $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark>
+
+* Data in each group are normally distributed.
+
+* Data values are continuous. $\Rightarrow$ <mark style="background-color: #FFFF00">OK</mark>
+
+* The variances for the two independent groups are equal.
+
+##### <span style="color:green">**Bước 3.1: Thực hiện kiểm tra giả thuyết về phân bố chuẩn**</span>
+
+<span style="color:green">**Cách 1: Sử dụng Q-Q plot**</span>
+
+**Q-Q plot cho theo từng group.**
+
+```{r}
+# test cho toàn bộ các group
+# qqnorm(flower$LBL, pch = 1, frame = FALSE)
+# qqline(flower$LBL, col = "steelblue", lwd = 2)
+
+par(mfrow = c(1, 2))
+
+flower |> subset(Species == "Flower A") -> flower_a
+qqnorm(flower_a$LBL, pch = 1, frame = FALSE, main = "Q-Q plot for Flower A")
+qqline(flower_a$LBL, col = "steelblue", lwd = 2)
+
+flower |> subset(Species == "Flower B") -> flower_b
+qqnorm(flower_b$LBL, pch = 1, frame = FALSE, main = "Q-Q plot for Flower B")
+qqline(flower_b$LBL, col = "steelblue", lwd = 2)
+```
+
+**Quantile-Quantile plots for comparing two Distributions**
+
+```{r}
+lattice::qq(Species ~ LBL, aspect = 1, data = flower,
+   subset = (Species == "Flower A" | Species == "Flower B"))
+```
+
+<span style="color:green">**Cách 2: Shapiro-Wilk Test for Normality (sample size must be between 3 and 5000)**</span>
+
+```{r}
+shapiro.test(x = flower_a$LBL)
+shapiro.test(x = flower_b$LBL)
+```
+
+**Trong Shapiro–Wilk test thì p-value nhỏ hơn 0.05 thì KHÔNG có phân bố chuẩn (do đó vi phạm giả thuyết). p-value lớn hơn 0.05 thì CÓ phân bố chuẩn.**
+
+<span style="color:green">**Cách 3: Two-sample Kolmogorov-Smirnov's test for Normality**</span>
+
+```{r}
+ks.test(flower_a$LBL, flower_b$LBL)
+```
+
+**Biện luận kết quả theo p-value của Kolmogorov-Smirnov's test.**
+
+**Tham khảo: `https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test`**
+
+##### <span style="color:green">**Bước 3.2: Thực hiện kiểm tra giả thuyết về khác biệt phương sai**</span>
+
+**We will check whether the variances across the two groups are same or not. Performs an F-test to compare the variances of two samples from normal populations.**
+
+`https://www.datanovia.com/en/lessons/homogeneity-of-variance-test-in-r/`
+
+There are different variance tests that can be used to assess the equality of variances. These include:
+
+* F-test: Compare the variances of two groups. The data must be normally distributed.
+
+* Bartlett's test: Compare the variances of two or more groups. The data must be normally distributed.
+
+* Levene's test: A robust alternative to the Bartlett’s test that is less sensitive to departures from normality.
+
+* Fligner-Killeen’s test: a non-parametric test which is very robust against departures from normality.
+
+<span style="color:green">**Cách 1: Áp dụng F-test**</span>
+
+```{r}
+# The statistical hypotheses are:
+# 
+# Null hypothesis (H0): the variances of the two groups are equal.
+# Alternative hypothesis (Ha): the variances are different.
+
+var.test(flower_a$LBL, flower_b$LBL)
+```
+
+> Interpretation. The p-value is p = 0.05311 which is greater than the significance level 0.05. In conclusion, there is no significant difference between the two variances.
+
+**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai biến này không khác biệt nhau.**
+
+<span style="color:green">**Cách 2: Bartlett's test with one independent variable**</span>
+
+```{r}
+bar_test <- bartlett.test(LBL ~ Species, data = flower)
+bar_test
+```
+
+**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai biến này không khác biệt nhau.**
+
+<span style="color:green">**Cách 3: Áp dụng Levene's test**</span>
+
+```{r}
+library(car)
+leveneTest(LBL ~ Species, data = flower)
+```
+
+Trong Levene’s test thì p-value nhỏ hơn 0.05 thì CÓ sự khác biệt về phương sai giữa 2 nhóm. p-value lớn hơn 0.05 thì KHÔNG CÓ sự khác biệt về phương sai giữa 2 nhóm.
+
+<span style="color:green">**Cách 4: Áp dụng Fligner-Killeen's test**</span>
+
+The Fligner-Killeen's test is one of the many tests for homogeneity of variances which is most robust against departures from normality.
+
+```{r}
+fligner.test(LBL ~ Species, data = flower)
+```
+
+#### <span style="color:blue">**Bước 3: Thực hiện kiểm định t-test**</span>
+
+> Recall that, **by default**, R computes the Welch t-test, which is the safer one. This is the test where you do not assume that the variance is the same in the two groups, which results in the fractional degrees of freedom. If you want to assume the equality of variances (Student t-test), specify the option var.equal = TRUE.
+
+**Trường hợp phương sai không bằng nhau**
+
+```{r}
+res_1 <- t.test(LBL ~ Species, data = flower, 
+              conf.level = 0.95,
+              paired = FALSE,
+              var.equal = FALSE)
+res_1
+```
+
+**Trường hợp phương sai bằng nhau**
+
+```{r}
+res_2 <- t.test(LBL ~ Species, data = flower, 
+              conf.level = 0.95,
+              paired = FALSE,
+              var.equal = TRUE)
+res_2
+```
+
+**Trường hợp nếu không thỏa điều kiện cho phân tích t-test thì ta áp dụng two-samples Wilcoxon test.**
+
+> The unpaired two-samples Wilcoxon test (also known as Wilcoxon rank sum test or Mann-Whitney test) is a non-parametric alternative to the unpaired two-samples t-test, which can be used to compare two independent groups of samples. It’s used when your data are not normally distributed.
+
+#### <span style="color:blue">**Bước 4:Kiểm tra giả thuyết cho t-test cho cùng lúc nhiều cột**</span>
+
+Ta cần chuyển dữ liệu về dạng long để thuận tiện xử lý và vẽ đồ thị.
+
+```{r}
+# Transform the data into long format
+# Put all variables in the same column except `Species`, the grouping variable
+
+mydata <- flower
+
+mydata.long <- mydata %>%
+  pivot_longer(-Species, names_to = "variables", values_to = "value")
+
+mydata.long <- as.data.frame(mydata.long)
+
+mydata.long
+```
+
+**Run multiple t-tests**
+
+```{r}
+stat.test <- mydata.long %>%
+  group_by(variables) %>%
+  t_test(value ~ Species) %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance()
+stat.test <- as.data.frame(stat.test)
+stat.test
+```
+
+**Create individual boxplots with t-test p-values**
+
+```{r, fig.width=8, fig.height=6}
+# multi-panel
+# # Create the plot
+# myplot <- ggboxplot(
+#   mydata.long, x = "Species", y = "value",
+#   fill = "Species", palette = "npg", legend = "none",
+#   ggtheme = theme_pubr(border = TRUE)
+#   ) +
+#   facet_wrap(~variables)
+# # Add statistical test p-values
+# stat.test <- stat.test %>% add_xy_position(x = "Species")
+# myplot + stat_pvalue_manual(stat.test, label = "p.adj.signif")
+
+###
+
+# Group the data by variables and do a graph for each variable
+
+stat.test <- stat.test %>% add_xy_position(x = "Species")
+
+graphs <- mydata.long %>%
+  group_by(variables) %>%
+  doo(
+    ~ggboxplot(
+      data =., x = "Species", y = "value",
+      fill = "Species", palette = "npg", legend = "none",
+      ggtheme = theme_pubr()
+      ), 
+    result = "plots"
+  )
+
+# graphs
+
+# Add statitistical tests to each corresponding plot
+variables <- graphs$variables
+for(i in 1:length(variables)){
+  graph.i <- graphs$plots[[i]] + 
+    labs(title = variables[i]) + 
+    stat_pvalue_manual(stat.test[i, ], label = "p.adj.signif")
+  print(graph.i)
+}
+```
+
+
+#### Tài liệu tham khảo
+
+1. `https://www.sthda.com/english/wiki/unpaired-two-samples-t-test-in-r`
+
+2. `https://www.datanovia.com/en/lessons/how-to-do-a-t-test-in-r-calculation-and-reporting/`
+
+3. `https://www.datanovia.com/en/blog/how-to-perform-multiple-t-test-in-r-for-different-variables/`
+
+4. `https://rpubs.com/SameerMathur/t-testAssumptions`
+
+5. `https://cran.r-project.org/web/packages/qqplotr/vignettes/introduction.html`
+
+6. `https://astrostatistics.psu.edu/su07/R/html/lattice/html/qq.html`
+
+7. `https://adiradaniel.netlify.app/post/ggmultipane/`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

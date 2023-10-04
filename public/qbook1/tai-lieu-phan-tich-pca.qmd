@@ -1,0 +1,18 @@
+# **Bài 29: Tài liệu phân tích PCA** {.unnumbered}
+
+Phân tích Principal Component Analysis (PCA) là kỹ thuật giảm chiều của dataset rút gọn còn 2 trục PC1 và PC2 (hay 3 trục PC1, PC2, PC3) nhằm giúp phân tách ra sự khác biệt giữa các nhóm (variables) hoặc giữa các cá thể/observation với nhau.
+
+`https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/`
+
+There are two general methods to perform PCA in R :
+
+* Spectral decomposition which examines the covariances / correlations between variables
+
+* Singular value decomposition which examines the covariances / correlations between individuals
+
+Để tìm hiểu nhanh về kỹ thuật vẽ đồ thị PCA ta cần điểm qua các tài liệu sau:
+
+1. GS. Nguyễn Văn Tuấn. Bài giảng 83: Principal Component Analysis. `https://www.youtube.com/watch?v=uEEp5WYNHVY`
+
+2. Alboukadel Kassambara - Practical Guide to Principal Component Methods in R. `https://studyr.netlify.app/ref/kassambara_principal_component_methods.pdf`
+
