@@ -2,62 +2,66 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.tuhocr.com/index.html</loc>
-    <lastmod>2023-10-04T07:55:09.854Z</lastmod>
+    <lastmod>2023-10-04T08:36:11.701Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/co-so-ly-thuyet.html</loc>
-    <lastmod>2023-10-02T13:32:17.731Z</lastmod>
+    <lastmod>2023-10-04T08:36:11.712Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/khoang-tin-cay.html</loc>
-    <lastmod>2023-10-02T13:32:17.740Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/phan-tich-anova-2-yeu-to-trong-r.html</loc>
-    <lastmod>2023-10-02T13:32:17.793Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.html</loc>
-    <lastmod>2023-10-02T13:32:17.850Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/phan-tich-ancova-trong-r.html</loc>
-    <lastmod>2023-10-02T13:32:17.872Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.html</loc>
-    <lastmod>2023-10-02T13:32:17.907Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html</loc>
-    <lastmod>2023-10-02T13:32:17.941Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/workflow-phan-tich-thong-ke-qua-dataset-iris.html</loc>
-    <lastmod>2023-10-02T13:32:17.979Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/example-partial-least-squares-and-principal-component-regression.html</loc>
-    <lastmod>2023-10-02T13:32:18.019Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/huong-dan-convert-tu-csv-qua-tsv-trong-r.html</loc>
-    <lastmod>2023-10-02T13:32:18.031Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/huong-dan-cach-lam-tron-so-trong-r.html</loc>
-    <lastmod>2023-10-02T13:32:18.046Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/huong-dan-show-all-data-tren-console.html</loc>
-    <lastmod>2023-10-02T13:32:18.085Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.tuhocr.com/references.html</loc>
-    <lastmod>2023-10-02T13:32:18.094Z</lastmod>
+    <lastmod>2023-10-04T08:36:11.724Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/huong-dan-phan-tich-t-test-trong-r.html</loc>
-    <lastmod>2023-10-04T07:55:51.788Z</lastmod>
+    <lastmod>2023-10-04T08:36:11.788Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/phan-tich-anova-2-yeu-to-trong-r.html</loc>
+    <lastmod>2023-10-04T08:36:11.847Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.html</loc>
+    <lastmod>2023-10-04T08:36:11.911Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/phan-tich-ancova-trong-r.html</loc>
+    <lastmod>2023-10-04T08:36:11.936Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.html</loc>
+    <lastmod>2023-10-04T08:36:11.960Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html</loc>
+    <lastmod>2023-10-04T08:36:12.224Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/workflow-phan-tich-thong-ke-qua-dataset-iris.html</loc>
+    <lastmod>2023-10-04T08:36:12.224Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/example-partial-least-squares-and-principal-component-regression.html</loc>
+    <lastmod>2023-10-04T08:36:12.246Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/tai-lieu-phan-tich-pca.html</loc>
+    <lastmod>2023-10-04T08:36:12.249Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-convert-tu-csv-qua-tsv-trong-r.html</loc>
+    <lastmod>2023-10-04T08:36:12.263Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-cach-lam-tron-so-trong-r.html</loc>
+    <lastmod>2023-10-04T08:36:12.281Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-show-all-data-tren-console.html</loc>
+    <lastmod>2023-10-04T08:36:12.319Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/references.html</loc>
+    <lastmod>2023-10-04T08:36:12.329Z</lastmod>
   </url>
 </urlset>

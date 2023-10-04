@@ -27,6 +27,7 @@ book:
         - workflow-phan-tich-thong-ke-qua-dataset-iris.qmd
         # - huong-dan-phan-tich-logistic-regression.qmd
         - example-partial-least-squares-and-principal-component-regression.qmd
+        - tai-lieu-phan-tich-pca.qmd
     - part: "Kỹ thuật xử lý dữ liệu"
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd

@@ -28,6 +28,6 @@ Khi phân tích PCA sẽ có giai đoạn gom cụm dữ liệu. Bạn cần tra
 
 7. Alboukadel Kassambara -Practical Guide To Cluster Analysis in R.  `https://applyr.netlify.app/b1/Practical%20Guide%20to%20Cluster%20Analysis%20in%20R.%20Unsupervised%20Machine%20Learning.pdf`
 
-8. Model-Based Clustering, Classification, and Density Estimation Using mclust in R. 
+8. Model-Based Clustering, Classification, and Density Estimation Using mclust in R. `https://applyr.netlify.app/b1/Model-Based%20Clustering.pdf`
 
 
