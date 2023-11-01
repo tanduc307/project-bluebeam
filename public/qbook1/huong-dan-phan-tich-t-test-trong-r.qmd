@@ -85,7 +85,7 @@ thong_ke_mo_ta <- function(input, group_input, chi_tieu) {
 lapply(names(flower)[-1], FUN = thong_ke_mo_ta,
        input = flower, group_input = "Species") -> ok
 
-names(ok) <- seq <- names(flower)[-1]
+names(ok) <- names(flower)[-1]
 
 ok
 ```
@@ -108,7 +108,7 @@ for(i in 1:length(names(flower)[-1])){
 
 #### <span style="color:blue">**Bước 3:Kiểm tra giả thuyết cho t-test**</span>
 
-<span style="background-color:dodgerblue; text-align:center;color:white;font-size:24px;">**Từ chỗ này trở đi ta sẽ tính riêng cho chỉ tiêu "LBL" cho "Flower A" và "Flower B". Các chỉ tiêu còn lại thực hiện tương tự.**</span>
+<span style="background-color:dodgerblue; text-align:center;color:white;font-size:24px;">**Từ chỗ này trở đi ta sẽ tính riêng chỉ tiêu "LBL" cho "Flower A" và "Flower B". Các chỉ tiêu còn lại thực hiện tương tự.**</span>
 
 **Giả thuyết cho t-test 1 sample**
 
@@ -126,7 +126,7 @@ While t-tests are relatively robust to deviations from assumptions, t-tests do a
     
     * <mark>the Welch's t-test, which is less restrictive compared to the original Student’s test. This is the test where you do not assume that the variance is the same in the two groups, which results in the fractional degrees of freedom.</mark>
     
-**Giả thuyết cho t-test 2 samples** 
+**Giả thuyết cho t-test 2 sample** 
 
 `https://www.jmp.com/en_is/statistics-knowledge-portal/t-test/two-sample-t-test.html`
 
@@ -219,7 +219,7 @@ var.test(flower_a$LBL, flower_b$LBL)
 
 > Interpretation. The p-value is p = 0.05311 which is greater than the significance level 0.05. In conclusion, there is no significant difference between the two variances.
 
-**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai biến này không khác biệt nhau.**
+**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai nhóm này không khác biệt nhau.**
 
 <span style="color:green">**Cách 2: Bartlett's test with one independent variable**</span>
 
@@ -228,7 +228,7 @@ bar_test <- bartlett.test(LBL ~ Species, data = flower)
 bar_test
 ```
 
-**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai biến này không khác biệt nhau.**
+**p-value lớn hơn 0.05 nên bác bỏ H1 chấp nhận H0, tức là phương sai của hai nhóm này không khác biệt nhau.**
 
 <span style="color:green">**Cách 3: Áp dụng Levene's test**</span>
 
@@ -275,7 +275,22 @@ res_2
 
 > The unpaired two-samples Wilcoxon test (also known as Wilcoxon rank sum test or Mann-Whitney test) is a non-parametric alternative to the unpaired two-samples t-test, which can be used to compare two independent groups of samples. It’s used when your data are not normally distributed.
 
-#### <span style="color:blue">**Bước 4:Kiểm tra giả thuyết cho t-test cho cùng lúc nhiều cột**</span>
+#### <span style="color:blue">**Bước 4: Tính effect size**</span>
+
+Salvatore S. Mangiafico. Summary and Analysis of Extension Program Evaluation in R. `https://rcompanion.org/documents/RHandbookProgramEvaluation.pdf`
+
+> Cohen's d can be used as an effect size statistic for a two-sample t-test.  It is calculated as the *difference* between the means of each group, all divided by the pooled standard deviation of the data.
+>
+> It ranges from 0 to infinity, with 0 indicating no effect where the means are equal.  In some versions, Cohen's d can be positive or negative depending on which mean is greater.
+>
+> A Cohen's d of 0.5 suggests that the means differ by one-half the standard deviation of the data.  A Cohen's d of 1.0 suggests that the means differ by one standard deviation of the data.
+
+```{r}
+library(lsr)
+
+lsr::cohensD(LBL ~ Species, data = flower)
+```
+#### <span style="color:blue">**Bước 5: Kiểm tra giả thuyết cho t-test cho cùng lúc nhiều cột**</span>
 
 Ta cần chuyển dữ liệu về dạng long để thuận tiện xử lý và vẽ đồ thị.
 
@@ -365,6 +380,8 @@ for(i in 1:length(variables)){
 6. `https://astrostatistics.psu.edu/su07/R/html/lattice/html/qq.html`
 
 7. `https://adiradaniel.netlify.app/post/ggmultipane/`
+
+8. [Tính diff mean trong t-test two samples](https://rcompanion.org/handbook/I_03.html)
 
 
 
