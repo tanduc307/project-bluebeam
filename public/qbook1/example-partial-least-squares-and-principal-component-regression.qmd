@@ -1,4 +1,4 @@
-# **Bài 28: Example for Partial Least Squares and Principal Component Regression** {.unnumbered}
+# **Example for Partial Least Squares and Principal Component Regression** 
 
 ### **Bước 1: Import dữ liệu**
 

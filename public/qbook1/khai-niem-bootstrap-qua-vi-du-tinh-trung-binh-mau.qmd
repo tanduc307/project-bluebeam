@@ -1,4 +1,4 @@
-# **Bài 19: Khái niệm về bootstrap qua ví dụ tính trung bình mẫu** {.unnumbered}
+# **Khái niệm về bootstrap qua ví dụ tính trung bình mẫu** 
 
 ### **Định nghĩa: What is bootstrap?**
 

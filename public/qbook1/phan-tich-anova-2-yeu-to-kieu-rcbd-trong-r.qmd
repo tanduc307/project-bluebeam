@@ -1,4 +1,4 @@
-# **Bài 14: Phân tích ANOVA 2 yếu tố kiểu RCBD trong R** {.unnumbered}
+# **Phân tích ANOVA 2 yếu tố kiểu RCBD trong R** 
 
 ### **Bước 1: Import dữ liệu**
 

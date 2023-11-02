@@ -1,4 +1,4 @@
-# **Bài 29: Tài liệu phân tích PCA** {.unnumbered}
+# **Tài liệu phân tích PCA** 
 
 Phân tích Principal Component Analysis (PCA) là kỹ thuật giảm chiều của dataset rút gọn còn 2 trục PC1 và PC2 (hay 3 trục PC1, PC2, PC3) nhằm giúp phân tách ra sự khác biệt giữa các nhóm (variables) hoặc giữa các cá thể/observation với nhau.
 

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thống kê sinh học: Từ lý thuyết đến ứng dụng - 6&nbsp; So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./phan-tich-ancova-trong-r.html" rel="next">
+<link href="./phan-tich-anova-2-yeu-to-trong-r.html" rel="prev">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">**So sánh kết quả giữa phân tích parametric và non-parametric ANOVA**</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./"><a href="https://thongkesinhhoc.quarto.pub/">Thống kê sinh học: Từ lý thuyết đến ứng dụng</a></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Giới thiệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Kỹ thuật vẽ đồ thị</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cac-lenh-do-thi-can-ban-su-dung-base-r-graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title"><strong>Các lệnh đồ thị căn bản sử dụng Base R Graphics</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cac-lenh-do-thi-su-dung-package-lattice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><strong>Các lệnh đồ thị sử dụng package <code>lattice</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cac-lenh-do-thi-su-dung-package-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title"><strong>Các lệnh đồ thị sử dụng package <code>ggplot2</code></strong></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./co-so-ly-thuyet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cơ sở lý thuyết</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./khoang-tin-cay.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><strong>Khoảng tin cậy là gì?</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./huong-dan-phan-tich-t-test-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title"><strong>Hướng dẫn phân tích t-test trong R</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-anova-2-yeu-to-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Bài 14: Phân tích ANOVA 2 yếu tố trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><strong>So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./phan-tich-ancova-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><strong>Phân tích ANCOVA trong R</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><strong>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title"><strong>Bố trí thí nghiệm tối ưu hóa bằng R</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title"><strong>Workflow phân tích thống kê qua dataset <code>iris</code></strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./example-partial-least-squares-and-principal-component-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title"><strong>Example for Partial Least Squares and Principal Component Regression</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tai-lieu-phan-tich-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title"><strong>Tài liệu phân tích PCA</strong></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Kỹ thuật xử lý dữ liệu</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./huong-dan-convert-tu-csv-qua-tsv-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Hướng dẫn convert từ file <code>csv</code> qua <code>tsv</code> trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./huong-dan-cach-lam-tron-so-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Hướng dẫn cách làm tròn số trong R</strong></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./huong-dan-show-all-data-tren-console.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Hướng dẫn show all data trên console</strong></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tài liệu tham khảo</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><strong>So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</strong></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="bước-1-đặt-vấn-đề" class="level3" data-number="6.0.1">
+<h3 data-number="6.0.1" class="anchored" data-anchor-id="bước-1-đặt-vấn-đề"><span class="header-section-number">6.0.1</span> <strong>Bước 1: Đặt vấn đề</strong></h3>
+<p>Khi bộ dataset của bạn không thỏa các điều kiện cho ANOVA như ở <a href="https://thongkesinhhoc.quarto.pub/phan-tich-anova-2-yeu-to-trong-r.html">link này</a> thì bạn cần thực hiện phân tích non-parametric ANOVA.</p>
+<p>Quy trình chọn test thống kê phù hợp với đặc điểm dataset. Tham khảo <a href="https://applyr.netlify.app/ref/mcelreath_2020_statistical_rethinking.pdf"><code>mcelreath_2020_statistical_rethinking</code></a></p>
+<p><img src="aov.jpg" class="img-fluid"></p>
+<p><span style="color:blue"><strong>Để làm rõ về quy trình phân tích theo hai hướng parametric (có các tham số như trung bình và phương sai của phân bố chuẩn) và non-parametric (không có các tham số cho phân bố chuẩn) ta sẽ xét cách làm trên cùng 1 bộ dataset.</strong></span></p>
+<p><strong>Dataset minh họa: Dữ liệu đo khối lượng cây ở các nghiệm thức khác nhau.</strong></p>
+<p><strong>Giả thuyết:</strong></p>
+<ul>
+<li><p><span class="math inline">\({H_0}\)</span> : Giữa các nghiệm thức <em>không khác nhau</em> về khối lượng cây</p></li>
+<li><p><span class="math inline">\({H_\alpha }\)</span> : Giữa các nghiệm thức <em>khác nhau</em> về khối lượng cây</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">### sửa lại dữ liệu từ dataset PlantGrowth để trở thành dữ liệu không có phân bố chuẩn.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>PlantGrowth <span class="ot">-&gt;</span> df</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">6.39</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">6.14</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">3</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">7.39</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">4</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">7.55</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">5</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">9.32</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">6</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">8.39</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">21</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.39</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">22</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.14</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">23</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.39</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">24</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.55</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">25</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.32</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">12</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">2.39</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">13</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.14</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">14</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.39</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">15</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.55</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">16</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">1.32</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   weight group
+1    6.39  ctrl
+2    6.14  ctrl
+3    7.39  ctrl
+4    7.55  ctrl
+5    9.32  ctrl
+6    8.39  ctrl
+7    5.17  ctrl
+8    4.53  ctrl
+9    5.33  ctrl
+10   5.14  ctrl
+11   4.81  trt1
+12   2.39  trt1
+13   1.14  trt1
+14   1.39  trt1
+15   0.55  trt1
+16   1.32  trt1
+17   6.03  trt1
+18   4.89  trt1
+19   4.32  trt1
+20   4.69  trt1
+21   1.39  trt2
+22   1.14  trt2
+23   1.39  trt2
+24   0.55  trt2
+25   1.32  trt2
+26   5.29  trt2
+27   4.92  trt2
+28   6.15  trt2
+29   5.80  trt2
+30   5.26  trt2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   weight     group 
+"numeric"  "factor" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">IQR =</span> <span class="fu">IQR</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  group count  mean    sd median   IQR
+  &lt;fct&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1 ctrl     10  6.54  1.58   6.26  2.3 
+2 trt1     10  3.15  1.99   3.36  3.44
+3 trt2     10  3.32  2.32   3.16  3.95</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">get_summary_stats</span>(weight, <span class="at">type =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  group variable     n   min   max median   iqr  mean    sd    se    ci
+  &lt;fct&gt; &lt;fct&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 ctrl  weight      10  4.53  9.32   6.26  2.3   6.54  1.58 0.499  1.13
+2 trt1  weight      10  0.55  6.03   3.36  3.44  3.15  1.99 0.629  1.42
+3 trt2  weight      10  0.55  6.15   3.16  3.94  3.32  2.32 0.732  1.66</code></pre>
+</div>
+</div>
+</section>
+<section id="bước-2-phân-tích-anova-1-yếu-tố-cho-trường-hợp-parametric" class="level3" data-number="6.0.2">
+<h3 data-number="6.0.2" class="anchored" data-anchor-id="bước-2-phân-tích-anova-1-yếu-tố-cho-trường-hợp-parametric"><span class="header-section-number">6.0.2</span> <strong>Bước 2: Phân tích ANOVA 1 yếu tố cho trường hợp parametric</strong></h3>
+<p>Tham khảo: <code>https://www.statsmadeasy.com/tutorial-4-inferential-stats-test-of-difference/one-way-anova-parametric-non-parametric</code></p>
+<p><mark><strong>Bước 2.1: Parametric One-Way ANOVA Assumptions</strong></mark></p>
+<ul>
+<li><p>Independence: Your observations in each sample should be independent. <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+<li><p>Independent Variable: This variable must have 3 or more outcomes. (mỗi chỉ tiêu cần đo lặp lại ít nhất 3 lần) <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+<li><p>Random Sampling: Your data should be a random sample of the target population. <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+<li><p>Equal Variance (Homogeneity): Both groups should have approximately the same variance.</p></li>
+<li><p>Normality: Your Dependent variable should be approximately normally distributed.</p></li>
+</ul>
+<p><mark><strong>Bước 2.2: Kiểm tra giả thuyết</strong></mark></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra giả thuyết Normality</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>res.aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>aov_residuals <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="at">object =</span> res.aov)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="at">x =</span> aov_residuals) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  aov_residuals
+W = 0.88797, p-value = 0.00432</code></pre>
+</div>
+</div>
+<p>Kết quả Shapiro-Wilk normality test cho thấy p-value là 0.00432 nhỏ hơn 0.05. Do đó bộ dataset này KHÔNG phân bố chuẩn. <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #eb4034">VIOLATE</mark></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra giả thuyết Normality qua Q-Q plot</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p>Nhìn đồ thị Q-Q lot ta thấy các giá trị không có phân bố chuẩn.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra giả thuyết Equal Variance (Homogeneity)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = median)
+      Df F value  Pr(&gt;F)  
+group  2  4.3203 0.02356 *
+      27                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Kết quả Levene’s test cho thấy p-value là 0.02356 nhỏ hơn 0.05. Do đó bộ dataset này có sự khác biệt về phương sai giữa các tổ hợp các mức khác nhau của 2 biến <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #eb4034">VIOLATE</mark></p>
+<p><code>It’s also possible to use Bartlett’s test or Levene’s test to check the homogeneity of variances.</code></p>
+<p><mark><strong>Bước 2.3: Mô tả đặc điểm dữ liệu qua đồ thị</strong></mark></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>( <span class="sc">~</span> weight <span class="sc">|</span> group, <span class="at">data =</span>df,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"density"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">panel =</span> <span class="cf">function</span>(x, ...) {</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>             <span class="fu">panel.histogram</span>(x, ...)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>             <span class="fu">panel.mathdensity</span>(<span class="at">dmath =</span> dnorm, <span class="at">col =</span> <span class="st">"black"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean=</span><span class="fu">mean</span>(x),<span class="at">sd=</span><span class="fu">sd</span>(x)))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>           } )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="768"></p>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"group"</span>, <span class="at">y =</span> <span class="st">"weight"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="768"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggline</span>(df, <span class="at">x =</span> <span class="st">"group"</span>, <span class="at">y =</span> <span class="st">"weight"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"trt1"</span>, <span class="st">"trt2"</span>), <span class="at">add =</span> <span class="fu">c</span>(<span class="st">"mean_sd"</span>, <span class="st">"dotplot"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="768"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">reorder</span>(df<span class="sc">$</span>group, df<span class="sc">$</span>weight, <span class="at">decreasing =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df, <span class="at">frame =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">horizontal =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">axisnames =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p><mark><strong>Bước 2.4: Thực hiện ANOVA 1 yếu tố</strong></mark></p>
+<p><span style="color:red">Cho dù đã vi phạm giả thuyết, nếu ta vẫn tiếp tục thực hiện ANOVA 1 yếu tố như bình thường thì kết quả sẽ như sau.</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>res.aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(res.aov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: weight
+          Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+group      2  72.653  36.327  9.2271 0.0008834 ***
+Residuals 27 106.298   3.937                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><span style="color:red">Kết quả cho thấy p-value = 0.0008834 nhỏ hơn 0.05 nên có ý nghĩa thống kê, dù rằng dataset này đã vi phạm giả thuyết về phân bố chuẩn!</span></p>
+<p><strong>Tham khảo thêm:</strong></p>
+<p><strong><code>ANOVA test with no assumption of equal variances</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oneway.test</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One-way analysis of means (not assuming equal variances)
+
+data:  weight and group
+F = 11.087, num df = 2.000, denom df = 17.548, p-value = 0.0007708</code></pre>
+</div>
+</div>
+<p><strong><code>Pairwise t-tests with no assumption of equal variances</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(df<span class="sc">$</span>weight, df<span class="sc">$</span>group,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">p.adjust.method =</span> <span class="st">"BH"</span>, <span class="at">pool.sd =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using t tests with non-pooled SD 
+
+data:  df$weight and df$group 
+
+     trt1   trt2  
+trt2 0.8638 -     
+ctrl 0.0017 0.0034
+
+P value adjustment method: BH </code></pre>
+</div>
+</div>
+<p><mark><strong>Bước 2.5: Phân hạng trong trường hợp parametric</strong></mark></p>
+<p><strong>Cách 1: Sử dụng function trong base R</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(res.aov) <span class="ot">-&gt;</span> tukey_yes</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tukey_yes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p><strong>Cách 2: Sử dụng function trong package <code>agricolae</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">HSD.test</span>(res.aov, <span class="st">"group"</span>, <span class="at">console =</span> <span class="cn">TRUE</span>) <span class="ot">-&gt;</span> tukey_ok</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Study: res.aov ~ "group"
+
+HSD Test for weight 
+
+Mean Square Error:  3.936961 
+
+group,  means
+
+     weight      std  r  Min  Max
+ctrl  6.535 1.578215 10 4.53 9.32
+trt1  3.153 1.990037 10 0.55 6.03
+trt2  3.321 2.315141 10 0.55 6.15
+
+Alpha: 0.05 ; DF Error: 27 
+Critical Value of Studentized Range: 3.506426 
+
+Minimun Significant Difference: 2.200114 
+
+Treatments with the same letter are not significantly different.
+
+     weight groups
+ctrl  6.535      a
+trt2  3.321      b
+trt1  3.153      b</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tukey_ok)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p><span style="color:red">Kết quả cho thấy vẫn thực hiện được phân hạng theo Tukey như bình thường, dù rằng dataset này đã vi phạm giả thuyết về phân bố chuẩn!</span></p>
+<p><strong>Cách 4: Sử dụng function trong package <code>multcomp</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glht</span>(res.aov, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">group =</span> <span class="st">"Tukey"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: aov(formula = weight ~ group, data = df)
+
+Linear Hypotheses:
+                 Estimate Std. Error t value Pr(&gt;|t|)   
+trt2 - trt1 == 0   0.1680     0.8874   0.189  0.98045   
+ctrl - trt1 == 0   3.3820     0.8874   3.811  0.00197 **
+ctrl - trt2 == 0   3.2140     0.8874   3.622  0.00335 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<p><strong>Cách 5: Thể hiện phân hạng qua đồ thị boxplot</strong></p>
+<p><code>https://statsandr.com/blog/kruskal-wallis-test-nonparametric-version-anova/</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"trt1"</span>, <span class="st">"trt2"</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> group,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> weight,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"parametric"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.type =</span> <span class="st">"box"</span>,</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.comparisons =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.display =</span> <span class="st">"significant"</span>,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality.plotting =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">bf.message =</span> <span class="cn">TRUE</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</section>
+<section id="bước-3-phân-tích-anova-1-yếu-tố-cho-trường-hợp-non-parametric" class="level3" data-number="6.0.3">
+<h3 data-number="6.0.3" class="anchored" data-anchor-id="bước-3-phân-tích-anova-1-yếu-tố-cho-trường-hợp-non-parametric"><span class="header-section-number">6.0.3</span> <strong>Bước 3: Phân tích ANOVA 1 yếu tố cho trường hợp non-parametric</strong></h3>
+<p>Tham khảo: <code>https://www.statsmadeasy.com/tutorial-4-inferential-stats-test-of-difference/one-way-anova-parametric-non-parametric</code></p>
+<p><mark><strong>Bước 3.1: Non-parametric One-Way ANOVA Assumptions</strong></mark></p>
+<ul>
+<li><p>Independence: Your observations in each sample should be independent. <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+<li><p>Independent Variable: This variable must have 3 or more outcomes. (mỗi chỉ tiêu cần đo lặp lại ít nhất 3 lần) <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+<li><p>Random Sampling: Your data should be a random sample of the target population. <span class="math inline">\(\Rightarrow\)</span> <mark style="background-color: #FFFF00">OK</mark></p></li>
+</ul>
+<p><mark><strong>Bước 3.2: Kiểm tra giả thuyết</strong></mark></p>
+<p>Thực tế cả 3 giả thuyết cho non-parametric thì bộ dataset này đã đáp ứng đủ nên không cần làm bước này.</p>
+<p><mark><strong>Bước 3.3: Thực hiện ANOVA 1 yếu tố non-parametric</strong></mark></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># kruskal.test(weight ~ group, data = df)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>res.kruskal <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> rstatix<span class="sc">::</span><span class="fu">kruskal_test</span>(weight <span class="sc">~</span> group)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>res.kruskal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  .y.        n statistic    df       p method        
+* &lt;chr&gt;  &lt;int&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;         
+1 weight    30      11.9     2 0.00265 Kruskal-Wallis</code></pre>
+</div>
+</div>
+<p><span style="color:red">Kết quả cho thấy p-value = 0.00265 nhỏ hơn 0.05 nên có ý nghĩa thống kê. Đây cũng trùng hợp với kết quả từ ANOVA parametric ở trên!</span></p>
+<blockquote class="blockquote">
+<p>Về lý thuyết, Kruskal-Wallis test có thể áp dụng cho two groups. Nhưng trong thực tế ta sẽ dùng the Mann-Whitney test for two groups and Kruskal-Wallis for three or more groups.</p>
+</blockquote>
+<p><mark><strong>Bước 3.4: Tính effect size</strong></mark></p>
+<p><code>https://www.datanovia.com/en/lessons/kruskal-wallis-test-in-r/</code></p>
+<blockquote class="blockquote">
+<p>The eta squared, based on the H-statistic, can be used as the measure of the Kruskal-Wallis test effect size. It is calculated as follow : eta2[H] = (H - k + 1)/(n - k); where H is the value obtained in the Kruskal-Wallis test; k is the number of groups; n is the total number of observations (M. T. Tomczak and Tomczak 2014).</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The eta-squared estimate assumes values from 0 to 1 and multiplied by 100 indicates the percentage of variance in the dependent variable explained by the independent variable.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The interpretation values commonly in published literature are: 0.01- &lt; 0.06 (small effect), 0.06 - &lt; 0.14 (moderate effect) and &gt;= 0.14 (large effect).</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span> rstatix<span class="sc">::</span><span class="fu">kruskal_effsize</span>(weight <span class="sc">~</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+  .y.        n effsize method  magnitude
+* &lt;chr&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;ord&gt;    
+1 weight    30   0.365 eta2[H] large    </code></pre>
+</div>
+</div>
+<p><strong>Ý nghĩa của effect size</strong></p>
+<p><code>https://lbecker.uccs.edu/glm_effectsize</code></p>
+<p><mark><strong>Bước 3.5: Phân hạng trong trường hợp non-parametric</strong></mark></p>
+<p><span style="color:blue">Lưu ý: Phân hạng theo parametric (Tukey’s test) thì ta căn cứ vào mean nên tính được diff mean (sự khác biệt giữa các trung bình) nên có thể phân ra theo từng hạng a, b, c, … còn phân hạng theo non-parametric ta căn cứ vào median nên chỉ phân hạng theo từng cặp, theo sign test +/- cho thấy sự khác biệt giữa các cặp nghiệm thức với nhau.</span></p>
+<p><strong>Cách 1: Pairwise comparisons using Dunn’s test</strong> (most common post-hoc test)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>pwc <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> rstatix<span class="sc">::</span><span class="fu">dunn_test</span>(weight <span class="sc">~</span> group, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>) </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>pwc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  .y.    group1 group2    n1    n2 statistic       p   p.adj p.adj.signif
+* &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       
+1 weight ctrl   trt1      10    10    -3.24  0.00119 0.00357 **          
+2 weight ctrl   trt2      10    10    -2.63  0.00851 0.0255  *           
+3 weight trt1   trt2      10    10     0.610 0.542   1       ns          </code></pre>
+</div>
+</div>
+<p><strong>Kết quả so sánh theo cặp theo Dunn’s test cho thấy cặp nghiệm thức <code>trt1-trt2</code> không khác nhau về mặt ý nghĩa thống kê p-value là <em>ns</em>. Còn lại giữa 2 cặp nghiệm thức <code>ctrl-trt1</code> và <code>ctrl-trt2</code> khác biệt có ý nghĩa thống kê vì p-value nhỏ hơn 0.05.</strong></p>
+<p><strong>Cách 2: Pairwise comparisons using Dunn’s test trong package <code>FSA</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FSA)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>FSA<span class="sc">::</span><span class="fu">dunnTest</span>(weight <span class="sc">~</span> group,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"holm"</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Comparison          Z     P.unadj       P.adj
+1 ctrl - trt1  3.2410278 0.001190996 0.003572987
+2 ctrl - trt2  2.6309520 0.008514606 0.017029212
+3 trt1 - trt2 -0.6100758 0.541811579 0.541811579</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that there are other p-value adjustment methods. See ?dunnTest for more options</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>It is the last column (the adjusted p-values, adjusted for multiple comparisons) that is of interest. These p-values should be compared to your desired significance level (usually 5%).</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Based on the output, we conclude that:</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><code>ctrl</code> and <code>trt1</code> differ significantly (p &lt; 0.05)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><code>ctrl</code> and <code>trt2</code> differ significantly (p &lt; 0.05)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><code>trt1</code> and <code>trt2</code> NOT differ significantly (p &gt; 0.05)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Therefore, based on the Dunn’s test, we can now conclude that only <code>ctrl-trt1</code> and <code>ctrl-trt2</code> differ in terms of weight.</p>
+</blockquote>
+<p><strong>Cách 3: Pairwise comparisons using Wilcoxon’s test</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>pwc2 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(weight <span class="sc">~</span> group, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>pwc2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  .y.    group1 group2    n1    n2 statistic        p p.adj p.adj.signif
+* &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       
+1 weight ctrl   trt1      10    10      93   0.000487 0.001 **          
+2 weight ctrl   trt2      10    10      84   0.011    0.034 *           
+3 weight trt1   trt2      10    10      42.5 0.596    1     ns          </code></pre>
+</div>
+</div>
+<p><strong>Kết quả so sánh theo cặp theo Wilcoxon’s test cho thấy cặp nghiệm thức <code>trt1-trt2</code> không khác nhau về mặt ý nghĩa thống kê p-value là <em>ns</em>. Còn lại giữa 2 cặp nghiệm thức <code>ctrl-trt1</code> và <code>ctrl-trt2</code> khác biệt có ý nghĩa thống kê vì p-value nhỏ hơn 0.05.</strong></p>
+<p><strong>Cách 3: Thể hiện phân hạng qua đồ thị boxplot</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Dunn's test</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>pwc <span class="ot">&lt;-</span> pwc <span class="sc">%&gt;%</span> <span class="fu">add_xy_position</span>(<span class="at">x =</span> <span class="st">"group"</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"group"</span>, <span class="at">y =</span> <span class="st">"weight"</span>) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(pwc, <span class="at">hide.ns =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">get_test_label</span>(res.kruskal, <span class="at">detailed =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="fu">get_pwc_label</span>(pwc)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="768"></p>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wilcoxon's test</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>pwc2 <span class="ot">&lt;-</span> pwc2 <span class="sc">%&gt;%</span> <span class="fu">add_xy_position</span>(<span class="at">x =</span> <span class="st">"group"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"group"</span>, <span class="at">y =</span> <span class="st">"weight"</span>) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_pvalue_manual</span>(pwc2, <span class="at">hide.ns =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">get_test_label</span>(res.kruskal, <span class="at">detailed =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="fu">get_pwc_label</span>(pwc2)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> group,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> weight,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"nonparametric"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.type =</span> <span class="st">"box"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.comparisons =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.display =</span> <span class="st">"significant"</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">centrality.plotting =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">bf.message =</span> <span class="cn">TRUE</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="so-sanh-ket-qua-giua-parametric-va-non-parametric-anova_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</section>
+<section id="tài-liệu-tham-khảo" class="level3" data-number="6.0.4">
+<h3 data-number="6.0.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">6.0.4</span> Tài liệu tham khảo</h3>
+<ol type="1">
+<li><p><code>https://bookdown.org/mike/data_analysis/nonparametric-anova.html</code></p></li>
+<li><p><code>https://jbhender.github.io/Stats506/F18/GP/Group3.html</code></p></li>
+<li><p><code>https://www.datanovia.com/en/lessons/kruskal-wallis-test-in-r/</code></p></li>
+<li><p><code>https://influentialpoints.com/Training/Kruskal-Wallis_ANOVA_use_and_misuse.htm#:~:text=The%20Kruskal%2DWallis%20one%2Dway,test%20of%20dominance%20between%20distributions.</code></p></li>
+<li><p><code>https://statsandr.com/blog/hypothesis-test-by-hand/</code></p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-page-right">
+  <div class="nav-page nav-page-previous">
+      <a href="./phan-tich-anova-2-yeu-to-trong-r.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><strong>Bài 14: Phân tích ANOVA 2 yếu tố trong R</strong></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./phan-tich-ancova-trong-r.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><strong>Phân tích ANCOVA trong R</strong></span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

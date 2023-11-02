@@ -1,4 +1,4 @@
-# **Bài 26: Workflow phân tích thống kê qua dataset `iris`** {.unnumbered}
+# **Workflow phân tích thống kê qua dataset `iris`**
 
 ## Đặc điểm dataset `iris`
 

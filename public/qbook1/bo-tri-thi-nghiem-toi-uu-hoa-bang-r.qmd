@@ -1,4 +1,4 @@
-# **Bài 24: Bố trí thí nghiệm tối ưu hóa bằng R** {.unnumbered}
+# **Bố trí thí nghiệm tối ưu hóa bằng R** 
 
 ### Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa
 

@@ -14,6 +14,11 @@ book:
   #     theme: clean
   chapters:
     - index.qmd
+    - part: "Kỹ thuật vẽ đồ thị"
+      chapters:
+        - cac-lenh-do-thi-can-ban-su-dung-base-r-graphics.qmd  
+        - cac-lenh-do-thi-su-dung-package-lattice.qmd
+        - cac-lenh-do-thi-su-dung-package-ggplot2.qmd
     - part: co-so-ly-thuyet.qmd
       chapters:
         - khoang-tin-cay.qmd
@@ -32,10 +37,7 @@ book:
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
         - huong-dan-cach-lam-tron-so-trong-r.qmd
-        - huong-dan-show-all-data-tren-console.qmd
-    - part: "Kỹ thuật vẽ đồ thị"
-      chapters:
-        - cac-lenh-do-thi-can-ban.qmd    
+        - huong-dan-show-all-data-tren-console.qmd    
     - references.qmd
     
   sidebar:
@@ -44,7 +46,7 @@ book:
     title: "<a href='https://thongkesinhhoc.quarto.pub/'>Thống kê sinh học: Từ lý thuyết đến ứng dụng</a>"
           
 bibliography: references.bib
-
+number-sections: true
 format:
   html:
     toc: false
