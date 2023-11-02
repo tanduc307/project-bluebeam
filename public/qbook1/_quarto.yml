@@ -33,6 +33,9 @@ book:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
         - huong-dan-cach-lam-tron-so-trong-r.qmd
         - huong-dan-show-all-data-tren-console.qmd
+    - part: "Kỹ thuật vẽ đồ thị"
+      chapters:
+        - cac-lenh-do-thi-can-ban.qmd    
     - references.qmd
     
   sidebar:
