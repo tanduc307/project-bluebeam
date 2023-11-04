@@ -1,0 +1,259 @@
+# **Hướng dẫn vẽ đồ thị cột bằng Base R Graphics** 
+
+```{r, include=FALSE}
+options(width = 1200)
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, warning = FALSE, message = FALSE)
+```
+
+## Dữ liệu minh họa: Doanh thu bán hàng
+
+```{r}
+# https://tuhocr.netlify.app/flashr/loop/doanh_thu_ban_hang.xlsx
+library(readxl)
+
+doanh_thu <- readxl::read_excel("doanh_thu_ban_hang.xlsx")
+
+doanh_thu <- as.data.frame(doanh_thu)
+
+doanh_thu <- doanh_thu[ , c(1, 2, 5, 8, 6, 3, 4, 7, 9)]
+
+doanh_thu 
+```
+
+### Vẽ đồ thị cột cho số lượng nam và nữ
+
+#### Vẽ từ object thuộc class `table`
+
+**Cú pháp cơ bản**
+
+```{r, fig.width=6, fig.height=4}
+# table(doanh_thu$`Giới tính`, useNA = "always") -> gender
+
+table(doanh_thu$`Giới tính`, useNA = "no") -> gender
+gender
+class(gender)
+
+# vẽ barplot từ kết quả của class table
+barplot(height = gender,
+        col = c("coral", "aquamarine"),
+        horiz = FALSE
+        )
+
+barplot(height = gender,
+        col = c("coral", "aquamarine"),
+        horiz = TRUE
+        )
+```
+
+**Cú pháp nâng cao**
+
+```{r, fig.width=6, fig.height=4}
+barplot(height = gender,
+        las = 1,
+        xlab = "Giới tính",
+        ylab = "Số đếm",
+        main = "Số lượng nam nữ trong công ty",
+        sub = "Nguồn: Dữ liệu mô phỏng",
+        width = c(0.1, 0.1),
+        xlim = c(0, 0),
+        space = c(-6, 9),
+        col = c("coral", "aquamarine"),
+        ylim = c(0, 50),
+        horiz = FALSE,
+        border = c("purple", "blue")
+        )
+
+box()
+```
+
+#### Vẽ từ object thuộc class `numeric vector`
+
+```{r, fig.width=6, fig.height=4}
+gender_numeric <- c("Nam" = 29, "Nữ" = 31)
+gender_numeric
+class(gender_numeric)
+
+barplot(height = gender_numeric,
+        las = 1,
+        xlab = "Giới tính",
+        ylab = "Số đếm",
+        main = "Số lượng nam nữ trong công ty",
+        sub = "Nguồn: Dữ liệu mô phỏng",
+        width = c(0.1, 0.1),
+        xlim = c(0, 0),
+        space = c(-6, 9),
+        col = c("coral", "aquamarine"),
+        ylim = c(0, 50),
+        horiz = FALSE,
+        border = c("purple", "blue")
+        )
+box()
+```
+
+
+#### Vẽ từ object thuộc class `character vector`
+
+```{r, fig.width=6, fig.height=4, error=TRUE}
+gender_character <- c("Nam" = "29", "Nữ" = "31")
+gender_character
+class(gender_character)
+
+barplot(height = gender_character,
+        las = 1,
+        xlab = "Giới tính",
+        ylab = "Số đếm",
+        main = "Số lượng nam nữ trong công ty",
+        sub = "Nguồn: Dữ liệu mô phỏng",
+        width = c(0.1, 0.1),
+        xlim = c(0, 0),
+        space = c(-6, 9),
+        col = c("coral", "aquamarine"),
+        ylim = c(0, 50),
+        horiz = FALSE,
+        border = c("purple", "blue")
+        )
+# box()
+```
+
+**<mark style="background-color: #FFFF00">Không vẽ được!</mark>**
+
+#### Vẽ từ object thuộc class `numeric matrix`
+
+**Bình thường nếu là kết quả từ class `table` ta đưa vào lệnh `barplot` sẽ vẽ ra đồ thị cột nhanh chóng.**
+
+```{r, fig.width=6, fig.height=4}
+
+table(doanh_thu$`Chức vụ`, useNA = "no") -> position
+
+barplot(position)
+
+```
+
+**Tuy nhiên nếu ta có dữ liệu ở dạng matrix thì cách vẽ như sau:**
+
+```{r, fig.width=6, fig.height=4}
+
+m <- matrix(data = c(7, 36, 6, 11),
+            nrow = 4, ncol = 1)
+
+rownames(m) <- c("Học việc", "Nhân viên", "Quản lý", "Thực tập sinh")
+
+m
+
+barplot(m)
+
+barplot(m, 
+        beside = TRUE,
+        # names.arg = rownames(m),
+        names = rownames(m))
+```
+
+**Cú pháp chi tiết**
+
+```{r, fig.width=6, fig.height=4}
+b <- barplot(height = m, 
+        beside = TRUE,
+        names.arg = rownames(m),
+        space = 2,
+        ylim = c(0, 50),
+        xlab = "Chức vụ",
+        ylab = "Số đếm",
+        main = "Số lượng nhân viên theo vị trí việc làm",
+        sub = "Nguồn: Dữ liệu mô phỏng",
+        density = c(30, 30, 30, 30),
+        angle = c(0, 30, 60, 90, 120), 
+        col = terrain.colors(5)
+        )
+box()
+
+text(b, m + 3, m, font = 1, col = "black")
+
+```
+
+
+**Trong trường hợp khi xoay ma trận `m`, ta có ma trận `n` như sau:**
+
+```{r, fig.width=6, fig.height=4}
+n <- t(m)
+
+n
+
+barplot(n, beside = FALSE) # ma trận xoay ngang thì các cột được vẽ. Không bị stacked lại như ở m.
+
+barplot(n, beside = TRUE,
+        col = c("cyan", "yellow", "coral", "lightblue"),
+        width = c(1, 1, 1, 1),
+        space = c(0.5, 0.5, 0.5, 0.5))
+```
+
+#### Vẽ từ object thuộc class `character matrix`
+
+```{r, error=TRUE}
+character_matrix <- apply(X = m, MARGIN = 2, FUN = as.character)
+
+row.names(character_matrix) <- row.names(m)
+
+character_matrix
+
+barplot(character_matrix, 
+        beside = TRUE,
+        names.arg = rownames(character_matrix)
+        )
+```
+
+**<mark style="background-color: #FFFF00">Không vẽ được!</mark>**
+
+<!-- ### barplot formular -->
+<!-- #### Vẽ từ object thuộc class `character matrix` -->
+
+<!-- ```{r} -->
+
+<!-- ``` -->
+
+
+
+
+
+<!-- ## Dữ liệu thực tế: Tình hình sản xuất lúa gạo ở Việt Nam -->
+
+<!-- ```{r} -->
+<!-- # https://tuhocr.netlify.app/flashr/loop/crop_production_all_data.rds -->
+<!-- # https://tuhocr.netlify.app/flashr/loop/FAOSTAT_data_3-21-2023.csv -->
+<!-- # df_1 <- readRDS("crop_production_all_data.rds") -->
+<!-- # df_2 <- read.csv("FAOSTAT_data_3-21-2023.csv")  -->
+<!-- #  -->
+<!-- # library(tuhocr) -->
+<!-- # rice <- tuhocr::extract_faostat(input_rds = df_1, -->
+<!-- #                         input_region = df_2, -->
+<!-- #                         input_item = "Rice") -->
+<!-- #  -->
+<!-- # head(rice) -->
+<!-- # dim(rice) -->
+<!-- ``` -->
+
+<!-- **Chọn riêng dữ liệu gạo của Việt Nam** -->
+
+<!-- ```{r} -->
+<!-- # rice |> subset(area == "Viet Nam") -> rice_vietnam -->
+<!-- #  -->
+<!-- # row.names(rice_vietnam) <- NULL -->
+<!-- #  -->
+<!-- # rice_vietnam -->
+<!-- #  -->
+<!-- # class(rice_vietnam) -->
+<!-- ``` -->
+
+<!-- ### Vẽ đồ thị cột -->
+
+<!-- ```{r} -->
+<!-- # barplot(production ~ year, data = rice_vietnam) -->
+<!-- ``` -->
+
+
+
+
+<!-- ### Vẽ đồ thị đường -->
+
+<!-- ### Tài liệu tham khảo -->
+
+<!-- 1. `https://www.learnbyexample.org/r-bar-plot-base-graph/` -->

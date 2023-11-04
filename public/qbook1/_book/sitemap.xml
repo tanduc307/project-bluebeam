@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.tuhocr.com/index.html</loc>
-    <lastmod>2023-11-02T18:41:48.302Z</lastmod>
+    <lastmod>2023-11-03T06:58:54.969Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/co-so-ly-thuyet.html</loc>
@@ -70,10 +70,18 @@
   </url>
   <url>
     <loc>https://www.tuhocr.com/cac-lenh-do-thi-can-ban-su-dung-base-r-graphics.html</loc>
-    <lastmod>2023-11-02T20:30:31.602Z</lastmod>
+    <lastmod>2023-11-03T09:53:15.201Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/cac-lenh-do-thi-su-dung-package-lattice.html</loc>
     <lastmod>2023-11-02T18:26:59.975Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-ve-do-thi-cot-base-r-graphics.html</loc>
+    <lastmod>2023-11-03T06:03:31.661Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/huong-dan-cach-thay-doi-do-rong-cot-trong-barplot.html</loc>
+    <lastmod>2023-11-03T07:55:19.354Z</lastmod>
   </url>
 </urlset>
