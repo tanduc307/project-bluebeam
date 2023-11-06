@@ -38,7 +38,8 @@ book:
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
         - huong-dan-cach-lam-tron-so-trong-r.qmd
-        - huong-dan-show-all-data-tren-console.qmd    
+        - huong-dan-show-all-data-tren-console.qmd   
+        - ky-thuat-reshape-du-lieu.qmd
     - references.qmd
     
   sidebar:

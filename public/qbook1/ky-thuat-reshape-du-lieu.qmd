@@ -1,0 +1,319 @@
+# **Kỹ thuật reshape dữ liệu** {.unnumbered}
+
+```{r, include=FALSE}
+options(width = 1200)
+knitr::opts_chunk$set(fig.width = 6, fig.height = 6, warning = FALSE, message = FALSE)
+```
+
+## Sử dụng lệnh `reshape` của base R 
+
+**Lệnh `stats::reshape` này là căn bản của base R giúp chuyển dữ liệu từ long sang wide và ngược lại. Hạn chế là nếu dữ liệu unbalanced thì quá trình chuyển đổi sẽ phức tạp.**
+
+**Lưu ý là khái niệm *semi-long* và *semi-wide* data là nói về các dạng dữ liệu ở trạng thái `long` và `wide` chưa triệt để. Còn *long* và *wide* nói về dạng dữ liệu ở trạng thái `long` và `wide` triệt để. Như vậy cùng 1 bộ dataset khi reshape sẽ có nhiều hơn 1 cách sắp xếp dữ liệu tùy vào nhu cầu phân tích của người dùng (chủ yếu để phù hợp với đặc điểm dữ liệu mà các function trong R yêu cầu khi vẽ đồ thị hay phân tích thống kê).**
+
+<!-- ### 1.1 Chuyển dữ liệu từ `wide` về `long` -->
+
+<!-- Ta có dataset dạng `wide`, với mỗi dòng là 1 cá thể khác nhau. Dữ liệu này `ballance`. Giờ chuyển thành dạng `long` như sau. -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- iris[c(1:5, 51:55, 101:105), c(1, 2, 5)] -> df -->
+<!-- names(df)[1] <- "length" -->
+<!-- names(df)[2] <- "width" -->
+<!-- names(df)[3] <- "sample" -->
+<!-- row.names(df) <- NULL -->
+<!-- df[, c(3, 1, 2)] -> df -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- df  -->
+
+<!-- df_long <- reshape(df,  -->
+<!--                    varying = list(2:3),  -->
+<!--                    v.names = "value",  -->
+<!--                    timevar = "variable", -->
+<!--                    times = names(df)[2:3],  -->
+<!--                    idvar = "sample_id",  -->
+<!--                    direction = "long") -->
+
+<!-- df_long -->
+
+<!-- df_long |> dplyr::arrange(sample_id) -> df_long_1 -->
+
+<!-- df_long_1 -> df_long_2 -->
+
+<!-- attributes(df_long_2)$reshapeLong <- NULL -->
+
+<!-- df_long_2 -->
+<!-- ``` -->
+
+<!-- Chuyển từ `long` về `wide`. -->
+
+<!-- ```{r} -->
+<!-- df_wide <- reshape(df_long_2, -->
+<!--                    idvar = c("sample_id"), -->
+<!--                    v.names = c("value"), -->
+<!--                    timevar = "variable", -->
+<!--                    direction = "wide")  -->
+
+<!-- row.names(df_wide) <- NULL -->
+
+<!-- attributes(df_wide)$reshapeWide <- NULL -->
+
+<!-- df_wide[, c(1, 3, 4)] -> df_wide_1 -->
+
+<!-- names(df_wide_1)[2] <- "length" -->
+<!-- names(df_wide_1)[3] <- "width" -->
+
+<!-- df_wide_1 -->
+
+<!-- identical(df, df_wide_1) -->
+<!-- ``` -->
+
+<!-- ### 1.2 Chuyển dữ liệu từ `wide` về `long` -->
+
+<!-- Để rõ hơn, ở `df` ban đầu ta cần có ký hiệu `origin_id` tương ứng từng dòng. -->
+
+<!-- ```{r} -->
+<!-- df -> df_ok -->
+
+<!-- df_ok$origin_id <- c(201:215) -->
+
+<!-- df_ok <- df_ok[, c(4, 1, 2, 3)] -->
+
+<!-- df_ok -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- af_long <- reshape(df_ok,  -->
+<!--                    varying = list(3:4),  -->
+<!--                    v.names = "value",  -->
+<!--                    timevar = "variable", -->
+<!--                    times = names(df_ok)[3:4],  -->
+<!--                    idvar = "sample_id", # tạo ra cột id mới  -->
+<!--                    direction = "long") -->
+
+<!-- af_long -->
+
+<!-- row.names(af_long) <- NULL -->
+<!-- attributes(af_long)$reshapeLong <- NULL -->
+
+<!-- af_long |> dplyr::arrange(sample_id) -> af_long_1 -->
+
+<!-- af_long_1 -> af_long_2 -->
+
+<!-- af_long_2 -->
+<!-- ``` -->
+
+<!-- Chuyển từ `long` về `wide` -->
+
+<!-- ```{r} -->
+<!-- # af_wide <- reshape(af_long_2, -->
+<!-- #                    idvar = c("sample_id"), -->
+<!-- #                    v.names = c("value"), -->
+<!-- #                    timevar = "variable", -->
+<!-- #                    direction = "wide")  -->
+
+<!-- af_wide <- reshape(af_long_2, -->
+<!--                    idvar = c("sample_id", "sample", "origin_id"), -->
+<!--                    v.names = c("value"), -->
+<!--                    timevar = "variable", -->
+<!--                    direction = "wide")  -->
+
+<!-- row.names(af_wide) <- NULL -->
+
+<!-- attributes(af_wide)$reshapeWide <- NULL -->
+
+<!-- af_wide[, c(1, 2, 4, 5)] -> af_wide_1 -->
+
+<!-- names(af_wide_1)[3] <- "length" -->
+<!-- names(af_wide_1)[4] <- "width" -->
+
+<!-- af_wide_1 -->
+
+<!-- identical(df_ok, af_wide_1) -->
+<!-- ``` -->
+
+### Áp dụng lệnh `reshape` của base R cho imbalanced dataset
+
+**Ta có dataset ở dạng long, ký hiệu là `survey` với thông tin như sau. Trong đây thì cột `id` là mã số người tham gia khảo sát, `gender` là giới tính, `age` là tuổi, `income` là thu nhập và `year` là năm.**
+
+```{r}
+id <- c("111", "111", "112", "112", "112", 
+        "114", "315", "315", "315", "539")
+
+gender <- c("male", "male", "female", "female", "female", 
+            "female", "male", "male", "male", "female")
+
+age <- c(56, 58, 29, 31, 33, 
+         NA, 86, 88, 90, NA)
+
+income <- c(1000, 2500, NA, 400, 540, 
+            200, 440, NA, NA, 300)
+
+year <- c(2012, 2014, 2012, 2014, 2016,
+          2016, 2012, 2014, 2016, 2016)
+
+survey <- data.frame(id, gender, age, income, year)
+
+survey
+```
+
+**Vì `id` và `gender` không thay đổi qua các năm ở cùng 1 cá nhân nên khi reshape từ long sang wide ta sẽ giữ lại 2 cột này.**
+
+```{r}
+survey_wide_1 <- reshape(survey, 
+                         direction = "wide", # định vị kiểu spread dữ liệu dạng wide
+                         idvar = c("id", "gender"), # giữ lại 2 cột này
+                         timevar = "year", # spread ra theo cột `year`
+                         v.names = c("age", "income") # chọn 2 cột để spread dữ liệu
+                         ) 
+
+survey_wide_1 # dữ liệu sau khi reshape
+
+row.names(survey_wide_1) <- NULL
+
+attributes(survey_wide_1)$reshapeWide <- NULL
+
+# dataset đã làm sạch attributes 
+# có thể sắp xếp thứ tự cột cho chuẩn về 1 trật tự thuận tiện cho việc subset sau này
+survey_wide_1 
+
+```
+
+**Như vậy ta có dữ liệu ở dạng wide, giờ nếu chuyển về dạng long thì R sẽ chuyển về dạng *long triệt để*, rồi sau đó ta mới tìm cách chuyển về dạng *semi-long* như là dataset `survey` ban đầu.**
+
+```{r}
+survey_long_1 <- reshape(survey_wide_1, 
+                         direction = "long", # định vị kiểu spread dữ liệu dạng long
+                         varying = list(3:8), # xác định các cột được rút lại khi reshape về dạng long
+                         v.names = "value", # tên cột mới chứa giá trị tương ứng
+                         timevar = "variable", # tên cột mới chứa tên của các cột được rút lại theo varying
+                         times = names(survey_wide_1)[3:8], # R căn cứ vào đây để đưa tên cột `variable`
+                         idvar = c("id") # nếu trong dataset ban đầu có cột id thì chỉ định luôn, 
+                         #nếu không thì ta cần đặt tên cột `sample_id` 
+                         #để R chỉ ra vị trí các cột sau khi gather
+                      )
+
+row.names(survey_long_1) <- NULL
+
+attributes(survey_long_1)$reshapeLong <- NULL
+
+survey_long_1
+```
+
+**Tiếp tục chuyển `survey_long_1` về dạng cấu trúc y chang dataset `survey` ban đầu bằng cách reshape qua dạng wide cho các biến `age` và `income`.**
+
+**Bước 1: Tách ra thành các cột riêng**
+
+```{r}
+strsplit(survey_long_1$variable, split = "\\.") -> ok
+
+ok
+
+do.call(rbind, ok) -> ok_1
+
+ok_1
+
+survey_long_1$chi_tieu_theo_doi <- ok_1[, 1]
+
+survey_long_1$year <- ok_1[, 2]
+
+survey_long_1
+```
+
+**Bước 2: Sắp xếp dataset gọn gàng trước khi reshape qua dạng wide. Ta thấy R đã chuẩn lại về cho *ballance* bộ dataset, tức là các giá trị id đều đầy đủ số liệu theo năm.**
+
+```{r}
+library(dplyr)
+
+survey_long_2 <- survey_long_1[, -3]
+
+survey_long_2 |> dplyr::arrange(id, year) -> survey_long_2
+
+survey_long_2[, c(1, 2, 4, 3, 5)] -> survey_long_2
+
+survey_long_2
+```
+
+**Bước 3: Reshape trở về dạng wide để giống như dataset `survey` ban đầu.**
+
+```{r}
+survey_wide_ok <- reshape(survey_long_2, 
+                         direction = "wide", # định vị kiểu spread dữ liệu dạng wide
+                         idvar = c("id", "gender", "year"), # giữ lại 3 cột này
+                         timevar = "chi_tieu_theo_doi", # spread ra theo cột `chi_tieu_theo_doi`
+                         v.names = c("value") # chọn cột này để spread dữ liệu
+                         ) 
+
+row.names(survey_wide_ok) <- NULL
+
+attributes(survey_wide_ok)$reshapeWide <- NULL
+
+survey_wide_ok
+```
+
+**Bước 4: Sửa lại tên cột.**
+
+```{r}
+
+survey_wide_ok_1 <- survey_wide_ok[, c(1, 2, 4, 5, 3)]
+
+names(survey_wide_ok_1)[3] <- "age"
+names(survey_wide_ok_1)[4] <- "income"
+
+survey_wide_ok_1
+```
+
+**Bước 5: Loại bỏ missing value và kiểm tra identical với `survey` ban đầu.**
+
+```{r}
+complete.cases(survey_wide_ok_1$age) -> check_1
+complete.cases(survey_wide_ok_1$income) -> check_2
+
+check_1 | check_2 -> check_3 # dùng OR để chọn cả 2 FALSE
+# để loại missing value ở 2 cột `age` và `income`
+
+survey_wide_ok_1[check_3, ] -> survey_wide_ok_2
+
+row.names(survey_wide_ok_2) <- NULL
+
+# lưu ý là cột `year` cần chuyển về numeric
+survey_wide_ok_2$year <- as.numeric(survey_wide_ok_2$year)
+
+# setdiff(survey, survey_wide_ok_2)
+
+survey_wide_ok_2
+
+survey
+
+# nếu ở bước này nhìn dataset đã giống nhau rồi mà 
+# identical vẫn false thì ta sắp xếp toàn bộ 
+#các cột trong dataset về cùng 1 cấu trúc sau đó mới so sánh
+identical(survey, survey_wide_ok_2)
+```
+
+**Bước 6 (nếu kỹ hơn): Chuẩn lại toàn bộ thứ tự thành phần trong dataset**
+
+```{r}
+survey |> dplyr::arrange(!!! rlang::syms(names(survey))) -> survey_chuan
+
+survey_chuan
+
+survey_wide_ok_2 |> dplyr::arrange(!!! rlang::syms(names(survey_wide_ok_2))) -> survey_wide_ok_2_chuan
+
+identical(survey_chuan, survey_wide_ok_2_chuan)
+```
+
+
+
+
+
+
+
+
+
+### Tham khảo
+
+* `https://www.magesblog.com/post/2012-02-09-reshape-function/`
+
+* `https://search.r-project.org/CRAN/refmans/splitstackshape/html/Reshape.html`
