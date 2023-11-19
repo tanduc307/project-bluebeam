@@ -1,0 +1,86 @@
+# **Quy trình phân tích logistic regression** 
+
+## Example dataset
+
+Sử dụng ví dụ ở chapter 10 trong cuốn sách này.
+
+`https://studyr.netlify.app/ref/introductory_biostatistics_2016.pdf`
+
+```{r}
+cancer <- read.csv("prostatecancer.dat", sep = "&")
+cancer
+```
+
+## Logistic Regression Model
+
+**Effect of Measurement Scale**
+
+```{r}
+acid.glm <- glm(Nodes ~ Acid, 
+                data = cancer, 
+                family = binomial(link = "logit"))
+# acid.glm
+
+summary(acid.glm)
+
+or.50acid <- exp((100-50)*acid.glm$coefficients[2])
+
+or.50acid
+```
+
+**Testing Hypotheses in Multiple Logistic Regression**
+
+```{r}
+all.glm <- glm(Nodes ~ Xray + Grade + Stage + Age + Acid, 
+              data = cancer,
+              family = binomial(link = "logit"))
+
+summary(all.glm)
+
+chisq.LR <- all.glm$null.deviance - all.glm$deviance
+
+chisq.LR
+
+df.LR <- all.glm$df.null - all.glm$df.residual
+
+df.LR
+
+1-pchisq(chisq.LR,df.LR)
+```
+
+**Stepwise**
+
+```{r}
+library(MASS)
+MASS::stepAIC(all.glm)
+```
+
+**ROC curve**
+
+```{r}
+library(epiDisplay)
+all.glm.roc <- lroc(all.glm, title = TRUE, auc.coords = c(0.5, 0.1))
+all.glm.roc
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

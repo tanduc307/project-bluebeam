@@ -18,7 +18,9 @@ book:
       chapters:
         - huong-dan-ve-do-thi-cot-base-r-graphics.qmd
         - huong-dan-cach-thay-doi-do-rong-cot-trong-barplot.qmd
-        # - cac-lenh-do-thi-su-dung-package-lattice.qmd
+        - tinh-huong-base-r-graphics-thuong-gap.qmd
+        - huong-dan-ve-do-thi-nhieu-truc-y.qmd
+        - huong-dan-ve-do-thi-bang-package-lattice.qmd
         # - cac-lenh-do-thi-su-dung-package-ggplot2.qmd
     - part: co-so-ly-thuyet.qmd
       chapters:
@@ -28,6 +30,7 @@ book:
         - phan-tich-anova-2-yeu-to-trong-r.qmd
         - so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.qmd
         - phan-tich-ancova-trong-r.qmd
+        - quy-trinh-phan-tich-logistic-regression.qmd
         - khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.qmd
         - bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd
         - workflow-phan-tich-thong-ke-qua-dataset-iris.qmd

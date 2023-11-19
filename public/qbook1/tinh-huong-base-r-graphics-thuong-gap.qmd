@@ -1,0 +1,1193 @@
+# **Tình huống Base R Graphics thường gặp** 
+
+```{r, include=FALSE}
+options(width = 1200)
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, warning = FALSE, message = FALSE)
+```
+
+## Import dataset
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+library(tuhocr)
+crop_production <- system.file("extdata",
+                               "crop_production_all_data.rds",
+                               package = "tuhocr")
+
+df_1 <- readRDS(crop_production)
+
+FAOSTAT_data_2023 <- system.file("extdata",
+                                 "FAOSTAT_data_3-21-2023.csv", 
+                                 package = "tuhocr")
+
+df_2 <- read.csv(FAOSTAT_data_2023)
+
+coffee_all <- tuhocr::extract_faostat(input_rds = df_1,
+                                     input_region = df_2,
+                                     input_item = "Coffee, green")
+
+coffee_all |> subset(area == "Viet Nam") -> coffee_vn
+
+coffee_vn |> subset(year >= 2010) -> coffee_vn_2010_2021
+
+coffee_vn_2010_2021$production <- coffee_vn_2010_2021$production / 1000000
+
+coffee_vn_2010_2021$area_harvested <- coffee_vn_2010_2021$area_harvested / 1000000
+
+coffee_vn_2010_2021
+
+```
+
+## Vẽ đồ thị đường (linechart)
+
+**Thông số mặc định**
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2010, 2021),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     main = "Tình hình sản xuất cà phê ở Việt Nam giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT"
+     )
+
+text(x = 2011, 
+     y = 0.5, 
+     labels = "Bước 1: Vẽ đồ thị 1 đường dùng\nthông số mặc định", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4)
+```
+
+**Tăng số lượng tick label**
+
+`https://www.sthda.com/english/wiki/add-custom-tick-mark-labels-to-a-plot-in-r-software`
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2010, 2021),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     main = "Tình hình sản xuất cà phê ở Việt Nam giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2010, to = 2021, by = 1) # x tick label
+axis(side = 1, at = xtick, labels = TRUE) # vẽ trục x (side = 1)
+
+text(x = 2011, 
+     y = 0.5, 
+     labels = "Bước 2: Tăng số lượng tick label trên trục X", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4)
+
+```
+
+**Xoay tick label**
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2010, 2021),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     main = "Tình hình sản xuất cà phê ở Việt Nam giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2010, to = 2021, by = 1) # x tick label
+
+axis(side = 1, at = xtick, labels = FALSE) # ẩn giá trị x tick label mặc định
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 45, 
+     # pos = 1, 
+     # adj = c(0.5, 3),
+     adj = c(1.5, 2),
+     xpd = TRUE)
+```
+
+**Vẽ 2 đường linechart**
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+coffee_all |> subset(area == "Indonesia") -> coffee_indo
+
+coffee_indo |> subset(year >= 2010) -> coffee_indo_2010_2021
+
+coffee_indo_2010_2021$production <- coffee_indo_2010_2021$production / 1000000
+
+coffee_indo_2010_2021$area_harvested <- coffee_indo_2010_2021$area_harvested / 1000000
+
+coffee_indo_2010_2021
+
+coffee_vn_2010_2021
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+## dataset coffee_vn_2010_2021
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2010, 2021),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2010, to = 2021, by = 1) # x tick label
+axis(side = 1, at = xtick, labels = TRUE) # vẽ trục x (side = 1)
+
+# legend
+
+legend(x = "topleft", 
+       y = NULL,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 1,
+       y.intersp = 1.5,
+       inset = 0.02, # chỉ có tác dụng khi x là keyword
+       box.lty = 1,
+       horiz = FALSE
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 3: Chèn thêm đường thứ 2 và legend", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4)
+```
+
+**Thay đổi vị trí legend**
+
+**Cách 1: Lấy tọa độ từ legend có sẵn**
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2010, 2021),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2010, to = 2021, by = 1) # x tick label
+axis(side = 1, at = xtick, labels = TRUE) # vẽ trục x (side = 1)
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3)
+
+# legend
+
+#############
+# lấy tọa độ
+
+leg <- legend(x = "top",
+              y = NULL,
+              legend = c("Việt Nam", "Indonesia"),
+              col = c("#0000b3", "red"),
+              lty = c(1, 1),
+              cex = 1,
+              pch = c(19, 17),
+              lwd = 2,
+              # x.intersp = 2,
+              # y.intersp = 2,
+              # inset = 0.02,
+              box.lty = 1,
+              horiz = TRUE,
+              xpd = TRUE,
+              plot = FALSE
+)
+#############
+
+legend(x = leg$rect$left, 
+       y = 2.25,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 1,
+       y.intersp = 1,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE
+       )
+
+abline(v = (2021 + 2010) / 2, col = "purple", lty = 2, xpd = TRUE)
+```
+
+**Cách 2: Dùng tham số `xjust` và `yjust` trong lệnh `legend()`**
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = TRUE) # vẽ trục x (side = 1)
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3)
+
+# legend
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 4: Chỉnh lại legend và trục X\ngiúp đồ thị rõ ràng hơn", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4)
+
+# abline(v = (2022 + 2009) / 2, col = "purple", lty = 2, xpd = TRUE)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(mar = c(6, 5, 5, 2))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE)
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3)
+
+# legend
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 5: Đồ thị cơ bản hoàn thiện", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4)
+
+par(new = TRUE) # workaround for grid.raster
+
+# plot(production ~ year,
+#      data = coffee_vn_2010_2021,
+#      type = "n",
+#      xlab = "",
+#      ylab = "",
+#      xaxt = "n",
+#      yaxt = "n")
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+
+# https://www.jumpingrivers.com/blog/r-knitr-markdown-png-pdf-graphics/
+# https://yihui.org/knitr/options/#plots
+```
+
+## Customize thêm cho linechart
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(mar = c(6, 5, 5, 2))
+
+par(font.lab = 2)
+
+windowsFonts(font_1 = windowsFont("Times New Roman"))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     family = "font_1",
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE,
+     family = "font_1")
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3,
+      family = "font_1")
+
+# legend
+
+par(family = "font_1")
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       seg.len = 3,
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 6: Set font Times New Roman", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     pos = 4,
+     family = "font_1")
+
+par(new = TRUE) # workaround for grid.raster
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(mar = c(6, 5, 5, 2))
+
+par(font.lab = 2)
+
+windowsFonts(font_1 = windowsFont("Times New Roman"))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     xaxs = "i",
+     yaxs = "i",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     type = "n",
+     xlab = "",
+     ylab = "",
+     xaxt = "n",
+     yaxt = "n")
+
+grid(nx = 13, 
+     ny = 4,
+     lty = 2, 
+     col = "gray", 
+     lwd = 1)
+
+par(new = TRUE) # make grid line behind the plot
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     family = "font_1",
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE,
+     family = "font_1")
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3,
+      family = "font_1")
+
+# legend
+
+par(family = "font_1")
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       seg.len = 3,
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 7: Thêm đường grid line", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     # pos = 4,
+     adj = c(0, 0),
+     family = "font_1")
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+
+# https://r-charts.com/base-r/grid/
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(bg = "#f7dba7")
+
+par(mar = c(6, 5, 5, 2))
+
+par(font.lab = 2)
+
+windowsFonts(font_1 = windowsFont("Times New Roman"))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     xaxs = "i",
+     yaxs = "i",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     type = "n",
+     xlab = "",
+     ylab = "",
+     xaxt = "n",
+     yaxt = "n")
+
+rect(par("usr")[1], par("usr")[3],
+     par("usr")[2], par("usr")[4],
+     col = "white")
+
+grid(nx = 13, 
+     ny = 4,
+     lty = 2, 
+     col = "gray", 
+     lwd = 1)
+
+par(new = TRUE) # make grid line behind the plot
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     family = "font_1",
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE,
+     family = "font_1")
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3,
+      family = "font_1")
+
+# legend
+
+par(family = "font_1")
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       seg.len = 3,
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 8: Set background color", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     # pos = 4,
+     adj = c(0, 0),
+     family = "font_1")
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+
+# https://r-charts.com/base-r/grid/
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(bg = "gray90")
+
+par(mar = c(6, 5, 5, 2))
+
+par(font.lab = 2)
+
+windowsFonts(font_1 = windowsFont("Times New Roman"))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     xaxs = "i",
+     yaxs = "i",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     type = "n",
+     xlab = "",
+     ylab = "",
+     xaxt = "n",
+     yaxt = "n")
+
+rect(par("usr")[1], par("usr")[3],
+     par("usr")[2], par("usr")[4],
+     col = "white")
+
+grid(nx = 13, 
+     ny = 4,
+     lty = 2, 
+     col = "gray", 
+     lwd = 1)
+
+par(new = TRUE) # make grid line behind the plot
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     family = "font_1",
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE,
+     family = "font_1")
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3,
+      family = "font_1")
+
+# legend
+
+par(family = "font_1")
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       seg.len = 3,
+       merge = TRUE # gộp pch và line
+       )
+
+text(x = 2011, 
+     y = 1, 
+     labels = "Bước 9: Thể hiện giá trị trên đồ thị", 
+     cex = 1.5,
+     col = "#ff007b", 
+     font = 2,
+     # pos = 4,
+     adj = c(0, 0),
+     family = "font_1")
+
+###
+
+text(x = coffee_vn_2010_2021$year, 
+     y = coffee_vn_2010_2021$production, 
+     labels = round(coffee_vn_2010_2021$production, digits = 2), 
+     cex = 1,
+     col = "#0000b3", 
+     font = 2,
+     pos = 3,
+     # adj = c(0, 0),
+     family = "font_1")
+
+text(x = coffee_indo_2010_2021$year, 
+     y = coffee_indo_2010_2021$production, 
+     labels = round(coffee_indo_2010_2021$production, digits = 2), 
+     cex = 1,
+     col = "red", 
+     font = 2,
+     pos = 3,
+     # adj = c(0, 0),
+     family = "font_1")
+
+###
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+
+# https://www.statology.org/label-scatterplot-points-r/
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+par(bg = "#fefc97")
+
+par(mar = c(6, 5, 5, 2))
+
+par(font.lab = 2)
+
+windowsFonts(font_1 = windowsFont("Times New Roman"))
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     xaxs = "i",
+     yaxs = "i",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     type = "n",
+     xlab = "",
+     ylab = "",
+     xaxt = "n",
+     yaxt = "n")
+
+rect(par("usr")[1], par("usr")[3],
+     par("usr")[2], par("usr")[4],
+     col = "white")
+
+grid(nx = 13, 
+     ny = 4,
+     lty = 2, 
+     col = "gray", 
+     lwd = 1)
+
+par(new = TRUE) # make grid line behind the plot
+
+plot(production ~ year, 
+     data = coffee_vn_2010_2021,
+     family = "font_1",
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     col = "#0000b3",
+     xlim = c(2009, 2022),
+     ylim = c(0, 2),
+     pch = 19,
+     type = "b",
+     xlab = "Năm",
+     ylab = "Sản lượng (triệu tấn)",
+     # main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+     sub = "Nguồn: FAOSTAT",
+     xaxt = "n" # remove thông tin trục x
+     # yaxt="n"
+     )
+
+## dataset coffee_indo_2010_2021
+points(production ~ year, 
+     data = coffee_indo_2010_2021,
+     col = "red",
+     pch = 17,
+     type = "b"
+     )
+
+# Changing x axis
+
+xtick <- seq(from = 2009, to = 2022, by = 1) # x tick label
+xtick[1] <- ""
+xtick[14] <- ""
+
+axis(side = 1, at = xtick, labels = FALSE) # vẽ trục x (side = 1)
+
+text(x = xtick,  
+     y = par("usr")[3], 
+     labels = xtick, 
+     srt = 0, 
+     # pos = 1,
+     adj = c(0.5, 3),
+     xpd = TRUE,
+     family = "font_1")
+
+# Thay đổi vị trí title
+
+title(main = "Tình hình sản xuất cà phê ở Việt Nam và Indonesia giai đoạn 2010–2021",
+      line = 3,
+      family = "font_1")
+
+# legend
+
+par(family = "font_1")
+
+legend(x = (2022 + 2009) / 2, 
+       y = 2.05,  
+       legend = c("Việt Nam", "Indonesia"),
+       col = c("#0000b3", "red"),
+       lty = c(1, 1), 
+       cex = 1,
+       pt.cex = 1.5, # cex của point
+       pch = c(19, 17),
+       lwd = 2,
+       x.intersp = 2.5,
+       # y.intersp = 1,
+       xjust = 0.5,
+       yjust = 0,
+       box.lty = 0,
+       horiz = TRUE,
+       xpd = TRUE,
+       adj = c(0.4, 0.5), # chỉnh text legend
+       seg.len = 3,
+       merge = TRUE # gộp pch và line
+       )
+
+# text(x = 2011, 
+#      y = 1, 
+#      labels = "Final plot", 
+#      cex = 1.5,
+#      col = "#ff007b", 
+#      font = 2,
+#      # pos = 4,
+#      adj = c(0, 0),
+#      family = "font_1")
+
+###
+
+text(x = coffee_vn_2010_2021$year, 
+     y = coffee_vn_2010_2021$production, 
+     labels = round(coffee_vn_2010_2021$production, digits = 2), 
+     cex = 1,
+     col = "#0000b3", 
+     font = 2,
+     pos = 3,
+     # adj = c(0, 0),
+     family = "font_1")
+
+text(x = coffee_indo_2010_2021$year, 
+     y = coffee_indo_2010_2021$production, 
+     labels = round(coffee_indo_2010_2021$production, digits = 2), 
+     cex = 1,
+     col = "red", 
+     font = 2,
+     pos = 3,
+     # adj = c(0, 0),
+     family = "font_1")
+
+###
+
+box(which = "plot")
+box(which = "figure")
+box(which = "outer")
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+grid.raster(logor, x = 0.92, y = 0.08, width = 0.1)
+```
+
+
+
+
+
+
+
+
