@@ -48,7 +48,7 @@ book:
   sidebar:
     style: "docked"
     search: true
-    title: "<a href='https://thongkesinhhoc.quarto.pub/'>Thống kê sinh học: Từ lý thuyết đến ứng dụng</a>"
+    title: "<a href='https://thongkesinhhoc.netlify.app/'>Thống kê sinh học: Từ lý thuyết đến ứng dụng</a>"
           
 bibliography: references.bib
 number-sections: true
