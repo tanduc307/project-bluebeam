@@ -2,15 +2,17 @@
 
 ```{r, include=FALSE}
 options(width = 1200)
-knitr::opts_chunk$set(fig.width = 12, fig.height = 6, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(fig.width = 12, fig.height = 8, warning = FALSE, message = FALSE)
 ```
+
+**File example `https://applyr.netlify.app/qbook1/doanh_thu_ban_hang.xlsx`**
 
 ```{r}
 library(readxl)
-doanh_thu_ban_hang <- read_excel("doanh_thu_ban_hang.xlsx")
-doanh_thu_ban_hang <- as.data.frame(doanh_thu_ban_hang)
+df <- read_excel("doanh_thu_ban_hang.xlsx")
+df <- as.data.frame(df)
 
-doanh_thu_ban_hang
+df
 ```
 
 **Số liệu nhân viên theo giới tính và chức vụ ở các chi nhánh**
@@ -18,6 +20,112 @@ doanh_thu_ban_hang
 ```{r}
 library(lattice)
 
-table()
+table(df$`Giới tính`,
+      df$`Chức vụ`,
+      df$`Chi nhánh`) -> ok_1
+
+ok_2 <- as.data.frame(ok_1)
+
+names(ok_2) <- c("gioi_tinh", "chuc_vu", "chi_nhanh", "count")
+
+ok_2
 ```
+
+```{r}
+lattice::barchart(count ~ gioi_tinh | chuc_vu + chi_nhanh, 
+                  groups = gioi_tinh,
+                  data = ok_2,
+                  
+                  horizontal = FALSE,
+                  stack = TRUE,
+                  col = c("lightblue", "lightyellow"),
+                  
+                  ## edit xy axis
+                  scales = list(axs = "i",
+                                draw = TRUE,
+                                x = list(relation = "free"), # relation = free | same
+                                y = list(relation = "same",
+                                         limits = c(0, 20))
+                                ),
+                  
+                  ## axis label and title
+                  xlab = list(label = "Đặc điểm phân loại", fontsize = 16, col = "darkgreen", font = 2),
+                  ylab = list(label = "Số lượng nhân viên", fontsize = 16, col = "#FF1694", font = 2),
+                  main = "Số liệu nhân viên theo giới tính và chức vụ ở các chi nhánh",
+                  sub = "Nguồn: Phòng nhân sự cung cấp",
+                  
+                  ## value above bar
+                  par.settings = list(strip.background = list(col = c("lightgreen", "yellow"))),
+                  
+                  panel = function(x, y, subscripts, ...){
+                    
+                    panel.grid(h = -1,v = 0)
+                    
+                    panel.barchart(x, y, subscripts = subscripts,...)
+                    
+                    t <- aggregate(y ~ x, data.frame(x, y), FUN = sum)
+                    
+                    panel.text(t$x, t$y, 
+                               labels = t$y, 
+                               pos = 3, 
+                               col = "blue",
+                               fontsize = 13,
+                               font = 2
+                               
+                               )
+                    
+                  }
+                  
+                  )
+```
+
+**Doanh số theo chi nhánh ở các độ tuổi khác nhau**
+
+```{r}
+df$doanh_so <- df$`Doanh thu bán hàng` / 1000000
+
+xyplot(doanh_so ~ `Tuổi` |`Chức vụ` + `Chi nhánh` , 
+       data = df,
+       groups = `Giới tính`,
+       # layout = c(1, 2), # thay đổi vị trí các panel con
+       pch = 19,
+       col = c("red", "blue"),
+
+       key = list (space = "top", column = 2,
+                   text = list(c("Nam", "Nữ")),
+                   points = list(pch = c(19, 19),
+                                 col = c("red", "blue"))
+
+                   ),
+       
+       ## axis label and title
+       xlab = list(label = "Tuổi", fontsize = 16, col = "darkgreen", font = 2),
+       ylab = list(label = "Doanh số (triệu VNĐ)", fontsize = 16, col = "#FF1694", font = 2),
+       main = "Doanh số theo chi nhánh ở các độ tuổi khác nhau",
+       sub = "Nguồn: Phòng nhân sự cung cấp",
+       
+       scales = list(axs = "i",
+                     draw = TRUE,
+                     x = list(relation = "free", # relation = free | same
+                              limits = c(0, 100)), 
+                     y = list(relation = "same",
+                              limits = c(-300, 3500)
+                              )
+                     ),
+       
+       ## value above bar
+       par.settings = list(strip.background = list(col = c("lightgreen", "yellow"))),
+       
+       type = c("g", "p") ## "g"rid and "p"oints
+       
+       )
+```
+
+
+
+
+
+
+
+
 

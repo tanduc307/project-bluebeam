@@ -20,6 +20,6 @@
 # https://r4ds.hadley.nz/quarto-formats.html
 
 # terminal
-# quarto publish quarto-pub 
+# quarto publish quarto-pub
 
 # quarto publish quarto-pub --no-prompt
