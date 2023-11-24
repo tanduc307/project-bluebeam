@@ -439,9 +439,11 @@ dev.off()
 ```
 
 ```{r}
-knitr::include_graphics("do_thi_nhieu_truc_tung.png")
+
+knitr::include_graphics("do_thi_nhieu_truc_tung.png") 
 ```
 
+**Full-size: [https://thongkesinhhoc.com/do_thi_nhieu_truc_tung.png](https://thongkesinhhoc.com/do_thi_nhieu_truc_tung.png)**
 
 
 
