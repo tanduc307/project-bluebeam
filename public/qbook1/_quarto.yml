@@ -6,7 +6,7 @@ book:
   author: "Duc Nguyen | Founder of tuhocr.com"
   site-url: https://www.tuhocr.com/
   date: last-modified
-  date-format: "[Cập nhập:] YYYY MMMM DD"
+  date-format: "[Cập nhật:] YYYY MMMM DD"
   cover-image: cover.png
   favicon: favicon.png
   # comments:

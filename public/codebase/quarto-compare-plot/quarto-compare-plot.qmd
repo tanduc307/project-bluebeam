@@ -1,0 +1,302 @@
+---
+title: "So sánh cú pháp vẽ đồ thị trong R qua các package khác nhau"
+author: "Duc Nguyen | Founder of tuhocr.com"
+site-url: https://www.tuhocr.com/
+date: last-modified
+date-format: "[Cập nhật:] YYYY MMMM DD"
+# cover-image: cover.png
+# favicon: favicon.png
+
+format:
+  html:
+    # theme: [style.scss]
+    # page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    grid:
+      sidebar-width: 0px
+      body-width: 2000px
+      margin-width: 0px
+
+# ảnh hưởng code annotations
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 70
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,      # suppress messages
+                      warning = FALSE,      # suppress warnings
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE          # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      # cache = TRUE       # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+zip(zipfile = "quarto-compare-plot", 
+    files = c("quarto-compare-plot.qmd", 
+              "quarto-compare-plot.Rproj", 
+              "_extensions/")
+    )
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.multiple .column {
+  width: 15%;
+  margin: 5px;
+}
+
+.multiple .columns {
+  display: flex;
+}
+
+@media (max-width: 1000px) {
+  .multiple .column {
+    width: auto;
+  }
+
+ .multiple .columns {
+   display: flex;
+   flex-direction: column;
+  }
+}
+
+```
+
+[**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"}
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+{{< downloadthis quarto-compare-plot.zip dname="quarto-compare-plot" label="RStudio project" icon=file-zip type=primary >}} {{< downloadthis quarto-compare-plot.qmd dname="quarto-compare-plot" label="quarto-compare-plot.qmd" icon=file-code type=success >}} 
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+[**Base R graphics (low-level functions)**]{style="color:#7F00FF"}
+
+```{r, echo=FALSE}
+# mở graphic devices cho plot
+plot.new() 
+
+# xác định khung đồ thị theo range xy
+plot.window(range(pressure$temperature),
+            range(pressure$pressure)) 
+
+# vẽ scatterplot từ dataset pressure
+# tham số xy = pressure (chính là data = pressure)
+plot.xy(xy = pressure, type = "p") 
+
+# viền xung quanh đồ thị
+box(which = "plot")
+
+# thể hiện giá trị trên trục xy
+axis(side = 1)
+axis(side = 2)
+
+# ghi label trục hoành, trục tung
+mtext(text = "temperature",
+      side = 1,
+      line = 3)
+mtext(text = "pressure",
+      side = 2,
+      line = 3)
+```
+
+```{r, echo=TRUE, eval=FALSE}
+# mở graphic devices cho plot
+plot.new() 
+
+# xác định khung đồ thị theo range xy
+plot.window(range(pressure$temperature),
+            range(pressure$pressure)) 
+
+# vẽ scatterplot từ dataset pressure
+# tham số xy = pressure (chính là data = pressure)
+plot.xy(xy = pressure, type = "p") 
+
+# viền xung quanh đồ thị
+box(which = "plot")
+
+# thể hiện giá trị trên trục xy
+axis(side = 1)
+axis(side = 2)
+
+# ghi label trục hoành, trục tung
+mtext(text = "temperature",
+      side = 1,
+      line = 3)
+mtext(text = "pressure",
+      side = 2,
+      line = 3)
+```
+:::
+
+::: column
+[**Base R graphics (high-level functions)**]{style="color:#0000FF"}
+
+```{r, echo=FALSE}
+graphics:::plot.formula(formula = pressure ~ temperature,
+     data = pressure)
+```
+
+```{r, echo=TRUE, eval=FALSE}
+plot(formula = pressure ~ temperature,
+     data = pressure) 
+```
+
+[**Function gốc:**]{style="color:#0000FF"}
+
+```         
+graphics:::plot.formula(
+
+formula = pressure ~ temperature,
+data = pressure
+
+) 
+```
+:::
+
+::: column
+[**Package `lattice`**]{style="color:#FF007F"}
+
+```{r, echo=FALSE}
+library(lattice)
+xyplot(pressure ~ temperature,
+       data = pressure)
+```
+
+```{r, echo=TRUE, eval=FALSE}
+library(lattice) 
+lattice::xyplot(pressure ~ temperature,
+       data = pressure)
+```
+:::
+
+::: column
+[**Package `ggplot2`**]{style="color:#660000"}
+
+```{r, echo=FALSE}
+library(ggplot2)
+ggplot2::ggplot(data = pressure,
+   mapping = aes(x = temperature,
+                 y = pressure)) +
+  geom_point()
+```
+
+```{r, echo=TRUE, eval=FALSE}
+ggplot2::ggplot(data = pressure,
+                mapping = aes(x = temperature,
+                              y = pressure)) +
+  geom_point()
+```
+:::
+
+:::
+:::
+
+<!-- new line -->
+
+::: multiple
+::: {.columns .column-screen-inset}
+::: column
+[**Methods trong lệnh `plot` của Base R Graphics**]{style="color:#0000FF"}
+
+```{r}
+methods("plot")
+```
+
+[Function có dấu `*` có nghĩa là được ẩn (hidden). 
+Ta muốn gọi ra thì dùng `:::` thay vì `::`]{style="background-color: #FFFF00"}
+
+[**Dataset `pressure` dùng để vẽ đồ thị**]{style="color:red"}
+
+```{r, echo=FALSE}
+pressure
+```
+
+:::
+
+::: column
+[**Liệt kê grid object và viewport từ package `lattice`**]{style="color:#FF007F"}
+
+```{r, eval=FALSE}
+grid.ls(grobs = TRUE, 
+        viewports = TRUE, 
+        fullNames = TRUE)
+```
+
+```{r, echo=FALSE, fig.show = 'hide'}
+library(lattice)
+library(grid)
+xyplot(pressure ~ temperature,
+       data = pressure)
+grid.ls(grobs = TRUE, 
+        viewports = TRUE, 
+        fullNames = TRUE)
+```
+:::
+
+::: column
+[**Liệt kê grid object và viewport từ package `ggplot2`**]{style="color:#660000"}
+
+```{r, eval=FALSE}
+grid.ls(grobs = TRUE, 
+        viewports = TRUE, 
+        fullNames = TRUE)
+```
+
+```{r, echo=FALSE, fig.show = 'hide'}
+library(ggplot2)
+library(grid)
+p <- ggplot2::ggplot(data = pressure,
+                     mapping = aes(x = temperature,
+                                   y = pressure)) +
+  geom_point()
+
+p
+
+grid.ls(grobs = TRUE, 
+        viewports = TRUE, 
+        fullNames = TRUE)
+
+# ggplot_build(p)
+```
+
+Package `ggplot2` nén grid object và viewport trong layout nên khi list bằng lệnh `grid.ls()` sẽ không hiện ra đầy đủ các thành phần tạo nên đồ thị ggplot2. Do đó ta sử dụng lệnh `ggplot_build()` để list ra trọn vẹn các thành phần này.
+
+```{r, eval=FALSE}
+ggplot_build(p)
+```
+
+```{r, echo=FALSE, fig.show = 'hide'}
+library(ggplot2)
+library(grid)
+p <- ggplot2::ggplot(data = pressure,
+                     mapping = aes(x = temperature,
+                                   y = pressure)) +
+  geom_point()
+
+p
+
+# grid.ls(grobs = TRUE, 
+#         viewports = TRUE, 
+#         fullNames = TRUE)
+
+ggplot_build(p)
+```
+:::
+
+:::
+:::
+
+<!-- new line -->
