@@ -1,0 +1,350 @@
+---
+title: "Kỹ thuật merge dữ liệu trong R"
+author: "Duc Nguyen | Founder of tuhocr.com"
+site-url: https://www.tuhocr.com/
+date: last-modified
+date-format: "[Cập nhật:] YYYY MMMM DD"
+# cover-image: cover.png
+# favicon: favicon.png
+
+format:
+  html:
+    # theme: [style.scss]
+    # page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    grid:
+      sidebar-width: 0px
+      body-width: 2000px
+      margin-width: 0px
+
+# ảnh hưởng code annotations
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 100
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,      # suppress messages
+                      warning = FALSE,      # suppress warnings
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE          # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      # cache = TRUE       # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+zip(zipfile = "quarto-merge-data", 
+    files = c("quarto-merge-data.qmd", 
+              "quarto-merge-data.Rproj", 
+              "_extensions/")
+    )
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.multiple .column {
+  width: 15%;
+  margin: 5px;
+}
+
+.multiple .columns {
+  display: flex;
+}
+
+@media (max-width: 1000px) {
+  .multiple .column {
+    width: auto;
+  }
+
+ .multiple .columns {
+   display: flex;
+   flex-direction: column;
+  }
+}
+
+```
+
+<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+{{< downloadthis quarto-merge-data.zip dname="quarto-merge-data" label="RStudio project" icon=file-zip type=primary >}} {{< downloadthis quarto-merge-data.qmd dname="quarto-merge-data" label="quarto-merge-data.qmd" icon=file-code type=success >}} 
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+[**Dataset `df_1`**]{style="color:#006600"}
+
+```{r, echo=TRUE}
+df_1 <- readxl::read_excel("df_1.xlsx")
+df_1
+```
+
+:::
+
+::: column
+[**Dataset `df_2`**]{style="color:#006600"}
+
+```{r, echo=TRUE}
+df_2 <- readxl::read_excel("df_2.xlsx")
+df_2
+```
+
+:::
+
+::: column
+[**Dataset `df_3`**]{style="color:#006600"}
+
+```{r, echo=TRUE}
+df_3 <- readxl::read_excel("df_3.xlsx")
+df_3
+```
+
+:::
+
+:::
+:::
+
+<!-- new line -->
+
+```{=html}
+
+<hr/>
+	
+```
+
+[**Merge lần 1 giữa `df_1` và `df_2`**]{style="color:red"} $\Rightarrow$ [**Áp dụng cách tiếp cận gom cột `country` và `year` thành 1 cột để làm `ID`, sau đó merge theo `all = TRUE`**]{style="background-color: #FFFF00"}
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+```{r}
+df_1$country_year <- paste0(df_1$country, "-", df_1$year)
+
+identical(dim(df_1)[1], length(unique(df_1$country_year)))
+
+df_2$country_year <- paste0(df_2$country, "-", df_2$year)
+
+identical(dim(df_2)[1], length(unique(df_2$country_year)))
+```
+
+```{r, echo=TRUE,eval=FALSE}
+merge(x = df_1,
+      y = df_2,
+      by = "country_year",
+      all = TRUE) -> df_1_2
+
+df_1_2
+```
+
+
+:::
+
+::: column
+
+```{r, echo=FALSE}
+merge(x = df_1,
+      y = df_2,
+      by = "country_year",
+      all = TRUE) -> df_1_2
+
+df_1_2
+```
+
+:::
+
+::: column
+
+```{r, echo=FALSE, fig.show = 'hide'}
+library(eulerr)
+library(grid)
+fit <- euler(c(df_1 = 20, 
+               df_2 = 20, 
+               "df_1&df_2" = 10))
+eulerr:::plot.euler(fit, n = 200L, main = "all = TRUE")
+
+# grid.lines(x = unit(c(0, 1), "npc"),
+#            y = unit(c(0, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# 
+# grid.lines(x = unit(c(0, 0.8), "npc"),
+#            y = unit(c(0.2, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# grid.lines(x = unit(c(0, 0.6), "npc"),
+#            y = unit(c(0.4, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# grid.lines(x = unit(c(0, 0.4), "npc"),
+#            y = unit(c(0.6, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# ###
+# 
+# grid.lines(y = unit(c(0, 0.8), "npc"),
+#            x = unit(c(0.2, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# grid.lines(y = unit(c(0, 0.6), "npc"),
+#            x = unit(c(0.4, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+# 
+# grid.lines(y = unit(c(0, 0.4), "npc"),
+#            x = unit(c(0.6, 1), "npc"),
+#            default.units = "npc",
+#            arrow = NULL, name = NULL,
+#            gp=gpar(col = "white", alpha = 0.8, lwd = 2), draw = TRUE, vp = NULL)
+
+######
+
+venn_ok <- grid.get("euler.diagram")
+
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.1$gp$fill <- "gray"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.1$gp$col <- "black"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.1$gp$alpha <- 0.8
+
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.2$gp$fill <- "gray"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.2$gp$col <- "black"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.2$gp$alpha <- 0.8
+
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.3$gp$fill <- "gray"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.3$gp$col <- "black"
+venn_ok $children$canvas.grob$children$diagram.grob.1$children$fills.grob.3$gp$alpha <- 0.8
+
+grid.add(gPath = "euler.diagram", 
+         child = venn_ok, 
+         strict = FALSE, grep = FALSE,
+         global = FALSE, allDevices = FALSE, redraw = TRUE)
+```
+
+```{r, echo=FALSE}
+venn_ok
+```
+
+:::
+
+:::
+:::
+
+```{=html}
+
+<hr/>
+	
+```
+
+[**Tương tự như trên, merge lần 2 giữa `df_1_2` và `df_3`.**]{style="color:red"} 
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+```{r}
+df_3$country_year <- paste0(df_3$country, "-", df_3$year)
+
+identical(dim(df_3)[1], length(unique(df_3$country_year)))
+```
+
+```{r, echo=TRUE, eval=FALSE}
+merge(x = df_1_2,
+      y = df_3,
+      by = "country_year",
+      all = TRUE) -> df_1_2_3
+
+df_1_2_3
+```
+
+:::
+
+::: column
+
+```{r, echo=FALSE}
+merge(x = df_1_2,
+      y = df_3,
+      by = "country_year",
+      all = TRUE) -> df_1_2_3
+
+df_1_2_3
+```
+
+:::
+
+:::
+:::
+
+```{=html}
+
+<hr/>
+	
+```
+
+[**Loại bỏ các cột trùng, tạo ra `df_1_2_3_clean`.**]{style="color:red"} 
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+```{r}
+df_1_2_3_clean <- df_1_2_3[ , c("country_year", "var_1", "var_2", "var_3", "var_4", "var_5")]
+
+df_1_2_3_clean
+```
+
+:::
+
+::: column
+
+```{r}
+### tách country-year
+strsplit(df_1_2_3_clean$country_year, split = "-") -> ok
+
+do.call(rbind, ok) -> ok_1
+
+ok_1
+```
+
+:::
+
+:::
+:::
+
+[**Thu được `df_1_2_3_final` dùng để đưa vào phân tích dữ liệu và làm sạch `NA` giai đoạn sau.**]{style="color:red"} 
+
+```{r}
+df_1_2_3_clean$country <- ok_1[, 1]
+
+df_1_2_3_clean$year <- ok_1[, 2]
+
+df_1_2_3_final <- df_1_2_3_clean[ , c("country_year", "country", "year", "var_1", "var_2", "var_3", "var_4", "var_5")]
+
+df_1_2_3_final
+```
+
+### Tài liệu tham khảo
+
+1. `https://www.infoworld.com/article/3454356/how-to-merge-data-in-r-using-r-merge-dplyr-or-datatable.html`
