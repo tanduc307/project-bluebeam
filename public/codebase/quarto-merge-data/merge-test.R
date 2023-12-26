@@ -14,7 +14,12 @@ identical(dim(df_2)[1], length(unique(df_2$country_year)))
 merge(x = df_1,
       y = df_2,
       by = "country_year",
-      all = TRUE) -> df_1_2
+      all = TRUE) 
+
+merge(x = df_1,
+      y = df_2,
+      by = "country_year") 
+
 
 merge(x = df_1,
       y = df_2,
