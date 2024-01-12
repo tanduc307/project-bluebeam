@@ -1,13 +1,4 @@
----
-format:
-  html:
-    toc: false
-    theme: default
-    page-layout: full
-    # embed-resources: true
----    
-
-# **Hướng dẫn convert từ file `csv` qua `tsv` trong R** {.unnumbered}
+# <b>Hướng dẫn convert từ file <code>csv</code> qua <code>tsv</code> trong R</b>
 
 Ví dụ bạn có 1 file [`file_example_1.csv`](https://tuhocr.netlify.app/file_example_1.csv) có cấu trúc như sau:
 
@@ -45,16 +36,4 @@ write.table(x = yes_1, file = "file_example_1.tsv", row.names = FALSE, sep = "\t
 **Lúc này bạn có thể upload file `tsv` hay `txt` lên website để thuận tiện thể hiện full dataset. [Link](https://tuhocr.netlify.app/file_example_1.txt)**
 
 ![](file_example_3.png)
-
-
-
-
-
-
-
-
-
-
-
-
 

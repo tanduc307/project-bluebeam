@@ -1,4 +1,4 @@
-# **Hướng dẫn vẽ đồ thị nhiều trục Y**
+# <b>Hướng dẫn vẽ đồ thị nhiều trục Y</b>
 
 ```{r, include=FALSE}
 options(width = 1200)

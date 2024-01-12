@@ -1,4 +1,4 @@
-# **Hướng dẫn vẽ đồ thị cột bằng Base R Graphics** 
+# <b>Hướng dẫn vẽ đồ thị cột bằng Base R Graphics</b> 
 
 ```{r, include=FALSE}
 options(width = 1200)

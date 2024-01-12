@@ -1,4 +1,4 @@
-# **Hướng dẫn cách thay đổi độ rộng cột trong barplot** 
+# <b>Hướng dẫn cách thay đổi độ rộng cột trong barplot</b> 
 
 ## Dữ liệu minh họa
 

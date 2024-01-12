@@ -1,4 +1,4 @@
-# **Hướng dẫn show all data trên console** {.unnumbered}
+# <b>Hướng dẫn show all data trên console</b>
 
 **Đối với data frame dài hơn 1000 dòng thì khi in trên console bạn sẽ bị truncated, vì mặc định RStudio chỉ thể hiện max là 1000 dòng. Do vậy để thể hiện toàn bộ dữ liệu trên console thì bạn sẽ thực hiện như sau.**
 

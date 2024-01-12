@@ -1,4 +1,4 @@
-# **Phân tích ANCOVA trong R** 
+# <b>Phân tích ANCOVA trong R</b> 
 
 ### Phân biệt giữa ANCOVA và ANOVA
 

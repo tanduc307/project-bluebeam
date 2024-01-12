@@ -1,4 +1,4 @@
-# **Hướng dẫn phân tích t-test trong R** 
+# <b>Hướng dẫn phân tích t-test trong R</b> 
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)

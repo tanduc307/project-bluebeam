@@ -1,4 +1,4 @@
-# **Hướng dẫn cách làm tròn số trong R** {.unnumbered}
+# <b>Hướng dẫn cách làm tròn số trong R</b>
 
 Bài viết này làm rõ hơn cách làm tròn số trong R ở video `CÁCH LÀM TRÒN SỐ TRONG R | Lệnh round(), signif()` trong chuyên đề 1 [Coding in R](https://www.tuhocr.com/r-courses/coding-in-r).
 

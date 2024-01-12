@@ -1,4 +1,4 @@
-# **Kỹ thuật reshape dữ liệu** {.unnumbered}
+# <b>Kỹ thuật reshape dữ liệu</b>
 
 ```{r, include=FALSE}
 options(width = 1200)

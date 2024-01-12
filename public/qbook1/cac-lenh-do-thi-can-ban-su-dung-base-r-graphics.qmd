@@ -1,2 +1,4 @@
 # Các lệnh đồ thị căn bản sử dụng Base R Graphics {.unnumbered} 
 
+Các kỹ thuật vẽ đồ thị thường gặp trong R.
+

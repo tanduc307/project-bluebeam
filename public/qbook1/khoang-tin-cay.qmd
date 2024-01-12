@@ -1,4 +1,4 @@
-# **Khoảng tin cậy là gì?** 
+# <b>Khoảng tin cậy là gì?</b> 
 
 Về bản chất khoảng tin cậy là giá trị thực (real value) của con số trung bình tính được từ mẫu, **nếu** giả sử lặp lại quá trình lấy mẫu rất nhiều lần thì các con số trung bình này dao động trong một khoảng giá trị nào đó, thì đó là khoảng tin cậy (confidence interval).
 

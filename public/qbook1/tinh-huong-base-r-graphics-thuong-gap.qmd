@@ -1,4 +1,4 @@
-# **Tình huống Base R Graphics thường gặp** 
+# <b>Tình huống Base R Graphics thường gặp</b> 
 
 ```{r, include=FALSE}
 options(width = 1200)

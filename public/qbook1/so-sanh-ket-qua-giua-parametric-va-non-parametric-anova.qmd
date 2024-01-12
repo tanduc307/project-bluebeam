@@ -1,4 +1,4 @@
-# **So sánh kết quả giữa phân tích parametric và non-parametric ANOVA** 
+# <b>So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</b> 
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)

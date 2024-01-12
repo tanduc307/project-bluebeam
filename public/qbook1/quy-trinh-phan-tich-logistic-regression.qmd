@@ -1,4 +1,4 @@
-# **Quy trình phân tích logistic regression** 
+# <b>Quy trình phân tích logistic regression</b> 
 
 ## Example dataset
 

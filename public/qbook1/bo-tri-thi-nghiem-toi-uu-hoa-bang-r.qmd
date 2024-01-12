@@ -1,4 +1,4 @@
-# **Bố trí thí nghiệm tối ưu hóa bằng R** 
+# <b>Bố trí thí nghiệm tối ưu hóa bằng R</b> 
 
 ### Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa
 

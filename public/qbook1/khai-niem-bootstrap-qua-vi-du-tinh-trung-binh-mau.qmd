@@ -1,4 +1,4 @@
-# **Khái niệm về bootstrap qua ví dụ tính trung bình mẫu** 
+# <b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b> 
 
 ### **Định nghĩa: What is bootstrap?**
 

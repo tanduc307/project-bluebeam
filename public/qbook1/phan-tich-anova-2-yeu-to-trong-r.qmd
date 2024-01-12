@@ -1,4 +1,4 @@
-# **Phân tích ANOVA 2 yếu tố trong R** 
+# <b>Phân tích ANOVA 2 yếu tố trong R</b> 
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(fig.width = 8, fig.height = 4, warning = FALSE, message = FALSE)
