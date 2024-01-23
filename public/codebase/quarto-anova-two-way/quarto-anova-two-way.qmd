@@ -1,0 +1,498 @@
+---
+title: "Hướng dẫn vẽ đồ thị ANOVA hai yếu tố"
+author-title: <b>Biên soạn</b>
+author: Duc Nguyen | Founder of <a href="https://www.tuhocr.com/">tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+format:
+  html:
+    theme: [style.scss]
+    # page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    grid:
+      sidebar-width: 0px
+      body-width: 2000px
+      margin-width: 0px
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 110
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,      # suppress messages
+                      warning = FALSE,      # suppress warnings
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE          # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      # cache = TRUE       # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+zip(zipfile = "quarto-anova-two-way", 
+    files = c("quarto-anova-two-way.qmd", 
+              "compost.csv",
+              "style.scss",
+              "quarto-anova-two-way.Rproj", 
+              "_extensions/")
+    )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+{{< downloadthis quarto-anova-two-way.zip dname="quarto-anova-two-way" label="RStudio project" icon=file-zip type=primary >}} {{< downloadthis quarto-anova-two-way.qmd dname="quarto-anova-two-way" label="quarto-anova-two-way.qmd" icon=file-code type=success >}} &#8205; &#8205; &#8205; [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"}
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+[**Bước 1:**]{style="color:red"} **Dataset `df` là kết quả thí nghiệm tương tác giữa tổ hợp hai yếu tố là phân bón và chế độ tưới nước đến sinh khối cây trồng.**
+
+```{r, eval=FALSE}
+df <- read.csv("compost.csv")
+df
+```
+
+<div style="font-size: 150%;">
+```{r, echo=FALSE}
+df <- read.csv("compost.csv")
+df
+```
+</div>
+
+:::
+
+::: column
+
+[**Bước 2:**]{style="color:red"} **Ta chuyển các cột `fertilizer` và `water` về class `factor`, cũng như thực hiện một số bước thống kê mô tả dữ liệu.**
+
+```{r, eval=FALSE}
+df$fertilizer <- factor(df$fertilizer, levels = c("Compost A", "Compost B"))
+df$water <- factor(df$water, levels = c("Low", "Medium", "High"))
+table(df$fertilizer, df$water, useNA = "always") ### Tổ hợp nghiệm thức
+```
+
+<div style="font-size: 150%;">
+```{r, echo=FALSE}
+df$fertilizer <- factor(df$fertilizer, levels = c("Compost A", "Compost B"))
+df$water <- factor(df$water, levels = c("Low", "Medium", "High"))
+table(df$fertilizer, df$water, useNA = "always")
+```
+</div>
+
+[**Bước 3:**]{style="color:red"} **Tính trung bình và độ lệch chuẩn.**
+
+```{r, eval=FALSE}
+df |> dplyr::group_by(fertilizer, water) |> 
+  dplyr::summarize(trung_binh = mean(biomass),
+                   do_lech_chuan = sd(biomass)) -> df_ok
+
+df_ok
+```
+
+<div style="font-size: 150%;">
+```{r, echo=FALSE}
+df |> dplyr::group_by(fertilizer, water) |> 
+  dplyr::summarize(trung_binh = mean(biomass),
+                   do_lech_chuan = sd(biomass)) -> df_ok
+
+print.data.frame(df_ok, digits = 3)
+```
+</div>
+
+[**Bước 4:**]{style="color:red"} **Tách ra vector trung bình và độ lệch chuẩn để vẽ error bar.**
+
+```{r}
+df_ok$trung_binh -> trung_binh
+
+names(trung_binh) <- paste0(df_ok$fertilizer, "_", df_ok$water)
+
+round(trung_binh, digits = 1)
+
+df_ok$do_lech_chuan -> do_lech_chuan
+
+names(do_lech_chuan) <- paste0(df_ok$fertilizer, "_", df_ok$water)
+
+round(do_lech_chuan, digits = 1)
+```
+
+
+:::
+
+:::
+:::
+
+<!-- new line -->
+
+```{=html}
+
+<hr/>
+	
+```
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+[**Bước 5:**]{style="color:red"} **Vẽ đồ thị line chart với error bar.**
+
+```{r, results='hide'}
+# windows(8, 8, "fixed")
+
+png(filename = "fertilizer_vs_water.png", width = 8, height = 8, units = "in", res = 300)
+
+par(pty = "s")
+par(mar = c(5, 5, 5, 5))
+
+### plot để lấy tọa độ
+interaction.plot(x.factor = df$water, 
+                 trace.factor = df$fertilizer, 
+                 trace.label = "Phân bón",
+                 response = df$biomass, 
+                 ann = FALSE,
+                 axes = FALSE,
+                 fun = mean,
+                 type = "o", 
+                 legend = FALSE,
+                 xlab = bquote(bold("Chế độ tưới nước")),
+                 ylab = bquote(bold("Sinh khối (g)")),
+                 ylim = c(0, 100),
+                 yaxs = "i",
+                 pch = c(15, 16), 
+                 col = c(adjustcolor( "red", alpha.f = 0),
+                         adjustcolor( "blue", alpha.f = 0)),
+                 las = 1,
+                 cex = 2,
+                 lwd = 2,
+                 lty = c(1, 2),
+                 font = 2)
+
+grid(col = "lightgray")
+
+par(lheight = 1.2)
+
+title(main = "Kết quả thí nghiệm ảnh hưởng giữa các loại phân bón\nvà chế độ tưới nước đến sinh khối cây trồng")
+
+par(lheight = 1.1)
+
+legend(x = "top",
+       y = NULL,
+       legend = c("Compost A   ", "Compost B"),
+       x.intersp = 1,
+       y.intersp = 1.1,
+       pch = c(15, 16),
+       col = c("red", "blue"),
+       lwd = 2,
+       lty = c(1, 2),
+       seg.len = 3,
+       pt.cex = 1.5,
+       inset = 0.02,
+       title.adj = c(0.5),
+       title = "Nghiệm thức phân bón\n(tính theo giá trị trung bình)",
+       bty = "n",
+       title.font = 2,
+       title.col = "darkgreen",
+       horiz = TRUE)
+
+########################
+# 
+# points(x = c(1, 1, 1, 1, 1, 1),
+#        y = subset(df, fertilizer == "Compost A" & water == "Low")$biomass,
+#        col = adjustcolor( "red", alpha.f = 1),
+#        pch = 0,
+#        cex = 1.1)
+# 
+# points(x = c(1, 1, 1, 1, 1, 1),
+#        y = subset(df, fertilizer == "Compost B" & water == "Low")$biomass,
+#        col = adjustcolor( "blue", alpha.f = 1),
+#        pch = 1,
+#        cex = 1.1)
+# 
+# ########################
+# 
+# points(x = c(2, 2, 2, 2, 2, 2),
+#        y = subset(df, fertilizer == "Compost A" & water == "Medium")$biomass,
+#        col = adjustcolor( "red", alpha.f = 1),
+#        pch = 0,
+#        cex = 1.1)
+# 
+# points(x = c(2, 2, 2, 2, 2, 2),
+#        y = subset(df, fertilizer == "Compost B" & water == "Medium")$biomass,
+#        col = adjustcolor( "blue", alpha.f = 1),
+#        pch = 1,
+#        cex = 1.1)
+# 
+# ########################
+# 
+# points(x = c(3, 3, 3, 3, 3, 3),
+#        y = subset(df, fertilizer == "Compost A" & water == "High")$biomass,
+#        col = adjustcolor( "red", alpha.f = 1),
+#        pch = 0,
+#        cex = 1.1)
+# 
+# points(x = c(3, 3, 3, 3, 3, 3),
+#        y = subset(df, fertilizer == "Compost B" & water == "High")$biomass,
+#        col = adjustcolor( "blue", alpha.f = 1),
+#        pch = 1,
+#        cex = 1.1)
+
+par(new = TRUE) ### vẽ đè lại plot để chuẩn đồ thị
+interaction.plot(x.factor = df$water, 
+                 trace.factor = df$fertilizer, 
+                 trace.label = "Phân bón",
+                 response = df$biomass, 
+                 fun = mean,
+                 type = "o", 
+                 legend = FALSE,
+                 xlab = bquote(bold("Chế độ tưới nước")),
+                 ylab = bquote(bold("Sinh khối (g)")),
+                 ylim = c(0, 100),
+                 yaxs = "i",
+                 pch = c(15, 16), 
+                 col = c(adjustcolor( "red", alpha.f = 0.7),
+                         adjustcolor( "blue", alpha.f = 0.7)),
+                 las = 1,
+                 cex = 2,
+                 lwd = 2,
+                 lty = c(1, 2),
+                 font = 2)
+
+### độ lệch chuẩn cho compost A
+arrows(x0 = c(1, 2, 3), 
+       y0 = trung_binh[1:3] + do_lech_chuan[1:3], 
+       x1 = c(1, 2, 3), 
+       y1 = trung_binh[1:3] - do_lech_chuan[1:3],
+       angle = 90, 
+       code = 3, 
+       length = 0.035,
+       col = adjustcolor( "red", alpha.f = 0.5),
+       lwd = 1.5)
+
+### độ lệch chuẩn cho compost B
+arrows(x0 = c(1, 2, 3), 
+       y0 = trung_binh[4:6] + do_lech_chuan[4:6], 
+       x1 = c(1, 2, 3), 
+       y1 = trung_binh[4:6] - do_lech_chuan[4:6],
+       angle = 90, 
+       code = 3, 
+       length = 0.035,
+       col = adjustcolor( "blue", alpha.f = 0.5),
+       lwd = 1.5)
+
+dev.off()
+```
+
+:::
+
+::: column
+
+![](fertilizer_vs_water.png)
+
+:::
+
+:::
+:::
+
+<!-- new line -->
+
+```{=html}
+
+<hr/>
+	
+```
+
+::: multiple
+::: {.columns .column-screen-inset}
+
+::: column
+
+[**Bước 6:**]{style="color:red"} **Vẽ đồ thị line chart và điểm dữ liệu tương ứng từng nghiệm thức.**
+
+```{r, results='hide'}
+# windows(8, 8, "fixed")
+
+png(filename = "fertilizer_vs_water_datapoint.png", width = 8, height = 8, units = "in", res = 300)
+
+par(pty = "s")
+par(mar = c(5, 5, 5, 5))
+
+### plot để lấy tọa độ
+interaction.plot(x.factor = df$water, 
+                 trace.factor = df$fertilizer, 
+                 trace.label = "Phân bón",
+                 response = df$biomass, 
+                 ann = FALSE,
+                 axes = FALSE,
+                 fun = mean,
+                 type = "o", 
+                 legend = FALSE,
+                 xlab = bquote(bold("Chế độ tưới nước")),
+                 ylab = bquote(bold("Sinh khối (g)")),
+                 ylim = c(0, 100),
+                 yaxs = "i",
+                 pch = c(15, 16), 
+                 col = c(adjustcolor( "red", alpha.f = 0),
+                         adjustcolor( "blue", alpha.f = 0)),
+                 las = 1,
+                 cex = 2,
+                 lwd = 2,
+                 lty = c(1, 2),
+                 font = 2)
+
+grid(col = "lightgray")
+
+par(lheight = 1.2)
+
+title(main = "Kết quả thí nghiệm ảnh hưởng giữa các loại phân bón\nvà chế độ tưới nước đến sinh khối cây trồng")
+
+par(lheight = 1.1)
+
+legend(x = "top",
+       y = NULL,
+       legend = c("Compost A   ", "Compost B"),
+       x.intersp = 1,
+       y.intersp = 1.1,
+       pch = c(15, 16),
+       col = c("red", "blue"),
+       lwd = 2,
+       lty = c(1, 2),
+       seg.len = 3,
+       pt.cex = 1.5,
+       inset = 0.02,
+       title.adj = c(0.5),
+       title = "Nghiệm thức phân bón\n(tính theo giá trị trung bình)",
+       bty = "n",
+       title.font = 2,
+       title.col = "darkgreen",
+       horiz = TRUE)
+
+########################
+
+points(x = c(1, 1, 1, 1, 1, 1),
+       y = subset(df, fertilizer == "Compost A" & water == "Low")$biomass,
+       col = adjustcolor( "red", alpha.f = 1),
+       pch = 0,
+       cex = 1.1)
+
+points(x = c(1, 1, 1, 1, 1, 1),
+       y = subset(df, fertilizer == "Compost B" & water == "Low")$biomass,
+       col = adjustcolor( "blue", alpha.f = 1),
+       pch = 1,
+       cex = 1.1)
+
+########################
+
+points(x = c(2, 2, 2, 2, 2, 2),
+       y = subset(df, fertilizer == "Compost A" & water == "Medium")$biomass,
+       col = adjustcolor( "red", alpha.f = 1),
+       pch = 0,
+       cex = 1.1)
+
+points(x = c(2, 2, 2, 2, 2, 2),
+       y = subset(df, fertilizer == "Compost B" & water == "Medium")$biomass,
+       col = adjustcolor( "blue", alpha.f = 1),
+       pch = 1,
+       cex = 1.1)
+
+########################
+
+points(x = c(3, 3, 3, 3, 3, 3),
+       y = subset(df, fertilizer == "Compost A" & water == "High")$biomass,
+       col = adjustcolor( "red", alpha.f = 1),
+       pch = 0,
+       cex = 1.1)
+
+points(x = c(3, 3, 3, 3, 3, 3),
+       y = subset(df, fertilizer == "Compost B" & water == "High")$biomass,
+       col = adjustcolor( "blue", alpha.f = 1),
+       pch = 1,
+       cex = 1.1)
+
+par(new = TRUE) ### vẽ đè lại plot để chuẩn đồ thị
+interaction.plot(x.factor = df$water, 
+                 trace.factor = df$fertilizer, 
+                 trace.label = "Phân bón",
+                 response = df$biomass, 
+                 fun = mean,
+                 type = "o", 
+                 legend = FALSE,
+                 xlab = bquote(bold("Chế độ tưới nước")),
+                 ylab = bquote(bold("Sinh khối (g)")),
+                 ylim = c(0, 100),
+                 yaxs = "i",
+                 pch = c(15, 16), 
+                 col = c(adjustcolor( "red", alpha.f = 0.7),
+                         adjustcolor( "blue", alpha.f = 0.7)),
+                 las = 1,
+                 cex = 2,
+                 lwd = 2,
+                 lty = c(1, 2),
+                 font = 2)
+
+# ### độ lệch chuẩn cho compost A
+# arrows(x0 = c(1, 2, 3), 
+#        y0 = trung_binh[1:3] + do_lech_chuan[1:3], 
+#        x1 = c(1, 2, 3), 
+#        y1 = trung_binh[1:3] - do_lech_chuan[1:3],
+#        angle = 90, 
+#        code = 3, 
+#        length = 0.035,
+#        col = adjustcolor( "red", alpha.f = 0.5),
+#        lwd = 1.5)
+# 
+# ### độ lệch chuẩn cho compost B
+# arrows(x0 = c(1, 2, 3), 
+#        y0 = trung_binh[4:6] + do_lech_chuan[4:6], 
+#        x1 = c(1, 2, 3), 
+#        y1 = trung_binh[4:6] - do_lech_chuan[4:6],
+#        angle = 90, 
+#        code = 3, 
+#        length = 0.035,
+#        col = adjustcolor( "blue", alpha.f = 0.5),
+#        lwd = 1.5)
+
+dev.off()
+```
+
+:::
+
+::: column
+
+![](fertilizer_vs_water_datapoint.png)
+
+:::
+
+:::
+:::
+
+<!-- new line -->
+
+```{=html}
+
+<hr/>
+	
+```
+
+[**Bước 7:**]{style="color:red"} **Phân tích ANOVA 2 yếu tố và phân hạng nghiệm thức được mình trình bày ở link này. Các bạn tham khảo tiếp nhé.**
+
+<mark style="background-color: #FFFF00">[**https://thongkesinhhoc.com/phan-tich-anova-2-yeu-to-trong-r**](https://thongkesinhhoc.com/phan-tich-anova-2-yeu-to-trong-r)</mark>
+
+### Tài liệu tham khảo
+
+1. `https://www.statology.org/interaction-plot-r/`
