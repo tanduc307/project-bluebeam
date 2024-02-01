@@ -57,7 +57,9 @@ zip(zipfile = "quarto-statistical-notation",
 <!-- https://github.com/shafayetShafee/downloadthis -->
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} {{< downloadthis quarto-statistical-notation.txt dname="quarto-statistical-notation" label="quarto-statistical-notation.txt" icon=file-code type=success >}} &#8205; &#8205; &#8205; [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"}
+{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.txt" class="btn btn-success" role="button"> 
+<i class="bi bi-file-code"></i> quarto-statistical-notation.txt</a> &#8205; &#8205; &#8205; [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"}
+
 
 ::: multiple
 ::: {.columns .column-screen-inset}
@@ -83,15 +85,15 @@ zip(zipfile = "quarto-statistical-notation",
 
 ### <mark style="background-color: #FFFF00">Tài liệu tham khảo</mark>
 
-1. `https://www.statisticshowto.com/statistics-basics/statistics-symbols/`
+1. <https://www.statisticshowto.com/statistics-basics/statistics-symbols/>
 
-2. `https://www.bmj.com/about-bmj/resources-readers/publications/statistics-square-one`
+2. <https://www.bmj.com/about-bmj/resources-readers/publications/statistics-square-one>
 
-3. `https://www.fsb.miamioh.edu/lij14/311_intu1.pdf`
+3. <https://www.fsb.miamioh.edu/lij14/311_intu1.pdf>
 
-4. `https://users.sussex.ac.uk/~grahamh/RM1web/StatsSymbolsGuide`
+4. <https://users.sussex.ac.uk/~grahamh/RM1web/StatsSymbolsGuide>
 
-5. `https://users.sussex.ac.uk/~grahamh/RM1web/APA%20format%20for%20statistical%20notation%20and%20other%20things.pdf`
+5. <https://users.sussex.ac.uk/~grahamh/RM1web/APA%20format%20for%20statistical%20notation%20and%20other%20things.pdf>
 
 
 
