@@ -30,7 +30,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide'}
 knitr::opts_chunk$set(error = TRUE,        # suppress errors
                       message = FALSE,      # suppress messages
                       warning = FALSE,      # suppress warnings
@@ -48,66 +48,71 @@ file.copy(from = files, to = newfiles)
 
 zip(zipfile = "quarto-statistical-notation", 
     files = c("quarto-statistical-notation.qmd", 
-              "style.scss",
+              "style.scss", "volume-up.svg",
               "quarto-statistical-notation.Rproj", 
               "_extensions/")
     )
 ```
 
 <!-- https://github.com/shafayetShafee/downloadthis -->
+
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} {{< downloadthis quarto-statistical-notation.txt dname="quarto-statistical-notation" label="quarto-statistical-notation.txt" icon=file-code type=success >}} &#8205; &#8205; &#8205; [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"}
+{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.txt" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> quarto-statistical-notation.txt</a> ‍ ‍ ‍ 
 
-::: multiple
-::: {.columns .column-screen-inset}
+<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
 
-::: column
+<!-- https://quarto.org/docs/authoring/tables.html -->
 
-[**Bước 1:**]{style="color:red"} **Dataset `df`**
+```{=html}
+<style>
+    .heatMap {
+        text-align: left;
+    }
+    .heatMap th {
+        background: #007bff;
+        color: white;
+        word-wrap: break-word;
+        text-align: center;
+    }
+</style>
+```
 
+```{=html}
+<script>function chi_squared(){
+  var music = new Audio('https://static.sfdict.com/audio/C04/C0417200.mp3');
+  music.play();
+  }</script>
+```
+
+::: heatMap
+
++-----------+-------------------+-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+| STT       | Ký hiệu           | Phát âm                                                                                 | Chú thích 			                                                                                      |	
++===========+===================+=========================================================================================+===========================================================================================================+
+| 1  		| ${\chi ^2}$       | **/ ˈkaɪˌskwɛər /** <input type="image" src="volume-up.svg" onclick="chi_squared()" />  | Có nhiều cách ký hiệu (khác nhau chỗ ed ở square)[^1]: 	                                                  |
+|           |                   | <br>    Chi bình phương     															  | <br>• Pearson's Chi-squared Test for Count Data														      |
+|			|	                |                                                                                         | <br>• bb																							      |
++-----------+-------------------+-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+| 2  		|                   |					                                                                      |				                                                                                              |
++-----------+-------------------+-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+                                                                                            																															                          
+
+: { .responsive-md .hover .table-bordered tbl-colwidths="[5, 10, 10, 75]" }
 :::
-
-::: column
-
-[**Bước 2:**]{style="color:red"} **Ta**
-
-
-:::
-
-:::
-:::
-
 
 
 
 ### <mark style="background-color: #FFFF00">Tài liệu tham khảo</mark>
 
-1. `https://www.statisticshowto.com/statistics-basics/statistics-symbols/`
+1.  <https://www.statisticshowto.com/statistics-basics/statistics-symbols/>
 
-2. `https://www.bmj.com/about-bmj/resources-readers/publications/statistics-square-one`
+2.  <https://www.bmj.com/about-bmj/resources-readers/publications/statistics-square-one>
 
-3. `https://www.fsb.miamioh.edu/lij14/311_intu1.pdf`
+3.  <https://www.fsb.miamioh.edu/lij14/311_intu1.pdf>
 
-4. `https://users.sussex.ac.uk/~grahamh/RM1web/StatsSymbolsGuide`
+4.  <https://users.sussex.ac.uk/~grahamh/RM1web/StatsSymbolsGuide>
 
-5. `https://users.sussex.ac.uk/~grahamh/RM1web/APA%20format%20for%20statistical%20notation%20and%20other%20things.pdf`
+5.  <https://users.sussex.ac.uk/~grahamh/RM1web/APA%20format%20for%20statistical%20notation%20and%20other%20things.pdf>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[^1]: <https://math.stackexchange.com/questions/1098138/chi-square-or-chi-squared>
