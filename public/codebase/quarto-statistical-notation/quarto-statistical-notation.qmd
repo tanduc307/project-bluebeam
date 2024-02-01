@@ -92,7 +92,7 @@ zip(zipfile = "quarto-statistical-notation",
 | STT       | Ký hiệu           | Phát âm                                                                                 | Chú thích 			                                                                                      |	
 +===========+===================+=========================================================================================+===========================================================================================================+
 | 1  		| ${\chi ^2}$       | **/ ˈkaɪˌskwɛər /** <input type="image" src="volume-up.svg" onclick="chi_squared()" />  | Có nhiều cách ký hiệu (khác nhau chỗ ed ở square)[^1]: 	                                                  |
-|           |                   | <br> Chi bình phương     											     				  | <br> • Pearson's **Chi-squared** Test for Count Data[^2]												  |
+|           |                   | <br> Chi bình phương     											     				  | <br> • Pearson's **chi-squared** test for count data[^2]												  |
 |			|	                |                                                                                         | <br> • Một số tài liệu ghi là **chi square** (không có ed và không có gạch nối) [@mann2010, p. 498]       |
 |           |         		    | 																						  | <br> • Hoặc là **chi-square** (không có ed và có gạch nối) [@le2016, p. 470]                              |
 +-----------+-------------------+-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
