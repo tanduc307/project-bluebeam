@@ -1,4 +1,4 @@
-# **Bài 27: Hướng dẫn phân tích logistic regression** {.unnumbered}
+# Hướng dẫn phân tích logistic regression
 
 ## Cơ sở lý thuyết
 
