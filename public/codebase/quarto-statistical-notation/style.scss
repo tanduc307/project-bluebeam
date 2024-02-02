@@ -58,7 +58,19 @@ quarto-title-meta {
   }
 }
 
+/* syntax cho table bootstrap */
 
+table.table-bordered{
+    border:1px solid black;
+    margin-top:20px;
+  }
+table.table-bordered > thead > tr > th{
+    border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+}
 
+/* https://stackoverflow.com/questions/41646011/how-to-change-the-border-color-of-bootstrap-table-using-inline-css */
 
 
