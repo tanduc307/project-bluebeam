@@ -59,7 +59,7 @@ zip(zipfile = "quarto-statistical-notation",
 
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.txt" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> text</a> <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.html" class="btn btn-danger" role="button"> <i class="bi bi-filetype-html"></i> web</a> ‍ ‍ ‍ 
+{{< downloadthis quarto-statistical-notation.zip dname="quarto-statistical-notation" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.txt" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> text</a> <a href="https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.html" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-filetype-html"></i> web</a> ‍ ‍ ‍ 
 
 <!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
 
