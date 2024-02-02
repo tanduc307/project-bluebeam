@@ -218,11 +218,53 @@ check_1[!unlist(check_2)]
 
 ```
 
+## Thể hiện giá trị `NA` trên toàn bộ dataset qua heatmap
+
+### Cách 1: Sử dụng package `mice`
+
+```{r, fig.width=12, fig.height=6}
+library(mice)
+mice::md.pattern(df, plot = TRUE, rotate.names = TRUE)
+```
+
+Kết quả này đọc là có 1753 sinh viên có đủ các thông tin ở tất cả các cột, 3139 sinh viên có đủ thông tin (chỉ trừ cột `salary` là có missing value), 3347 sinh viên có đủ thông tin (chỉ trừ các cột `score1`, `score2`, và `salary`). Có tổng cộng 13180 giá trị `NA` trong toàn bộ dataset.
+
+### Cách 2: Sử dụng package `VIM`
+
+Sử dụng đồ thị này để thể hiện tỷ lệ % giá trị `NA` trên toàn dataset.
+
+```{r, fig.width=12, fig.height=6}
+library(VIM)
+aggr_plot <- VIM::aggr(df, 
+                       col = c("navyblue", "red"), 
+                       numbers = TRUE, 
+                       sortVars = TRUE, 
+                       labels = names(data), 
+                       cex.axis = 1, 
+                       gap = 3,
+                       ylab = c("Histogram of missing data", "Pattern"))
+```
+
+Ta có thể so sánh từng cặp chỉ tiêu với nhau thông qua đồ thị này, với các biện luận tham khảo ở đây[^2].
+
+```{r, fig.width=12, fig.height=6}
+VIM::marginplot(df[, c("salary", "score1")])
+VIM::marginplot(df[, c("salary", "score2")])
+VIM::marginplot(df[, c("score1", "score2")])
+```
+
+
 # Tài liệu tham khảo
 
 1. <https://stackoverflow.com/questions/6451152/how-to-catch-integer0>
 
+2. <https://amices.org/mice/>
+
+3. <https://amices.org/Winnipeg/>
+
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
+
+[^2]: <https://datascienceplus.com/imputing-missing-data-with-r-mice-package/>
 
 <button onclick="topFunction()" id="myBtn">**Home**</button>
 
