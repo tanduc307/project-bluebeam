@@ -10,8 +10,20 @@ $link-color: blue; /* đổi màu hyperlink */
 .title {
     margin-bottom: 0;
     text-align: center;
-    color: red;
+    color: blue;
     font-weight: bold;
+}
+
+/* https://www.w3schools.com/cssref/sel_id.php */
+
+.toc-active {
+  color: black;
+  font-weight: bold;
+}
+
+#toc-title {
+  color: black;
+  font-weight: bold;
 }
 
 /*
