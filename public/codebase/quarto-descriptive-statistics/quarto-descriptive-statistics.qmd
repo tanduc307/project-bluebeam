@@ -38,7 +38,7 @@ engine: knitr
 knitr:
   opts_chunk:
     R.options:
-      width: 900
+      width: 1000
 editor_options: 
   chunk_output_type: console
 ---
@@ -108,8 +108,130 @@ head(df, n = 30) ### xem 30 dòng đầu của df
 dim(df) ### Kiểm tra dataset gồm bao nhiêu hàng và cột
 ```
 
+```{r}
+str(df) ### Xem tổng quát cấu trúc dataset
+```
 
-### ok
+```{r}
+summary(df) ### Tóm tắt đặc điểm từng cột trong dataset
+```
+
+Vì giá trị `NA` missing values chỉ thể hiện ở numeric vector mà không thể hiện ở character vector. Vì vậy kết quả trong lệnh `summary()` chỉ để tham khảo sơ bộ khi đánh giá về tình trạng `NA` của bộ dữ liệu.
+
+```{r}
+### Lệnh này xác nhận là toàn bộ dataset có `NA` hay không. 
+### Nếu FALSE là chắc chắn không có `NA`, còn TRUE thì chắc chắn là có `NA`.
+any(is.na(df)) 
+```
+
+### Kiểm tra kỹ `class` từng cột
+
+```{r}
+sapply(df, class) ### Kiểm tra class từng cột. 
+```
+
+Ta chuyển toàn bộ các cột ở class `integer` sang class `numeric` (nếu cần thiết). Ở đây mình làm ví dụ minh họa để có code mẫu áp dụng cho các trường hợp tương tự.
+
+```{r}
+### Tách ra vector chứa kết quả kiểm tra class từng cột
+class_tung_cot <- sapply(df, class, simplify = TRUE, USE.NAMES = TRUE)
+### Tìm vị trí index của các cột có class là `integer`
+integer_index_cot <- grep(pattern = "integer", ignore.case = FALSE, fixed = TRUE, x = class_tung_cot)
+### Tách ra tên các cột có class `integer`
+ten_cot_integer <- names(class_tung_cot)[integer_index_cot]
+### Chuyển toàn bộ các cột `integer` này về dạng `numeric`
+df[, ten_cot_integer] <- lapply(df[, ten_cot_integer], as.numeric)
+### Kiểm tra lại thì thấy toàn bộ các cột `integer` đã chuyển qua dạng `numeric`
+sapply(df, class, simplify = TRUE, USE.NAMES = TRUE)
+```
+
+### Xác nhận mỗi dòng (observation, row) là một quan sát riêng biệt
+
+Để tăng mức độ tự tin khi thao tác với dữ liệu, bạn cần xác nhận là mỗi dòng (ở đây là mỗi sinh viên) thì dữ liệu là duy nhất, không có lặp lại. Việc này rất quan trọng để tránh bị trùng lắp (trong trường hợp dataset ở dạng semi-long) để ta tìm cách trải dữ liệu ra làm sao thu được dạng true long hoặc true wide, tức là mỗi một dòng là một quan sát riêng biệt.
+
+```{r}
+### Thông thường trong các dataset luôn có cột ID để làm cơ sở theo dõi thông tin,
+### nếu không có cột ID thì bạn cần tạo ra cột ID để thuận tiện xử lý sau này (nếu cần)
+### Kiểm tra thông tin ở cột ID sinh viên xem có trùng lắp hay không,
+### Lệnh unique() trả về kết quả của toàn bộ các giá trị xuất hiện duy nhất trong cột ID
+### Lệnh length() giúp đếm tổng chiều dài của vector
+length(unique(df$stud.id)) 
+```
+
+Như vậy ta xác nhận xem tổng số hàng của dataset `df` có bằng với tổng số giá trị ID riêng biệt ở cột `stud.id` hay không. Nếu là `TRUE` thì chắc chắn là mỗi một dòng là một sinh viên riêng biệt.
+
+```{r}
+identical(dim(df)[1], length(unique(df$stud.id)))
+```
+
+Cách 2 là ta dùng lệnh `duplicated()`
+
+```{r}
+### Lệnh này trả về vector logical check cho mỗi giá trị trong vector stud.id
+### Nếu có trùng lặp thì sẽ có TRUE, còn nếu không có trùng lặp sẽ là FALSE
+check_duplicated <- duplicated(df$stud.id)
+### Lệnh all này sẽ trả về kết quả TRUE nếu toàn bộ giá trị trong vector !check_duplicated
+### là TRUE, nghĩa là không có trùng lặp
+all(!check_duplicated)
+```
+
+Cách 3 là ta dùng lệnh `anyDuplicated()`
+
+```{r}
+### Để thuận tiện thì ta dùng lệnh này, nếu kết quả trả về 0 nghĩa là không có trùng lặp
+anyDuplicated(df$stud.id)
+```
+
+### Dùng lệnh `table()` để kiểm tra giá trị `NA` ở từng cột
+
+Lệnh `table()` là một lệnh rất mạnh trong R. Ta nên dùng tham số `useNA = "ifany"` nhằm thể hiện luôn số lượng `NA` nếu có trong vector đang kiểm tra.
+
+```{r}
+options(width = 120)
+check_na <- lapply(X = df[, !(names(df) %in% c("no", "stud.id", "name"))], ### Bỏ 3 cột đầu vì không cần thiết phải check `NA`
+                   FUN = table, 
+                   useNA = "ifany")
+
+check_na
+```
+
+Kết quả trả về là bảng tần số ở từng cột, nếu có `NA` như ở trường hợp cột `salaray` thì sẽ hiện ra ở dòng cuối. Trong trường hợp kết quả này quá nhiều cột, ta chỉ quan tâm tách ra những cột nào có giá trị `NA` và muốn biết có bao nhiêu `NA` trong cột đó (dù là `character` hay `numeric`) thì ta sẽ làm thêm một bước kiểm tra sau.
+
+```{r}
+### Lệnh này sẽ kiểm từng thành phần trong list `check_na` sau đó trả về kết quả
+### Những thành phần nào (cột nào trong df) có bao nhiêu giá trị `NA`
+check_1 <- lapply(check_na, function(x) {
+                                        x[which(is.na(names(x)))]
+                                        }       
+                  )
+
+### Build function kiểm tra ruột của từng thành phần trong list có giá trị hay không
+is.integer0 <- function(x) {
+  is.integer(x) && length(x) == 0L
+}
+
+### Kiểm tra từng thành phần trong check_1 có giá trị hay không
+check_2 <- lapply(check_1, is.integer0)
+
+### Trích xuất những cột có giá trị missing value
+check_1[!unlist(check_2)]
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+# Tài liệu tham khảo
+
+1. <https://stackoverflow.com/questions/6451152/how-to-catch-integer0>
 
 
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
