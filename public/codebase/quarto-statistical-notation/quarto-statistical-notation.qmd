@@ -45,7 +45,7 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
 
 files <- list.files(pattern="*.qmd")
 newfiles <- gsub("\\.qmd", ".txt", files)
-file.copy(from = files, to = newfiles)
+file.copy(from = files, to = newfiles, overwrite = TRUE)
 
 zip(zipfile = "quarto-statistical-notation", 
     files = c("quarto-statistical-notation.qmd", 
