@@ -9,7 +9,7 @@ date-format: "YYYY MMMM DD"
 cover-image: cover.png
 favicon: favicon.png
 bibliography: reborn_1.bib
-  
+
 format:
   html:
     toc: true
@@ -102,7 +102,7 @@ df <- read.csv("students.csv")
 head(df, n = 30) ### xem 30 dòng đầu của df
 ```
 
-## Các lệnh kiểm tra dataset thường dùng
+# Các lệnh kiểm tra dataset thường dùng
 
 ```{r}
 dim(df) ### Kiểm tra dataset gồm bao nhiêu hàng và cột
@@ -124,7 +124,7 @@ Vì giá trị `NA` missing values chỉ thể hiện ở numeric vector mà kh�
 any(is.na(df)) 
 ```
 
-### Kiểm tra kỹ `class` từng cột
+## Kiểm tra kỹ `class` từng cột
 
 ```{r}
 sapply(df, class) ### Kiểm tra class từng cột. 
@@ -145,7 +145,7 @@ df[, ten_cot_integer] <- lapply(df[, ten_cot_integer], as.numeric)
 sapply(df, class, simplify = TRUE, USE.NAMES = TRUE)
 ```
 
-### Xác nhận mỗi dòng (observation, row) là một quan sát riêng biệt
+## Xác nhận mỗi dòng (observation, row) là một quan sát riêng biệt
 
 Để tăng mức độ tự tin khi thao tác với dữ liệu, bạn cần xác nhận là mỗi dòng (ở đây là mỗi sinh viên) thì dữ liệu là duy nhất, không có lặp lại. Việc này rất quan trọng để tránh bị trùng lắp (trong trường hợp dataset ở dạng semi-long) để ta tìm cách trải dữ liệu ra làm sao thu được dạng true long hoặc true wide, tức là mỗi một dòng là một quan sát riêng biệt.
 
@@ -182,7 +182,7 @@ Cách 3 là ta dùng lệnh `anyDuplicated()`
 anyDuplicated(df$stud.id)
 ```
 
-### Dùng lệnh `table()` để kiểm tra giá trị `NA` ở từng cột
+## Dùng lệnh `table()` để kiểm tra giá trị `NA` ở từng cột
 
 Lệnh `table()` là một lệnh rất mạnh trong R. Ta nên dùng tham số `useNA = "ifany"` nhằm thể hiện luôn số lượng `NA` nếu có trong vector đang kiểm tra.
 
@@ -218,26 +218,35 @@ check_1[!unlist(check_2)]
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
 # Tài liệu tham khảo
 
 1. <https://stackoverflow.com/questions/6451152/how-to-catch-integer0>
 
-
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
 
+<button onclick="topFunction()" id="myBtn">**Home**</button>
 
+<script>
+// Get the button:
+let mybutton = document.getElementById("myBtn");
 
+// When the user scrolls down 200px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+</script>
 
 
 

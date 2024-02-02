@@ -1,0 +1,80 @@
+---
+title: top
+format:
+  html:
+    include-in-header: back-to-top.html
+    theme: minty
+---
+
+:::{style='text-align: center;'}
+
+```{=html}
+<style>
+.down-arrow {
+  font-size: 120px;
+  margin-top: 120px;
+  margin-bottom: 120px;
+  text-shadow: 0px -20px #0C1F31, 0px 0px #C33329;
+  color: rgba(0,0,0,0);
+  -webkit-transform: scaleY(0.8);
+  -moz-transform: scaleY(0.8);
+  transform: scaleY(0.8);
+}
+</style>
+```
+
+<div class="down-arrow">&#9660;</div>
+First we need to get to the bottom of the page.
+<div class="down-arrow">&#9660;</div>
+Because you're already at the top.
+<div class="down-arrow">&#9660;</div>
+So a "back to top" button wouldn't make sense.
+<div class="down-arrow">&#9660;</div>
+Down down down.
+<div class="down-arrow">&#9660;</div>
+## Wow, all this scrolling
+<div class="down-arrow">&#9660;</div>
+This had better be worth it.
+<div class="down-arrow">&#9660;</div>
+It's going to take ages to get back to the top.
+<div class="down-arrow">&#9660;</div>
+If only we had an easy way to get back...
+<div class="down-arrow">&#9660;</div>
+...that is both functional and fun.
+<div class="down-arrow">&#9660;</div>
+I call "back to top" buttons ...
+<div class="down-arrow">&#9660;</div>
+...they should really behave more like them.
+<div class="down-arrow">&#9660;</div>
+Ok, here we are... click that arrow button!
+
+:::
+
+
+<button type="button" class="btn btn-primary btn-lg bi bi-arrow-up" id="btn-back-to-top"></button>
+
+<style>
+#btn-back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+}
+</style>
+
+<script>
+let backToTopButton = document.getElementById("btn-back-to-top");
+
+window.onscroll = function () {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    backToTopButton.style.display = "block";
+  } else {
+    backToTopButton.style.display = "none";
+  }
+};
+
+backToTopButton.addEventListener("click", function () {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+});
+</script>
