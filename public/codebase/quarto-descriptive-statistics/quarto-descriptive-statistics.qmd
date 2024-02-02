@@ -9,14 +9,15 @@ date-format: "YYYY MMMM DD"
 cover-image: cover.png
 favicon: favicon.png
 bibliography: reborn_1.bib
+  
 format:
   html:
     toc: true
     toc-title: "Mục lục"
-    # toc-expand: 3
+    toc-expand: 6
     toc-location: left
     number-sections: true
-    # number-depth: 3
+    number-depth: 6
     theme: [style.scss]
     page-layout: full
     # code-annotations: below # không thuận tiện cho 2 code chunk
@@ -24,15 +25,20 @@ format:
     anchor-sections: true
     smooth-scroll: true
     link-external-newwindow: true
+    code-tools:
+      source: https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.txt
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
     #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
 engine: knitr
 knitr:
   opts_chunk:
     R.options:
-      width: 110
+      width: 900
 editor_options: 
   chunk_output_type: console
 ---
@@ -65,13 +71,15 @@ zip(zipfile = "quarto-descriptive-statistics",
 
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-descriptive-statistics.zip dname="quarto-descriptive-statistics" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.txt" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> text</a> <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.html" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-filetype-html"></i> web</a> ‍ ‍ ‍ 
+{{< downloadthis quarto-descriptive-statistics.zip dname="quarto-descriptive-statistics" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.html" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-filetype-html"></i> quarto-descriptive-statistics.html</a> ‍ ‍ ‍ 
 
 <!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
 
 # Tình huống thường gặp
 
-Bạn có một file dữ liệu `df` có rất nhiều hàng và cột như sau. Việc đầu tiên là ta cần làm một số lệnh để kiểm tra đặc điểm dữ liệu trước khi đi tiếp các bước phân tích sâu hơn. Để tạo ra 1 file HTML table show full dataset, bạn sử dụng package `kableExtra` với hướng dẫn ở đây[^1].
+Bạn có file dữ liệu `df` gồm rất nhiều hàng và cột (trong bài này ta sử dụng dummy dataset để làm ví dụ minh họa). Việc đầu tiên cần làm là kiểm tra đặc điểm dữ liệu để đánh giá tổng quát toàn bộ dataset như thế nào nhằm có một hình dung cụ thể về dữ liệu trước khi thực hiện các bước phân tích sâu hơn. 
+
+Để tạo ra 1 file HTML table show full dataset, bạn sử dụng package `kableExtra`[^1]. [**View**](https://applyr.netlify.app/codebase/quarto-descriptive-statistics/output.html)
 
 ```{r, eval = FALSE}
 df <- read.csv("students.csv")
@@ -89,8 +97,17 @@ df %>% kbl(format = "html") %>%
 save_kable(output, file = "output.html")
 ```
 
+```{r}
+df <- read.csv("students.csv")
+head(df, n = 30) ### xem 30 dòng đầu của df
+```
 
-## Sau đó
+## Các lệnh kiểm tra dataset thường dùng
+
+```{r}
+dim(df) ### Kiểm tra dataset gồm bao nhiêu hàng và cột
+```
+
 
 ### ok
 
