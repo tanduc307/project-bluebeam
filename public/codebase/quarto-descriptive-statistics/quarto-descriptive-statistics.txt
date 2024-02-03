@@ -45,12 +45,12 @@ editor_options:
 
 ```{r, echo=FALSE, results='hide'}
 knitr::opts_chunk$set(error = TRUE,        # suppress errors
-                      message = FALSE,      # suppress messages
-                      warning = FALSE,      # suppress warnings
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
                       # results = 'hide',  # suppress code output
-                      echo = TRUE          # suppress code
+                      echo = TRUE,         # suppress code
                       # fig.show = 'hide', # suppress plots
-                      # cache = TRUE       # enable caching
+                      cache = TRUE         # enable caching
                       )        
 # library(ggfortify)
 # autoplot(lm(cars$dist ~ cars$speed))
@@ -184,12 +184,14 @@ anyDuplicated(df$stud.id)
 
 ## Dùng lệnh `table()` để kiểm tra giá trị `NA` ở từng cột
 
+### Tham số `gender` ở vị trí hàng, tham số `major` ở vị trí cột
 Lệnh `table()` là một lệnh rất mạnh trong R. Ta nên dùng tham số `useNA = "ifany"` nhằm thể hiện luôn số lượng `NA` nếu có trong vector đang kiểm tra.
 
 ```{r}
 options(width = 120)
 check_na <- lapply(X = df[, !(names(df) %in% c("no", "stud.id", "name"))], ### Bỏ 3 cột đầu vì không cần thiết phải check `NA`
                    FUN = table, 
+                   ### Tham số `gender` ở vị trí hàng, tham số `major` ở vị trí cột
                    useNA = "ifany")
 
 check_na
@@ -253,6 +255,81 @@ VIM::marginplot(df[, c("salary", "score2")])
 VIM::marginplot(df[, c("score1", "score2")])
 ```
 
+# Các lệnh group và summary dữ liệu
+
+Ở thời điểm này, ta đã có cái nhìn tổng quát về bộ dữ liệu. Lúc này việc phân tích thống kê mô tả sẽ đi theo câu hỏi nghiên cứu/chủ đề mà bạn quan tâm để làm cơ sở chọn ra những biến/cột/variable phân tích mô tả cụ thể hơn. Mình chọn quan tâm về số lượng nam và nữ ở cột giới tính `gender` theo học các ngành `major` trong bộ dữ liệu này.
+
+## Áp dụng các lệnh tạo bảng summary
+
+### Sử dụng lệnh `table()` cho hai tham số 
+
+```{r}
+### Tham số `gender` ở vị trí hàng, tham số `major` ở vị trí cột
+table(df$gender, df$major, useNA = "ifany")
+```
+
+Nếu dùng lệnh `table()` cho ba tham số sẽ tạo ra dạng array 3 chiều, chẻ ra thành từng matrix 2 chiều.
+
+```{r}
+### Tham số `religion` ở vị trí thứ 3 sẽ được tách ra tương ứng các matrix giữa `gender` và `major`
+table(df$gender, df$major, df$religion, useNA = "ifany")
+```
+
+### Add margins vào table
+
+Tạo bảng summary cho hai tham số `gender` và `major`
+
+```{r}
+gender_major <- table(df$gender, df$major, useNA = "ifany")
+
+names(dimnames(gender_major)) <- c("Gender", "Major")
+
+addmargins(A = gender_major,
+           margin = seq_along(dim(gender_major)),
+           FUN = sum,
+           quiet = TRUE)
+```
+
+Tạo bảng summary cho ba tham số `gender` và `major` và `religion`
+
+```{r}
+gender_major_religion <- table(df$gender, df$major, df$religion, useNA = "ifany")
+
+names(dimnames(gender_major_religion)) <- c("Gender", "Major", "Religion")
+
+addmargins(A = gender_major_religion,
+           margin = seq_along(dim(gender_major_religion)),
+           FUN = sum,
+           quiet = TRUE)
+```
+
+### Sử dụng lệnh `prop.table()`
+
+```{r}
+### Lệnh này trả về tỷ lệ giữa nam và nữ trong cùng vector `gender`
+prop.table(table(df$gender), margin = NULL)
+
+### Nếu có 2 tham số trở lên thì các bạn chú ý tham số margin nhé
+prop.table(table(df$gender, df$major, useNA = "ifany"), margin = NULL)
+
+
+addmargins(A = prop.table(table(df$gender, df$major, useNA = "ifany"), margin = NULL),
+           margin = seq_along(dim(prop.table(table(df$gender, df$major, useNA = "ifany"), margin = NULL))),
+           FUN = sum,
+           quiet = TRUE)
+
+addmargins(A = prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 1),
+           margin = seq_along(dim(prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 1))),
+           FUN = sum,
+           quiet = TRUE)
+
+addmargins(A = prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 2),
+           margin = seq_along(dim(prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 2))),
+           FUN = sum,
+           quiet = TRUE)
+```
+
+
 
 # Tài liệu tham khảo
 
@@ -262,32 +339,40 @@ VIM::marginplot(df[, c("score1", "score2")])
 
 3. <https://amices.org/Winnipeg/>
 
+4. <https://www.geeksforgeeks.org/addmargins-function-in-r/>
+
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
 
 [^2]: <https://datascienceplus.com/imputing-missing-data-with-r-mice-package/>
 
-<button onclick="topFunction()" id="myBtn">**Home**</button>
+<!-- top -->
 
-<script>
-// Get the button:
-let mybutton = document.getElementById("myBtn");
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
 
-// When the user scrolls down 200px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
 
-function scrollFunction() {
-  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
 
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
 </script>
 
 
