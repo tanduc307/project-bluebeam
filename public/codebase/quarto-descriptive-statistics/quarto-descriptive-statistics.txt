@@ -331,6 +331,52 @@ addmargins(A = prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 
            quiet = TRUE)
 ```
 
+
+## Áp dụng các lệnh summary trong package `dplyr`
+
+```{r}
+library(dplyr)
+
+df |> dplyr::group_by(gender, religion) |> 
+  dplyr::summarise(trung_binh_age = mean(age),
+                   trung_vi_age = median(age),
+                   do_lech_chuan_age = sd(age),
+                   so_luong = n(),
+                   max_age = max(age),
+                   min_age = min(age),
+                   tong_so_tuoi = sum(age)) -> summary_all
+
+summary_all
+```
+
+```{r}
+library(dplyr)
+
+df |> dplyr::group_by(major) |> 
+  dplyr::summarise(so_luong_mon = n_distinct(major),
+                   so_nguoi_theo_hoc = n()) |> 
+  print(n = Inf)
+```
+
+```{r}
+library(dplyr)
+
+df |> dplyr::group_by(major, gender) |>
+  dplyr::summarise(so_nguoi_theo_hoc = n()) -> df_major_gender 
+
+df_major_gender |> print(n = Inf)
+
+# df |> dplyr::group_by(major, minor) |>
+#   dplyr::summarise(so_luong_mon = n_distinct(major),
+#                    so_nguoi_theo_hoc = n()) |> 
+#   print(n = Inf)
+# 
+# df |> dplyr::group_by(major, minor) |>
+#   dplyr::summarise(so_luong_mon = n_distinct(minor),
+#                    so_nguoi_theo_hoc = n())|> 
+#   print(n = Inf)
+```
+
 # Tài liệu tham khảo
 
 1. <https://stackoverflow.com/questions/6451152/how-to-catch-integer0>
@@ -340,6 +386,8 @@ addmargins(A = prop.table(table(df$gender, df$major, useNA = "ifany"), margin = 
 3. <https://amices.org/Winnipeg/>
 
 4. <https://www.geeksforgeeks.org/addmargins-function-in-r/>
+
+5. <https://sparkbyexamples.com/r-programming/group-by-summarise-in-r/>
 
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
 
