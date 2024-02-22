@@ -377,6 +377,23 @@ df_major_gender |> print(n = Inf)
 #   print(n = Inf)
 ```
 
+### Vẽ đồ thị mô tả dữ liệu
+
+```{r}
+table_1 <- table(df$major, df$gender)
+
+# df_wide <- reshape(df_major_gender, 
+#                          direction = "wide", 
+#                          idvar = "major",
+#                          timevar = "gender",
+#                          v.names = "so_nguoi_theo_hoc"
+#                          )
+
+female_1 <- df_major_gender |> subset(gender == "Female")
+
+```
+
+
 # Tài liệu tham khảo
 
 1. <https://stackoverflow.com/questions/6451152/how-to-catch-integer0>
