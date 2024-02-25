@@ -799,7 +799,7 @@ lattice::xyplot(x = bmi ~ salary | group_age + gender,
                                   alpha.f = 0.5),
                 pch = c(15, 17, 18, 19, 8),
                 origin = 0,
-                ylim = c(20, 31),
+                ylim = c(15, 31),
                 xlim = c(0, 80000),
                 xlab = "Salary (USD)",
                 ylab = "BMI index",
@@ -813,6 +813,14 @@ lattice::xyplot(x = bmi ~ salary | group_age + gender,
                                                        alpha.f = 1)),
                          text = list(labels)),
                 scale = list(alternating = 3, rot = 0),
+                panel = function(...) {
+                   panel.abline(h = 30, col = "red", lty = 2)
+                   panel.abline(h = 18.5, col = "red", lty = 2)
+                   
+                   panel.abline(v = 20000, col = "blue", lty = 2)
+                   panel.abline(v = 60000, col = "blue", lty = 2)
+                   panel.xyplot(...)
+                 },
                 data = df_clean)
 
 ```
