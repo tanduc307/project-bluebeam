@@ -377,19 +377,443 @@ df_major_gender |> print(n = Inf)
 #   print(n = Inf)
 ```
 
-### Vẽ đồ thị mô tả dữ liệu
+# Vẽ đồ thị mô tả dữ liệu
+
+## Vẽ đồ thị cột
+
+### Đồ thị cột side-by-side
+
+**Nếu dataset ở dạng như sau thì khi ta vẽ đồ thị cột sẽ dùng theo dạng formula `y ~ x1 + x2`**
 
 ```{r}
-table_1 <- table(df$major, df$gender)
+df_major_gender
+```
 
-# df_wide <- reshape(df_major_gender, 
-#                          direction = "wide", 
-#                          idvar = "major",
-#                          timevar = "gender",
-#                          v.names = "so_nguoi_theo_hoc"
-#                          )
+```{r, fig.width=14, fig.height=6}
+barplot(so_nguoi_theo_hoc ~ gender + major,
+              data = df_major_gender,
+              beside = TRUE,
+              col = c("blue", "red"),
+              angle = c(45, 135),
+              density = 20,
+              xlab = "",
+              ylab = "Sinh viên",
+              yaxs = "i",
+              ylim = c(0, 1000),
+              xaxs = "i",
+              xlim = c(0.5, 18.5),
+              # xaxt = "n",
+              main = "Số lượng sinh viên theo học ở các chuyên ngành khác nhau",
+              width = 1,
+              las = 1)
 
-female_1 <- df_major_gender |> subset(gender == "Female")
+legend(x = "topright",
+       y = NULL,
+       title = "Chú thích",
+       legend = c("Nữ", "Nam"),
+       col = c("blue", "red"),
+       fill = c("blue", "red"),
+       angle = c(45, 135),
+       density = 20)
+
+box()
+
+
+```
+
+**Nếu dataset ở dạng `table` hay `matrix` thì ta vẽ trực tiếp bằng lệnh `barplot()` với chính table đó.**
+
+```{r}
+student_gender_major <- table(df$gender, df$major)
+student_gender_major
+```
+
+```{r, fig.width=14, fig.height=6}
+barplot(height = student_gender_major,
+              beside = TRUE,
+              col = c("blue", "red"),
+              angle = c(45, 135),
+              density = 20,
+              xlab = "",
+              ylab = "Sinh viên",
+              yaxs = "i",
+              ylim = c(0, 1000),
+              xaxs = "i",
+              xlim = c(0.5, 18.5),
+              # xaxt = "n",
+              main = "Số lượng sinh viên theo học ở các chuyên ngành khác nhau",
+              width = 1,
+              las = 1)
+
+legend(x = "topright",
+       y = NULL,
+       title = "Chú thích",
+       legend = c("Nữ", "Nam"),
+       col = c("blue", "red"),
+       fill = c("blue", "red"),
+       angle = c(45, 135),
+       density = 20)
+
+box()
+```
+
+### Đồ thị cột stacked barchart
+
+```{r, fig.width=14, fig.height=6}
+barplot(height = student_gender_major,
+              beside = FALSE,
+              col = c("blue", "red"),
+              angle = c(45, 135),
+              density = 20,
+              xlab = "",
+              ylab = "Sinh viên",
+              yaxs = "i",
+              ylim = c(0, 2000),
+              xaxs = "i",
+              xlim = c(0, 7.4),
+              # xaxt = "n",
+              main = "Số lượng sinh viên theo học ở các chuyên ngành khác nhau",
+              width = 1,
+              space = 0.2,
+              las = 1)
+
+par("usr")
+
+legend(x = "topright",
+       y = NULL,
+       title = "Chú thích",
+       legend = c("Nữ", "Nam"),
+       col = c("blue", "red"),
+       fill = c("blue", "red"),
+       angle = c(45, 135),
+       density = 20)
+
+box()
+```
+
+### Đồ thị cột percent stacked barchart
+
+```{r, fig.width=14, fig.height=6}
+percent_1 <- prop.table(table(df$gender, df$major), margin = 2)
+percent_1
+
+barplot(height = percent_1,
+              beside = FALSE,
+              col = c("blue", "red"),
+              angle = c(45, 135),
+              density = 20,
+              xlab = "",
+              ylab = "Sinh viên (%)",
+              yaxs = "i",
+              ylim = c(0, 1),
+              xaxs = "i",
+              xlim = c(0, 7.4),
+              # xaxt = "n",
+              main = "Tỷ lệ sinh viên theo học ở các chuyên ngành khác nhau",
+              width = 1,
+              space = 0.2,
+              las = 1)
+
+# par("usr")
+
+legend(x = 6.461,
+       y = 1.16,
+       title = "Chú thích",
+       legend = c("Nữ", "Nam"),
+       horiz = TRUE,
+       col = c("blue", "red"),
+       fill = c("blue", "red"),
+       angle = c(45, 135),
+       density = 20,
+       xpd = TRUE)
+
+box(which = "plot", col = "black")
+# box(which = "figure", col = "red")
+```
+
+
+## Vẽ đồ thị đường
+
+Ta quan tâm về `salary` và `age` xem có mối tương quan như thế nào.
+
+```{r, fig.width=14, fig.height=6}
+### tách ra dataset clean
+
+df_salary <- df[, c("age", "gender", "salary")]
+df_salary <- na.omit(df_salary)
+
+df_salary |> dplyr::arrange(age, salary) -> df_salary
+
+head(df_salary, n = 30)
+```
+
+```{r, fig.width=14, fig.height=6, results='hide'}
+options(scipen = 1e9)
+
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 8, 4, 4))
+par(mgp = c(4, 1, 0))
+plot(x = df_salary$age,
+     y = df_salary$salary,
+     type = "o",
+     col = "darkblue",
+     xlim = c(0, 80),
+     ylim = c(0, 80000),
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     xlab = "Age",
+     ylab = "Salary",
+     main = paste0("Tương quan giữa tuổi và tiền lương (n = ",
+                  dim(df_salary)[1], " sinh viên)"), 
+     lwd = 1,
+     lty = 1,
+     bty = "o")
+par(oldpar)
+```
+
+## Vẽ đồ thị hộp
+
+Ta cắt vector `age` theo các độ tuổi khác nhau để thuận tiện vẽ đồ thị hộp.
+
+```{r}
+df_salary$group_age <- cut(x = df_salary$age,
+                           breaks = c(0, 20, 30, 40, 50, 60, 70),
+                           labels = c("≤ 20",
+                                      "20 < age ≤ 30",
+                                      "30 < age ≤ 40",
+                                      "40 < age ≤ 50",
+                                      "50 < age ≤ 60",
+                                      "> 60"))
+
+df_salary |> dplyr::arrange(age, salary) -> df_salary
+
+as.data.frame(table(df_salary$group_age))
+
+# sample kiểu base R
+# sample_x <- sample(1:nrow(df_salary), size = 30)
+# df_salary[sample_x, ] -> df_sample
+
+# sample kiểu dplyr (ngẫu nhiên)
+# dplyr::sample_n(tbl = df_salary, size = 30, replace = FALSE) |> dplyr::arrange(age, salary)
+
+set.seed(1)
+
+# sample kiểu dplyr (ngẫu nhiên theo từng nhóm factor)
+df_salary |> dplyr::group_by(group_age) |> 
+  dplyr::sample_frac(size = 0.05, replace = FALSE) |> 
+  dplyr::arrange(age, salary)-> sample_df
+
+as.data.frame(sample_df)
+```
+
+```{r, fig.width=14, fig.height=6}
+
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 8, 4, 4))
+par(mgp = c(4, 1, 0))
+boxplot(formula = salary ~ group_age,
+        data = df_salary,
+        col = rainbow(n = 6),
+        las = 1,
+        xlab = "Nhóm tuổi",
+        ylab = "Mức lương",
+        main = "Đồ thị thể hiện mức lương theo các nhóm tuổi")
+par(oldpar)
+```
+
+```{r, fig.width=14, fig.height=6}
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 12, 4, 4))
+par(mgp = c(4, 1, 0))
+boxplot(formula = salary ~ group_age + gender,
+        data = df_salary,
+        col = c(rep("cyan", 6), rep("coral", 6)),
+        las = 1,
+        xlab = "Mức lương",
+        ylab = "",
+        horizontal = TRUE,
+        sep = "-",
+        lex.order = FALSE,
+        # names = c(letters[1:12]),
+        main = "Đồ thị thể hiện mức lương theo các nhóm tuổi và giới tính")
+par(oldpar)
+```
+
+```{r, fig.width=14, fig.height=6}
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 12, 4, 4))
+par(mgp = c(4, 1, 0))
+boxplot(formula = salary ~ group_age + gender,
+        data = df_salary,
+        col = rep(c("cyan", "coral"), 6),
+        las = 1,
+        xlab = "Mức lương",
+        ylab = "",
+        horizontal = TRUE,
+        sep = "-",
+        lex.order = TRUE,
+        # names = c(letters[1:12]),
+        main = "Đồ thị thể hiện mức lương theo các nhóm tuổi và giới tính")
+par(oldpar)
+```
+
+```{r}
+df_salary |> dplyr::group_by(gender, group_age) |> 
+  dplyr::summarise(trung_binh_salary = mean(salary),
+                   trung_vi_salary = median(salary),
+                   do_lech_chuan_salary = sd(salary),
+                   max_salary = max(salary),
+                   min_salary = min(salary),
+                   so_luong = n()) -> summary_salary
+
+as.data.frame(summary_salary)
+```
+
+## Vẽ nhiều đồ thị con trong một hình
+
+Vẽ đồ thị giữa `height` và `weight`
+
+```{r, fig.width=14, fig.height=6}
+df_height <- df[, c("age", "gender", "major", "height", "weight", "salary")]
+
+head(df_height, n = 30)
+
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 8, 4, 4))
+par(mgp = c(4, 1, 0))
+plot(x = df_height$weight,
+     y = df_height$height,
+     type = "p",
+     col = "darkgreen",
+     pch = 1,
+     cex = 0.5,
+     xlim = c(0, 120),
+     ylim = c(0, 250),
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     xlab = "Cân nặng (kg)",
+     ylab = "Chiều cao (cm)",
+     main = paste0("Tương quan giữa chiều cao và cân nặng (n = ",
+                  dim(df_height)[1], " sinh viên)"),
+     lwd = 1,
+     lty = 1,
+     bty = "o")
+par(oldpar)
+```
+
+Tô màu theo `gender`
+
+```{r, fig.width=14, fig.height=6}
+df_height <- df[, c("age", "gender", "religion", "height", "weight", "salary")]
+
+col_1 <- factor(df_height$gender)
+
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(6, 8, 4, 4))
+# par(mgp = c(4, 1, 0))
+plot(x = df_height$weight,
+     y = df_height$height,
+     type = "p",
+     col = c("blue", "red")[col_1],
+     pch = 1,
+     cex = 0.5,
+     xlim = c(0, 120),
+     ylim = c(0, 250),
+     las = 1,
+     xaxs = "i",
+     yaxs = "i",
+     xlab = "Cân nặng (kg)",
+     ylab = "Chiều cao (cm)",
+     main = paste0("Tương quan giữa chiều cao và cân nặng (n = ",
+                  dim(df_height)[1], " sinh viên)"),
+     lwd = 1,
+     lty = 1,
+     bty = "o")
+
+legend(x = "bottomleft",
+       y = NULL,
+       title = "Chú thích",
+       legend = c("Nữ", "Nam"),
+       # horiz = TRUE,
+       col = c("blue", "red"),
+       # fill = c("blue", "red"),
+       pch = 1,
+       xpd = TRUE)
+
+par(oldpar)
+```
+
+### Sử dụng package `lattice` vẽ đồ thị scatterplot
+
+```{r, fig.width=14, fig.height=10}
+library(lattice)
+
+lattice::xyplot(x = height ~ weight | gender + religion,
+                groups = gender,
+                col = c("blue", "red"),
+                origin = 0,
+                xlim = c(30, 130),
+                ylim = c(50, 250),
+                xlab = "Cân nặng (kg)",
+                ylab = "Chiều cao (cm)",
+                main = paste0("Tương quan giữa chiều cao và cân nặng theo giới tính và tôn giáo (n = ",
+                  dim(df_height)[1], " sinh viên)"),
+                data = df_height)
+```
+
+### Vẽ đồ thị nhiều biến
+
+```{r, fig.width=14, fig.height=10}
+df_clean <- df[, c("age", "gender", "religion", "height", "weight", "salary")]
+
+df_clean <- na.omit(df_clean)
+
+df_clean$group_age <- cut(x = df_clean$age,
+                           breaks = c(0, 20, 30, 40, 50, 60, 70),
+                           labels = c("≤ 20",
+                                      "20 < age ≤ 30",
+                                      "30 < age ≤ 40",
+                                      "40 < age ≤ 50",
+                                      "50 < age ≤ 60",
+                                      "> 60"))
+
+df_clean |> dplyr::arrange(age) -> df_clean
+
+as.data.frame(table(df_clean$group_age))
+
+library(lattice)
+
+head(df_clean)
+options(scipen = 10)
+
+df_clean$bmi <- df_clean$weight / (df_clean$height * 0.01)^2
+
+df_clean$religion <- factor(df_clean$religion)
+labels <- levels(df_clean$religion)
+
+lattice::xyplot(x = bmi ~ salary | group_age + gender,
+                groups = religion,
+                col = adjustcolor(col = c("red", "black", "darkgreen", "blue", "purple"),
+                                  alpha.f = 0.5),
+                pch = c(15, 17, 18, 19, 8),
+                origin = 0,
+                ylim = c(20, 31),
+                xlim = c(0, 80000),
+                xlab = "Salary (USD)",
+                ylab = "BMI index",
+                main = paste0("Phân bố mức lương theo chỉ số BMI, giới tính và nhóm tuổi (n = ",
+                  dim(df_clean)[1], " sinh viên)"),
+                key = list(space = "top",
+                         columns = 5,
+                         title = "Chú thích",
+                         points=list(pch = c(15, 17, 18, 19, 8),
+                                     col = adjustcolor(col = c("red", "black", "darkgreen", "blue", "purple"),
+                                                       alpha.f = 1)),
+                         text = list(labels)),
+                scale = list(alternating = 3, rot = 0),
+                data = df_clean)
 
 ```
 
@@ -405,6 +829,10 @@ female_1 <- df_major_gender |> subset(gender == "Female")
 4. <https://www.geeksforgeeks.org/addmargins-function-in-r/>
 
 5. <https://sparkbyexamples.com/r-programming/group-by-summarise-in-r/>
+
+6. <https://dplyr.tidyverse.org/reference/sample_n.html>
+
+7. <https://www.calculator.net/bmi-calculator.html>
 
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
 
