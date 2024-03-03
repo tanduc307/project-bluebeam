@@ -1,4 +1,4 @@
-# <b>Hướng dẫn vẽ đồ thị bằng package `lattice`</b> 
+# <b>Hướng dẫn vẽ đồ thị bằng package <code>lattice</code></b> 
 
 ```{r, include=FALSE}
 options(width = 1200)

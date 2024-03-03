@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.536">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -167,7 +167,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./huong-dan-ve-do-thi-bang-package-lattice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn vẽ đồ thị bằng package `lattice`</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn vẽ đồ thị bằng package <code>lattice</code></b></span></span></a>
   </div>
 </li>
       </ul>
@@ -499,7 +499,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -722,7 +727,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation column-page-right">
   <div class="nav-page nav-page-previous">
-      <a href="./ky-thuat-reshape-du-lieu.html" class="pagination-link  aria-label=" &lt;span="" thuật="" reshape="" dữ="" liệu&lt;="" b&gt;&lt;="" span&gt;"="">
+      <a href="./ky-thuat-reshape-du-lieu.html" class="pagination-link" aria-label="<b>Kỹ thuật reshape dữ liệu</b>">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title"><b>Kỹ thuật reshape dữ liệu</b></span></span>
       </a>          
   </div>
