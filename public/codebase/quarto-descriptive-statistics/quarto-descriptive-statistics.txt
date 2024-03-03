@@ -73,7 +73,7 @@ zip(zipfile = "quarto-descriptive-statistics",
 
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-descriptive-statistics.zip dname="quarto-descriptive-statistics" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.html" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-filetype-html"></i> quarto-descriptive-statistics.html</a> ‍ ‍ ‍ 
+{{< downloadthis quarto-descriptive-statistics.zip dname="quarto-descriptive-statistics" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.txt" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> text</a> <a href="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.html" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-filetype-html"></i> web</a> ‍ ‍ ‍ 
 
 <!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
 
