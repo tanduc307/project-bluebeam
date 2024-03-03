@@ -101,15 +101,15 @@ zip(zipfile = "quarto-statistical-notation",
     </tr>
       <tr>
       <th>2</th>
-      <td><div style="font-size: 200%; color: red;">*t*-test</div></td>
+      <td><div style="font-size: 200%; color: red;">*t* test</div></td>
       <td>**/ ˈtiˌtɛst /** <input type="image" src="volume-up.svg" onclick="t_test()" /> 
       <br>**Kiểm định *t***</td>
       <td class="text-start">Có nhiều cách ký hiệu (khác nhau chỗ t in nghiêng hay viết thường, có gạch nối hay không): 
       <br> • Student's **t-test**[^3]
       <br> • Student's ***t*-test** (chữ t in nghiêng)[^4]^,&nbsp;^[^5]^,&nbsp;^[^7]
-      <br> • Student's ***t* test** (chữ t in nghiêng, không có gạch nối)[^6]
-      <br> Về mặt thuật ngữ, *t*-test là kiểm định *t*, với *t* là một chỉ số thống kê. Ta có *t*-distribution hay t distribution. Rất ít tài liệu viết hoa chữ T. 
-      <br>Mình chọn cách viết chữ t trong chữ *t*-test là viết in nghiêng, có gạch nối.</td>
+      <br> • Student's ***t* test** (chữ t in nghiêng, không có gạch nối)[^6] [@crawley2015, p. 94]
+      <br> Về mặt thuật ngữ, *t* test là kiểm định *t*, với *t* là một chỉ số thống kê. Ta có *t* distribution hay ghi đầy đủ là Student's *t* distribution. Rất ít tài liệu viết hoa chữ T. 
+      <br>Mình chọn cách viết chữ t trong chữ *t* test là viết in nghiêng, không gạch nối.</td>
     </tr>
   </tbody>
 </table>
