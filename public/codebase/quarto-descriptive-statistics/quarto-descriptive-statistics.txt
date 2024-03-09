@@ -825,6 +825,47 @@ lattice::xyplot(x = bmi ~ salary | group_age + gender,
 
 ```
 
+### Vẽ đồ thị histogram
+
+```{r, fig.width=10, fig.height=6}
+height_data <- hist(df$height,
+     col = "lightyellow",
+     main = "Histogram of students' height",
+     xlab = "Height (cm)",
+     ylab = "Density",
+     xlim = c(120, 220),
+     ylim = c(0, 0.04),
+     probability = TRUE)
+
+lines(density(df$height),
+      col = "red",
+      lty = 1,
+      lwd = 2)
+
+day_so <- seq(from = min(df$height, na.rm = TRUE), 
+              to = max(df$height, na.rm = TRUE), 
+              length = 1000)
+
+curve(expr = dnorm(day_so, 
+            mean = mean(df$height, na.rm = TRUE), 
+            sd = sd(df$height, na.rm = TRUE)), 
+      type = "l",
+      add = TRUE, 
+      lwd = 2,
+      xname = "day_so",
+      col = "blue", 
+      lty = "dotted")
+
+legend(x = "topright",
+       y = NULL,
+       legend = c("kernel density", "normal curve"),
+       col = c("red", "blue"),
+       lwd = 2,
+       lty = c(1, 2))
+
+height_data
+```
+
 
 # Tài liệu tham khảo
 
