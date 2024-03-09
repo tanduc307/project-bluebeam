@@ -883,6 +883,10 @@ height_data
 
 7. <https://www.calculator.net/bmi-calculator.html>
 
+8. <https://www.statology.org/overlay-normal-curve-histogram-in-r/>
+
+9. <https://www.geo.fu-berlin.de/en/v/soga-r/Basics-of-statistics/Descriptive-Statistics/Measures-of-Dispersion/Variance-and-Standard-Deviation/index.html>
+
 [^1]: <https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html>
 
 [^2]: <https://datascienceplus.com/imputing-missing-data-with-r-mice-package/>
