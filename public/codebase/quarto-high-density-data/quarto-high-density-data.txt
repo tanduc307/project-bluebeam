@@ -214,7 +214,7 @@ gplot_hexbin(x = bins_data,
              ylab = "Biến Y",
              border = "blue",
              legend = 1,
-             title_legend = "Số điểm\ndữ liệu",
+             title_legend = "Counts",
              colramp = colorRampPalette(c("lightgreen", "yellow", "red")))
 
 ```
