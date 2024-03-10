@@ -1,7 +1,7 @@
 ---
 title: "Kỹ thuật trực quan hóa dữ liệu có mật độ cao"
 author-title: <b>Biên soạn</b>
-author: Duc Nguyen | Founder of <a href="https://www.tuhocr.com/">tuhocr.com</a>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
 site-url: https://www.tuhocr.com/
 published-title: <b>Cập nhật</b> 
 date: last-modified
@@ -46,6 +46,8 @@ editor_options:
 knitr::opts_chunk$set(error = TRUE,        # suppress errors
                       message = FALSE,     # suppress messages
                       warning = FALSE,     # suppress warnings
+                      fig.width = 8,
+                      fig.height = 6,
                       # results = 'hide',  # suppress code output
                       echo = TRUE,         # suppress code
                       # fig.show = 'hide', # suppress plots
@@ -61,6 +63,7 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 zip(zipfile = "quarto-high-density-data", 
     files = c("quarto-high-density-data.qmd", 
               "style.scss", "reborn_1.bib",
+              "gplot_hexbin.R",
               "quarto-high-density-data.Rproj", 
               "_extensions/")
     )
@@ -70,18 +73,229 @@ zip(zipfile = "quarto-high-density-data",
 
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-{{< downloadthis quarto-high-density-data.zip dname="quarto-high-density-data" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-file-code"></i> text</a> <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.html" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-filetype-html"></i> web</a> ‍ ‍ ‍ 
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-high-density-data.zip dname="quarto-high-density-data" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
 
 <!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
 
 # Tình huống thường gặp
 
-Bạn có file dữ liệu `df` gồm rất nhiều hàng và cột (trong bài này ta sử dụng dummy dataset để làm ví dụ minh họa).
+Bạn có dataset gồm hai biến có mật độ tương quan với nhau rất cao (các điểm dữ liệu rất gần nhau và dày đặc) vì vậy khi plot theo kiểu thông thường ta không phân biệt được là có bao nhiêu điểm dữ liệu vì các điểm này trùng lắp lên nhau. Vì vậy để đồ thị thể hiện được [*có bao nhiêu điểm dữ liệu trong cùng một vị trí tọa độ*]{style="color:#FF0000"} thì ta sẽ áp dụng dạng biểu đồ sunflower với các cánh hoa đại diện cho 1 điểm dữ liệu hoặc biểu đồ hexbin (bản chất là heatmap).
+
+Dataset minh họa là `Galton` nằm trong package `HistData` về thông số chiều cao giữa cha mẹ `parent` và con cái `child`, ta thấy dữ liệu của hai biến chiều cao này rất dày đặc với nhau thông qua lệnh `table()`.
+
+```{r}
+library(HistData)
+data(Galton)
+dim(Galton)
+summary(Galton)
+table(Galton$parent, Galton$child)
+head(Galton, n = 30)
+```
+
+# Các dạng đồ thị thường áp dụng
+
+## Đồ thị scatter plot
+
+<mark style="background-color: #FFFF00">Khi plot theo kiểu thông thường ta thấy các điểm data point rất ít, bởi vì hầu như các điểm này có giá trị rất sát nhau nên đều trùng lắp lên nhau $\Rightarrow$ dẫn đến cảm giác là bộ dataset này có rất ít điểm dữ liệu.</mark>
+
+```{r}
+plot(x = Galton$parent,
+     y = Galton$child,
+     main = paste0("Đồ thị scatter plot với rất nhiều điểm có cùng tọa độ (n = ",
+                   dim(Galton)[1], ")"),
+     xlab = "Biến X",
+     ylab = "Biến Y")
+```
+
+**Khi cho `xlim` và `ylim` xuất phát từ gốc tọa độ để bao quát dữ liệu, ta thấy các điểm dữ liệu tập trung ở khu vực trong khoảng `r min(Galton$parent)` đến `r max(Galton$parent)` ở trục hoành và trong khoảng `r min(Galton$child)` đến `r max(Galton$child)`.**
+
+```{r}
+plot(x = Galton$parent,
+     y = Galton$child,
+     main = paste0("Đồ thị scatter plot với xlim và ylim tính từ gốc tọa độ (n = ",
+                   dim(Galton)[1], ")"),
+     xlab = "Biến X",
+     ylab = "Biến Y",
+     xlim = c(0, 100),
+     ylim = c(0, 100))
+
+abline(v = c(min(Galton$parent), max(Galton$parent)),
+       lty = 2,
+       col = "red")
+abline(h = c(min(Galton$child), max(Galton$child)),
+       lty = 2,
+       col = "red")
+```
+
+## Đồ thị sunflower
+
+Trong tình huống này ta dùng đồ thị sunflower, vốn bản chất là một cải tiến của đồ thị scatter plot khi thể hiện thêm các đường gạch nhỏ (đại diện cho 1 datapoint) ngay ở vị trí các data point trùng nhau, khi đó ta nhìn vào các điểm nào có nhiều gạch (tương tự như cánh hoa hướng dương) thì xác định được khu vực đó mật độ điểm dữ liệu rất cao.
+
+```{r}
+sunflowerplot(x = Galton$parent,
+              y = Galton$child,
+              main = paste0("Đồ thị sunflower với mỗi đoạn thẳng là 1 điểm dữ liệu (n = ",
+                   dim(Galton)[1], ")"),
+              xlab = "Biến X",
+              ylab = "Biến Y",
+              col = "blue",
+              seg.col = "darkgreen")
+```
+
+**Nếu bạn muốn vẽ một đường clustering bao xung quanh cụm dữ liệu có mật độ cao thì sử dụng function `dataEllipse`. Có nhiều loại đường ellipse, bạn tham khảo trong trang help package `car` nhé.**
+
+>`dataEllipse() superimposes the normal-probability contours over a scatterplot of the data.`
+
+```{r}
+library(car)
+
+sunflowerplot(x = Galton$parent,
+              y = Galton$child,
+              main = paste0("Đồ thị sunflower bao gồm đường clustering (n = ",
+                   dim(Galton)[1], ")"),
+              xlab = "Biến X",
+              ylab = "Biến Y",
+              col = "blue",
+              xlim = c(60, 75),
+              ylim = c(60, 75),
+              seg.col = "darkgreen")
+
+
+car::dataEllipse(x = Galton$parent,
+                 y = Galton$child,
+                 plot.points = FALSE,
+                 col = "red",
+                 lty = 2)
+```
+
+## Đồ thị hexbin
+
+Đây là đồ thị biểu diễn điểm dữ liệu ở dạng hình lục giác, với thang màu thay đổi tùy theo mật độ điểm dữ liệu.
+
+### Hexbin vẽ theo kiểu base R
+
+```{r}
+library(hexbin)
+library(RColorBrewer)
+
+## chuyển dataset về dạng bins
+
+bins_data <- hexbin::hexbin(x = c(Galton$parent),
+                            y = c(Galton$child),
+                            xbnds = c(60, 75),
+                            ybnds = c(60, 75),
+                            xbins = 20,
+                            shape = 1)
+
+## gọi lệnh này qua S4 method
+# hexbin::plot(x = bins_data)
+
+## nên gọi trực tiếp lệnh này
+hexbin::gplot.hexbin(x = bins_data,
+                     main = paste0("Đồ thị hexbin (n = ",    
+                                   dim(Galton)[1], ")"),
+                     xlab = "Biến X",
+                     ylab = "Biến Y",
+                     border = "blue",
+                     legend = 1,
+                     colramp = colorRampPalette(c("lightgreen", "yellow", "red")))
+```
+
+**Để thay đổi title của legend thì ta hack một chút ở code gốc**
+
+```{r}
+source("gplot_hexbin.R")
+library(grid)
+
+gplot_hexbin(x = bins_data,
+             main = paste0("Đồ thị hexbin (n = ",    
+                           dim(Galton)[1], ")"),
+             xlab = "Biến X",
+             ylab = "Biến Y",
+             border = "blue",
+             legend = 1,
+             title_legend = "Số điểm\ndữ liệu",
+             colramp = colorRampPalette(c("lightgreen", "yellow", "red")))
+
+```
+
+**Hexagon Bin Smoothing**
+
+`https://cran.r-project.org/web/packages/hexbin/vignettes/hexagon_binning.pdf`
+
+```{r}
+source("gplot_hexbin.R")
+library(grid)
+
+smooth_data <- smooth.hexbin(bins_data)
+
+gplot_hexbin(x = smooth_data,
+             main = "Hexagon Bin Smoothing",
+             xlab = "Biến X",
+             ylab = "Biến Y",
+             # border = "blue",
+             legend = 1,
+             title_legend = "Counts",
+             colramp = colorRampPalette(BTY(n = 50))
+             # colramp = colorRampPalette(terrain.colors(n = 50))
+             )
+
+```
+
+### Hexbin vẽ theo kiểu `lattice`
+
+```{r}
+# tuy nhiên hexbin xây dựng trên nền grid graphics nên ta vẽ trực tiếp
+# nền grid graphics sẽ thuận tiện tinh chỉnh đồ thị
+library(lattice)
+hexbin::hexbinplot(x = child ~ parent,
+                   data = Galton,
+                   xlim = c(60, 75),
+                   ylim = c(60, 75),
+                   main = paste0("Đồ thị hexbin trên nền package lattice (n = ",
+                                   dim(Galton)[1], ")"),
+                     xlab = "Biến X",
+                     ylab = "Biến Y",
+                   colramp = colorRampPalette(rev(brewer.pal(20,"Spectral")))
+                   )
+
+
+```
+
+### Hexbin vẽ theo kiểu `ggplot2`
+
+```{r}
+library(ggplot2)
+
+ggplot(data = Galton,
+       mapping = aes(x = parent, y = child)) + geom_hex() +
+  labs(title = paste0("Đồ thị hexbin trên nền package ggplot2 (n = ",
+                                   dim(Galton)[1], ")")) +
+  scale_x_continuous(name = "Biến X",
+                     limits = c(60, 75)) + 
+  scale_x_continuous(name = "Biến Y",
+                     limits = c(60, 75)) + 
+  theme_classic()
+  
+
+```
 
 
 # Tài liệu tham khảo
 
 1. <https://subscription.packtpub.com/book/data/9781783989508/7/ch07lvl1sec69/constructing-a-sunflower-plot>
+
+2. <https://search.r-project.org/CRAN/refmans/car/html/Ellipses.html>
+
+3. <https://stackoverflow.com/questions/43120327/how-to-call-a-function-that-contains-a-comma-in-r>
+
+4. <https://www.biostars.org/p/291845/>
+
+5. <https://www.geeksforgeeks.org/hexbin-plot-using-hexbin-packages-in-r/>
+
+6. <https://datavizproject.com/data-type/hexagonal-binning>
+
+7. <https://stat.ethz.ch/pipermail/r-help/2014-November/423554.html>
 
 <!-- top -->
 
