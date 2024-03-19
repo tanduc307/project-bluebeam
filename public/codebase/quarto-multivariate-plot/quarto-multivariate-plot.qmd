@@ -1,0 +1,675 @@
+---
+title: "Hướng dẫn vẽ đồ thị đa biến"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    code-tools:
+      source: https://applyr.netlify.app/codebase/quarto-multivariate-plot/quarto-multivariate-plot.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 1000
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 10,
+                      fig.height = 10,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = TRUE         # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+file <- list.files(pattern="*.qmd")
+newfile <- gsub("\\.qmd", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
+
+zip(zipfile = "quarto-multivariate-plot", 
+    files = c("quarto-multivariate-plot.qmd", 
+              "style.scss", "reborn_1.bib",
+              "quarto-gmultivariate-plot.Rproj", 
+              "_extensions/")
+    )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-multivariate-plot.zip dname="quarto-multivariate-plot" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-multivariate-plot/quarto-multivariate-plot.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-multivariate-plot/quarto-multivariate-plot.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+
+<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
+
+# Tình huống thường gặp
+
+Bạn có dataset gồm nhiều cột dữ liệu (biến liên tục, biến định lượng, số đếm) như vậy để thể hiện nhiều nhất số lượng các biến này lên đồ thị 2D thì ta sẽ thực hiện như thế nào. Các dạng đồ thị có nhiều biến (multivariate plot) giúp lồng ghép nhiều thông tin khác nhau vào trong cùng một đồ thị, tuy nhiên bạn cũng có thể tách ra thành các đồ thị con để giúp người đọc dễ tiếp nhận được thông điệp từ đồ thị. Trong ví dụ này mình sử dụng dataset `state.x77` về thông tin 50 bang nước Mỹ ở thập niên 1970. 
+
+# Chuẩn bị dataset
+
+```{r}
+state.x77 -> df
+
+df_1 <- as.data.frame(df)
+
+df_1$State <- row.names(df_1)
+
+row.names(df_1) <- NULL
+
+df_1 <- df_1[, c(9, 1:4, 6, 8)]
+
+names(df_1)[5] <- "Life_Exp"
+
+names(df_1)[6] <- "HS_Grad"
+
+df_1 # mặc định thì dataset này xếp thứ tự bang nước Mỹ theo alphabet
+```
+
+**Thông tin các cột như sau:**
+
+* `Population` population estimate as of July 1, 1975 (đơn vị ngàn dân)
+
+* `Income` per capita income (1974) (đơn vị USD)
+
+* `Illiteracy` tỷ lệ mù chữ (1970, percent of population)
+
+* `Life_Exp` tuổi thọ trung bình (life expectancy in years 1969–71)
+
+* `HS Grad` tỷ lệ tốt nghiệp trung học phổ thông (percent high-school graduates in 1970)
+
+* `Area` diện tích (land area in square miles)
+
+# Vẽ đồ thị scatter plot 2 biến
+
+Ta có thể sử dụng cột `Income` và `Life_Exp` để biểu diễn đặc trưng giữa các bang trong nước Mỹ với hai biến này.
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_1,
+     pch = 19,
+     col = "darkgreen")
+
+text(x = df_1$Income,
+     y = df_1$Life_Exp,
+     cex = 0.7,
+     labels = df_1$State,
+     pos = 3)
+```
+
+# Thêm thông tin về dân số
+
+**Áp dụng lệnh `cut()` để tạo group cho biến dân số, đây là kỹ thuật chuyển biến định lượng sang biến phân loại. Sử dụng tham số `col` màu sắc để biểu diễn biến dân số.**
+
+```{r}
+df_1$Population_group <- cut(x = df_1$Population,
+                       breaks = c(0, 500, 1000, 5000, 10000, 30000),
+                       labels = c("≤ 500",
+                                  "500 < population ≤ 1000",
+                                  "1000 < population ≤ 5000",
+                                  "5000 < population ≤ 10000",
+                                  "> 10000"))
+
+df_1 |> dplyr::arrange(desc(Population_group), desc(Income)) -> df_2
+
+df_2
+```
+
+**Áp dụng cách subset vector theo factor để tạo ra vector chứa màu sắc tương ứng từng mức trong biến `Population_group`.**
+
+```{r}
+levels(df_2$Population_group)
+
+color_area_group <- c("#ff99e6", # level thấp
+                      "#C17EFB",
+                      "#7900cc",
+                      "#cc0000",
+                      "#ff0000") # level cao
+
+color_area_group[df_2$Population_group]
+```
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     pch = 19,
+     col = color_area_group[df_2$Population_group])
+
+text(x = df_2$Income,
+     y = df_2$Life_Exp,
+     cex = 0.7,
+     labels = df_2$State,
+     pos = 3)
+```
+
+# Thêm thông tin về diện tích
+
+Cách 1: Ta sẽ biểu diễn diện tích của các bang theo độ lớn của point character, sử dụng tham số `cex`, để làm được như vậy cần quy đổi về tỷ lệ giữa các bang và chuyển thành các mức `cex` phù hợp (đây là cách vẽ bubble chart).
+
+Cách 2: Ta cắt dữ liệu ra tương tự như biến dân số, sau đó gán vào tỷ lệ `cex` phù hợp. Ở đây ta chọn cách 2 để thực hiện.
+
+```{r}
+### cách 1
+# prop.table(df_2$Area) -> df_2$cex_area
+# 
+# library(car)
+# df_2$cex_area_ok <- car::recode(df_2$cex_area, 
+#                                "0.0001:0.0005 = 1; 
+#                                 0.0005:0.01  = 1.5; 
+#                                 0.01:0.05 = 2;
+#                                 0.05:0.1 = 2.5;
+#                                 else = 3")
+
+### cách 2
+df_2$Area_group <- cut(x = df_2$Area,
+                       breaks = c(0, 5000, 10000, 30000, 
+                                  100000, 300000, 600000),
+                       labels = c("≤ 5000",
+                                  "5000 < area ≤ 10000",
+                                  "10000 < area ≤ 30000",
+                                  "30000 < area ≤ 100000",
+                                  "100000 < area ≤ 300000",
+                                  "> 300000"))
+
+df_2$cex_area_ok <- car::recode(df_2$Area_group, 
+                               " '≤ 5000' = 1; 
+                                '5000 < area ≤ 10000'  = 1.25; 
+                                '10000 < area ≤ 30000' = 1.5;
+                                '30000 < area ≤ 100000' = 2;
+                                '100000 < area ≤ 300000' = 2.75;
+                                else = 3")
+
+
+
+df_2
+```
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     pch = 19,
+     cex = df_2$cex_area_ok,
+     col = color_area_group[df_2$Population_group])
+
+text(x = df_2$Income,
+     y = df_2$Life_Exp,
+     cex = 0.7,
+     labels = df_2$State,
+     pos = 3)
+```
+
+# Thêm điều kiện về tuổi thọ
+
+**Ta sử dụng hai tính chất của point character (từ 21 đến 25) là có thể tô màu viền `col` và màu nền `bg` để đưa thêm điều kiện về tuổi thọ trung bình vào đồ thị, để dễ quan sát ta sẽ chỉnh lại độ trong suốt về màu sắc giữa các điểm dữ liệu.**
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     pch = 21,
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)))
+
+text(x = df_2$Income,
+     y = df_2$Life_Exp,
+     cex = 0.7,
+     labels = df_2$State,
+     pos = 3)
+
+abline(h = 70, lty = 2, lwd = 2, col = "darkgreen")
+```
+
+# Gộp hai biến cũ để tạo thành biến mới
+
+**Trong dataset này ta thấy có biến `Illiteracy` về mức độ mù chữ trong tổng số dân (tính theo phần trăm), do đó ta có thể chuyển thành biến `Literacy` (là 1 - `Illiteracy`) để đại diện cho tỷ lệ biết chữ trong tổng số dân.**
+
+**Tiếp đó ta có biến `HS_Grad` đại diện cho tỷ lệ tốt nghiệp trung học phổ thông (tú tài) trên tổng số dân, nếu biểu diễn biến này thì cũng được, tuy nhiên để minh họa cách tận dụng dữ liệu thì mình sẽ tạo ra biến mới, gọi là `Edu_index` đại diện cho tỷ lệ tốt nghiệp trung học phổ thông tính trên tổng số dân biết chữ, để đánh giá mức độ học vấn giữa các bang. Như vậy sẽ gộp được hai biến gốc là `Illiteracy` và `HS_Grad` thành biến mới `Edu_index` giúp tăng thêm thông tin cho đồ thị.**
+
+[**View dataset final**](https://applyr.netlify.app/codebase/quarto-multivariate-plot/output.html)
+
+```{r}
+df_2$Literacy <- 100 - df_2$Illiteracy
+
+df_2$Edu_index <- df_2$HS_Grad / df_2$Literacy
+
+## tạo group cho biến `Edu_index`
+
+df_2$Edu_index_group <- car::recode(df_2$Edu_index, 
+                                    "0:0.4 = 'low'; 
+                                     0.4:0.6  = 'medium'; 
+                                     else = 'high'")
+
+df_2$Edu_index_group <- factor(df_2$Edu_index_group,
+                               levels = c("low", "medium", "high"),
+                               ordered = TRUE)
+
+library(kableExtra)
+df_2 %>% kbl(format = "html") %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                      "hover", 
+                                      "condensed", 
+                                      "bordered", 
+                                      "responsive")) %>%
+  row_spec(0, bold = TRUE, align = "c", color = "white", background = "#1d6c00") %>% 
+  kable_classic(full_width = TRUE, html_font = "arial") -> output
+
+save_kable(output, file = "output.html")
+```
+
+**Vẽ đồ thị với tham số `pch` đại diện cho chỉ số `Edu_index` ở từng bang.**
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)))
+
+text(x = df_2$Income,
+     y = df_2$Life_Exp,
+     cex = 0.7,
+     labels = df_2$State,
+     pos = 3)
+
+abline(h = 70, lty = 2, lwd = 2, col = "darkgreen")
+```
+
+# Chỉnh lại text không bị overlap
+
+```{r}
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)))
+
+# text(x = df_2$Income,
+#      y = df_2$Life_Exp,
+#      cex = 0.7,
+#      labels = df_2$State,
+#      pos = 3)
+
+abline(h = 70, lty = 2, lwd = 2, col = "darkgreen")
+
+library(basicPlotteR)
+basicPlotteR::addTextLabels(xCoords = df_2$Income,
+                            yCoords = df_2$Life_Exp,
+                            labels = df_2$State,
+                            keepLabelsInside = TRUE,
+                            # border = "black",
+                            # col.background = "lightyellow",
+                            avoidPoints = TRUE,
+                            col.label = "black",
+                            col.line = NA,
+                            cex.label = 0.8,
+                            cex.pt = 0.9)
+```
+
+# Thêm đường đồng mức thể hiện mật độ điểm dữ liệu
+
+Khi ta có đồ thị scatter plot với mật độ điểm tập trung dày đặc, để thể hiện phân bố 2D cho hai biến `x` và `y` tương ứng ta sẽ vẽ đường đồng mức (thực tế là biến `z` đại diện cho mật độ điểm trên một đơn vị diện tích ở đồ thị scatter plot ban đầu). Thông tin chi tiết các bạn xem thêm ở đây nhé.[^1]
+
+>`dataEllipse` superimposes the normal-probability contours over a scatterplot of the data
+
+```{r}
+par(mar = c(5, 5, 5, 2))
+
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     type = "n",
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)),
+     xlim = c(2000, 7000),
+     ylim = c(67, 74),
+     xaxs = "i",
+     yaxs = "i",
+     xlab = "Thu nhập (USD)",
+     ylab = "Tuổi thọ trung bình (năm)",
+     las = 1)
+
+car::dataEllipse(x = df_2$Income,
+                 y = df_2$Life_Exp,
+                 plot.points = FALSE,
+                 col = "lightgreen",
+                 center.pch = FALSE,
+                 fill = TRUE,
+                 levels = c(0.5, 0.9),
+                 fill.alpha = 0.3,
+                 grid = TRUE,
+                 lty = 2)
+
+abline(h = 70, lty = 3, lwd = 2, col = adjustcolor("gray", alpha.f = 0.8))
+
+points(formula = Life_Exp ~ Income,
+     data = df_2,
+     type = "p",
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)),
+     xlim = c(2000, 7000),
+     ylim = c(67, 74),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+library(basicPlotteR)
+basicPlotteR::addTextLabels(xCoords = df_2$Income,
+                            yCoords = df_2$Life_Exp,
+                            labels = df_2$State,
+                            keepLabelsInside = TRUE,
+                            # border = "black",
+                            # col.background = "lightyellow",
+                            avoidPoints = TRUE,
+                            col.label = "black",
+                            col.line = NA,
+                            cex.label = 0.8,
+                            cex.pt = 0.9)
+```
+
+# Thêm chú thích và hoàn thiện đồ thị
+
+```{r, fig.width=12, fig.height=10}
+par(mar = c(5, 5, 5, 2))
+par(font.lab = 2)
+par(font.axis = 2)
+
+plot(formula = Life_Exp ~ Income,
+     data = df_2,
+     type = "n",
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)),
+     xlim = c(2000, 7000),
+     ylim = c(67, 74),
+     xaxs = "i",
+     yaxs = "i",
+     xlab = "Thu nhập bình quân đầu người (USD)",
+     ylab = "Tuổi thọ trung bình (năm)",
+     las = 1)
+
+car::dataEllipse(x = df_2$Income,
+                 y = df_2$Life_Exp,
+                 plot.points = FALSE,
+                 col = "lightgreen",
+                 center.pch = FALSE,
+                 fill = TRUE,
+                 levels = c(0.5, 0.9),
+                 fill.alpha = 0.3,
+                 grid = TRUE,
+                 lty = 2)
+
+abline(h = 70, lty = 3, lwd = 2, col = adjustcolor("gray", alpha.f = 0.8))
+
+points(formula = Life_Exp ~ Income,
+     data = df_2,
+     type = "p",
+     pch = c(22, 24, 21)[df_2$Edu_index_group],
+     cex = df_2$cex_area_ok,
+     bg = adjustcolor(color_area_group[df_2$Population_group], alpha.f = 0.8),
+     lwd = 1,
+     col = ifelse(df_2$Life_Exp <= 70,
+                  yes = adjustcolor("cyan", alpha.f = 1),
+                  no = adjustcolor("transparent", alpha.f = 1)),
+     xlim = c(2000, 7000),
+     ylim = c(67, 74),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+library(basicPlotteR)
+basicPlotteR::addTextLabels(xCoords = df_2$Income,
+                            yCoords = df_2$Life_Exp,
+                            labels = df_2$State,
+                            keepLabelsInside = TRUE,
+                            # border = "black",
+                            # col.background = "lightyellow",
+                            avoidPoints = TRUE,
+                            col.label = "black",
+                            col.line = NA,
+                            cex.label = 0.8,
+                            cex.pt = 0.9)
+
+### legend dân số
+
+legend(x = "topright",
+       y = NULL,
+       title = "Dân số (nghìn người)",
+       title.font = 2,
+       legend = levels(df_2$Population_group),
+       col = color_area_group,
+       pt.cex = 1.5,
+       y.intersp = 1.25,
+       x.intersp = 1.25,
+       inset = 0.01,
+       bty = "n",
+       pch = 19)
+
+### legend diện tích
+
+leg <- legend(x = "bottomright",
+       y = NULL,
+       title = "Diện tích (square mile)",
+       legend = c("≤ 5000",
+                  "5000 < area ≤ 10000",
+                  "10000 < area ≤ 30000",
+                  "30000 < area ≤ 100000",
+                  "100000 < area ≤ 300000",
+                  "> 300000"),
+       col = "black",
+       pch = 1,
+       y.intersp = c(1, 1.25, 1.25, 1.25, 1.5, 1.5),
+       pt.cex = c(1, 1.25, 1.5, 2, 2.75, 3),
+       bty = "n",
+       plot = FALSE)
+
+legend(x = leg$rect$left - 400,
+       y = leg$rect$top,
+       title = "",
+       legend = c("",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""),
+       col = "black",
+       pch = 0,
+       y.intersp = c(1, 1.25, 1.25, 1.25, 1.5, 1.5),
+       pt.cex = c(1, 1.25, 1.5, 2, 2.75, 3),
+       bty = "n")
+
+legend(x = leg$rect$left - 200,
+       y = leg$rect$top,
+       title = "",
+       legend = c("",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""),
+       col = "black",
+       pch = 2,
+       y.intersp = c(1, 1.25, 1.25, 1.25, 1.5, 1.5),
+       pt.cex = c(1, 1.25, 1.5, 2, 2.75, 3),
+       bty = "n")
+
+legend(x = "bottomright",
+       y = NULL,
+       title.font = 2,
+       title = "Diện tích (square mile)",
+       legend = c("≤ 5000",
+                  "5000 < area ≤ 10000",
+                  "10000 < area ≤ 30000",
+                  "30000 < area ≤ 100000",
+                  "100000 < area ≤ 300000",
+                  "> 300000"),
+       col = "black",
+       pch = 1,
+       x.intersp = 1.25,
+       y.intersp = c(1, 1.25, 1.25, 1.25, 1.5, 1.5),
+       pt.cex = c(1, 1.25, 1.5, 2, 2.75, 3),
+       plot = TRUE,
+       bty = "n")
+
+### legend edu index
+
+legend(x = "topleft",
+       y = NULL,
+       title = "Tỷ lệ tốt nghiệp tú tài (%)\ntính trên tổng số người biết chữ",
+       title.font = 2,
+       legend = c("≤ 40 ~ Low",
+                  "40–60 ~ Medium",
+                  "> 60 ~ High"),
+       col = "black",
+       pt.bg = "gray",
+       pt.cex = 1.5,
+       y.intersp = 1.25,
+       x.intersp = 1.25,
+       inset = 0.01,
+       bty = "n",
+       pch = c(22, 24, 21))
+
+### legend other
+
+legend(x = "bottomleft",
+       y = NULL,
+       title = "Ghi chú",
+       title.font = 2,
+       legend = c("Point có viền (Life_Exp ≤ 70)",
+                  "Point không viền (Life_Exp > 70)"),
+       col = c("cyan", "purple"),
+       lwd = 2,
+       lty = 0,
+       pt.bg = "purple",
+       merge = FALSE,
+       pt.cex = 1.5,
+       horiz = FALSE,
+       bty = "n",
+       pch = c(21, 19))
+
+title(main = "Thông tin về các tiểu bang Hoa Kỳ (thập niên 1970) | Hướng dẫn vẽ đồ thị nhiều biến",
+      cex.main = 1.5,
+      col.main = "darkblue")
+mtext(text = "Source: Dataset state.x77\nThis plot is only for training R",
+      side = 1,
+      col = "blue",
+      font = 3,
+      line = 3.5,
+      adj = 0,
+      xpd = NA)
+
+box()
+
+library(png)
+library(grid)
+logor <- readPNG("logor.png")
+
+scale_logo <- 0.08
+
+grid.raster(logor, 
+            x = 0.9, 
+            y = 0.70, 
+            width = scale_logo)
+
+```
+
+
+
+
+# Tài liệu tham khảo
+
+1. <https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/>
+
+[^1]: <https://statisticsbyjim.com/graphs/contour-plots/>
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+
+
+
+
