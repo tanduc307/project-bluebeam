@@ -80,6 +80,8 @@ zip(zipfile = "quarto-multivariate-plot",
 
 Bạn có dataset gồm nhiều cột dữ liệu (biến liên tục, biến định lượng, số đếm) như vậy để thể hiện nhiều nhất số lượng các biến này lên đồ thị 2D thì ta sẽ thực hiện như thế nào. Các dạng đồ thị có nhiều biến (multivariate plot) giúp lồng ghép nhiều thông tin khác nhau vào trong cùng một đồ thị, tuy nhiên bạn cũng có thể tách ra thành các đồ thị con để giúp người đọc dễ tiếp nhận được thông điệp từ đồ thị. Trong ví dụ này mình sử dụng dataset `state.x77` về thông tin 50 bang nước Mỹ ở thập niên 1970. 
 
+[**Video hướng dẫn chi tiết và các tài liệu liên quan được upload ở tài khoản học viên.**](https://www.tuhocr.com/r-courses/data-visualization-in-r)
+
 # Chuẩn bị dataset
 
 ```{r}
