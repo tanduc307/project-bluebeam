@@ -1,5 +1,5 @@
 ---
-title: "Hướng dẫn vẽ đồ thị đa biến"
+title: "Hướng dẫn vẽ đồ thị nhiều biến"
 author-title: <b>Biên soạn</b>
 author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
 site-url: https://www.tuhocr.com/
