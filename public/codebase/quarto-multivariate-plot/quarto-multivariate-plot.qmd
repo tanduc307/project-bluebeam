@@ -213,7 +213,8 @@ df_2$cex_area_ok <- car::recode(df_2$Area_group,
                                 '100000 < area ≤ 300000' = 2.75;
                                 else = 3")
 
-
+df_2$cex_area_ok <- as.character(df_2$cex_area_ok)
+df_2$cex_area_ok <- as.numeric(df_2$cex_area_ok)
 
 df_2
 ```
