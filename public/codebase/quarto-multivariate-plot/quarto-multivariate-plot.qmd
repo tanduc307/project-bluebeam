@@ -62,7 +62,7 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 
 zip(zipfile = "quarto-multivariate-plot", 
     files = c("quarto-multivariate-plot.qmd", 
-              "style.scss", "reborn_1.bib",
+              "style.scss", "reborn_1.bib", "logor.png",
               "quarto-gmultivariate-plot.Rproj", 
               "_extensions/")
     )
