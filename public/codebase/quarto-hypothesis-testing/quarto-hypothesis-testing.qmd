@@ -1,5 +1,5 @@
 ---
-title: "Hướng dẫn vẽ đồ thị nhiều biến"
+title: "Quy trình kiểm định giả thuyết thống kê"
 author-title: <b>Biên soạn</b>
 author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
 site-url: https://www.tuhocr.com/
@@ -25,7 +25,7 @@ format:
     smooth-scroll: true
     link-external-newwindow: true
     code-tools:
-      source: https://applyr.netlify.app/codebase/quarto-multivariate-plot/quarto-multivariate-plot.txt
+      source: https://applyr.netlify.app/codebase/quarto-hypothesis-testing/quarto-hypothesis-testing.txt
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
@@ -60,10 +60,10 @@ file <- list.files(pattern="*.qmd")
 newfile <- gsub("\\.qmd", ".txt", file)
 file.copy(from = file, to = newfile, overwrite = TRUE)
 
-zip(zipfile = "quarto-multivariate-plot", 
-    files = c("quarto-multivariate-plot.qmd", 
+zip(zipfile = "quarto-hypothesis-testing", 
+    files = c("quarto-hypothesis-testing.qmd", 
               "style.scss", "reborn_1.bib", "logor.png",
-              "quarto-multivariate-plot.Rproj", 
+              "quarto-hypothesis-testing.Rproj", 
               "_extensions/")
     )
 ```
