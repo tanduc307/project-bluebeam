@@ -51,7 +51,7 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
                       # results = 'hide',  # suppress code output
                       echo = TRUE,         # suppress code
                       # fig.show = 'hide', # suppress plots
-                      cache = TRUE         # enable caching
+                      cache = FALSE         # enable caching
                       )        
 # library(ggfortify)
 # autoplot(lm(cars$dist ~ cars$speed))
@@ -59,6 +59,12 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
 file <- list.files(pattern="*.qmd")
 newfile <- gsub("\\.qmd", ".txt", file)
 file.copy(from = file, to = newfile, overwrite = TRUE)
+
+df <- read.csv("df.csv")
+write.table(x = df, file = "df.tsv", row.names = FALSE, sep = "\t\t", quote = FALSE)
+file_a <- list.files(pattern="*.tsv")
+newfile_a <- gsub("\\.tsv", ".txt", file_a)
+file.copy(from = file_a, to = newfile_a, overwrite = TRUE)
 
 zip(zipfile = "quarto-confidence-interval", 
     files = c("quarto-confidence-interval.qmd", 
@@ -79,6 +85,12 @@ zip(zipfile = "quarto-confidence-interval",
 # Tình huống thường gặp
 
 Bạn có dataset
+
+```{r}
+df <- read.csv("df.csv")
+df
+```
+
 
 
 # Tài liệu tham khảo
