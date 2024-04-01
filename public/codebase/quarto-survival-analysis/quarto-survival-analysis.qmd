@@ -1,0 +1,471 @@
+---
+title: "Quy trình phân tích survival analysis"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    code-tools:
+      source: https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 1000
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 12,
+                      fig.height = 8,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = FALSE         # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+file <- list.files(pattern="*.qmd")
+newfile <- gsub("\\.qmd", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
+
+zip(zipfile = "quarto-survival-analysis", 
+    files = c("quarto-survival-analysis.qmd", 
+              "survival.xlsx", "survival.png",
+              "style.scss", "reborn_1.bib", "logor.png",
+              "quarto-survival-analysis.Rproj", 
+              "_extensions/")
+    )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-survival-analysis.zip dname="quarto-survival-analysis" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+
+<!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
+
+# Tình huống thường gặp
+
+Bạn có 1 dataset về thí nghiệm survival. Bạn cần xử lý dữ liệu thành dạng như sau, ký hiệu `1` là `dead` còn `0` là `alive / censor` theo mã số `id` từng con tôm đến khi kết thúc thí nghiệm.
+
+```{r}
+library(dplyr)
+library(readxl)
+
+survival <- read_excel("survival.xlsx")
+
+survival <- as.data.frame(survival)
+
+survival
+
+create_group <- function(input_data) {
+  
+  treat_1 <- survival |> subset(TREATMENT == input_data)
+treat_1 <- treat_1[, c(-1, -2)]
+t(treat_1) -> treat_1_a
+treat_1_a <- as.data.frame(treat_1_a)
+treat_1_a
+treat_1_a$time <- row.names(treat_1_a)
+treat_1_a$time <- gsub("H", "", treat_1_a$time)
+
+treat_1_a[, c(1, 5)] -> treat_1_i
+names(treat_1_i)[1] <- "status"
+row.names(treat_1_i) <- NULL
+
+treat_1_a[, c(2, 5)] -> treat_1_ii
+names(treat_1_ii)[1] <- "status"
+row.names(treat_1_ii) <- NULL
+
+treat_1_a[, c(3, 5)] -> treat_1_iii
+names(treat_1_iii)[1] <- "status"
+row.names(treat_1_iii) <- NULL
+
+treat_1_a[, c(4, 5)] -> treat_1_iv
+names(treat_1_iv)[1] <- "status"
+row.names(treat_1_iv) <- NULL
+
+treat_1_clean <- rbind(treat_1_i, treat_1_ii, treat_1_iii, treat_1_iv)
+
+treat_1_clean$group <- input_data
+
+treat_1_clean |> subset(status != 0) -> ok_1
+
+row.names(ok_1) <- NULL
+
+for(i in 1:dim(ok_1)[1]){
+  
+  if(ok_1$status[i] != 1){
+    
+    new_sub <- ok_1[rep(i, ok_1$status[i]), ]
+    
+    new_sub$status <- 1
+    
+    ok_1 <- rbind(ok_1, new_sub)
+    
+  } else { next }
+  
+}
+
+ok_1 |> subset(status == 1) -> ok_1
+
+row.names(ok_1) <- NULL
+
+ok_2 <- data.frame(status = rep(0, 40 - dim(ok_1)[1]),
+                   time = rep(138, 40- dim(ok_1)[1]),
+                   group = rep(input_data, 40- dim(ok_1)[1]))
+
+rbind(ok_1, ok_2) -> ok_3
+
+ok_3$time <- as.numeric(ok_3$time)
+
+ok_3 |> dplyr::arrange(time, status) -> ok_4
+
+row.names(ok_4) <- NULL
+
+return(ok_4)
+  
+}
+
+treat_1_clean <- create_group("T1")
+treat_1_clean
+
+treat_3_clean <- create_group("T3")
+treat_3_clean
+
+treat_5_clean <- create_group("T5")
+treat_5_clean
+
+treat_6_clean <- create_group("T6")
+treat_6_clean
+
+treat_8_clean <- create_group("T8")
+treat_8_clean
+
+###
+
+treat_m1 <- survival |> subset(TREATMENT == "M1")
+treat_m1 <- treat_m1[, c(-1, -2)]
+t(treat_m1) -> treat_m1_a
+treat_m1_a <- as.data.frame(treat_m1_a)
+treat_m1_a$time <- row.names(treat_m1_a)
+treat_m1_a$time <- gsub("H", "", treat_m1_a$time)
+names(treat_m1_a)[1] <- "status"
+row.names(treat_m1_a) <- NULL
+treat_m1_a$group <- "M1"
+treat_m1_a
+
+###
+
+treat_m3 <- survival |> subset(TREATMENT == "M3")
+treat_m3 <- treat_m3[, c(-1, -2)]
+t(treat_m3) -> treat_m3_a
+treat_m3_a <- as.data.frame(treat_m3_a)
+treat_m3_a$time <- row.names(treat_m3_a)
+treat_m3_a$time <- gsub("H", "", treat_m3_a$time)
+names(treat_m3_a)[1] <- "status"
+row.names(treat_m3_a) <- NULL
+treat_m3_a$group <- "M3"
+treat_m3_a
+
+###
+
+treat_m5 <- survival |> subset(TREATMENT == "M5")
+treat_m5 <- treat_m5[, c(-1, -2)]
+t(treat_m5) -> treat_m5_a
+treat_m5_a <- as.data.frame(treat_m5_a)
+treat_m5_a$time <- row.names(treat_m5_a)
+treat_m5_a$time <- gsub("H", "", treat_m5_a$time)
+names(treat_m5_a)[1] <- "status"
+row.names(treat_m5_a) <- NULL
+treat_m5_a$group <- "M5"
+treat_m5_a
+
+###
+
+treat_m6 <- survival |> subset(TREATMENT == "M6")
+treat_m6 <- treat_m6[, c(-1, -2)]
+t(treat_m6) -> treat_m6_a
+treat_m6_a <- as.data.frame(treat_m6_a)
+treat_m6_a$time <- row.names(treat_m6_a)
+treat_m6_a$time <- gsub("H", "", treat_m6_a$time)
+names(treat_m6_a)[1] <- "status"
+row.names(treat_m6_a) <- NULL
+treat_m6_a$group <- "M6"
+treat_m6_a
+
+###
+
+treat_m8 <- survival |> subset(TREATMENT == "M8")
+treat_m8 <- treat_m8[, c(-1, -2)]
+t(treat_m8) -> treat_m8_a
+treat_m8_a <- as.data.frame(treat_m8_a)
+treat_m8_a$time <- row.names(treat_m8_a)
+treat_m8_a$time <- gsub("H", "", treat_m8_a$time)
+names(treat_m8_a)[1] <- "status"
+row.names(treat_m8_a) <- NULL
+treat_m8_a$group <- "M8"
+treat_m8_a
+
+
+
+```
+
+# Gộp chung lại thành 1 dataset
+
+```{r}
+#### CHỈ LẤY TREATMENT, KHÔNG LẤY MOCK
+rbind(treat_1_clean,
+      treat_3_clean,
+      treat_5_clean,
+      treat_6_clean,
+      treat_8_clean
+      # treat_m1_a,
+      # treat_m3_a,
+      # treat_m5_a,
+      # treat_m6_a,
+      # treat_m8_a
+      ) -> treat_all
+
+treat_all$time <- as.numeric(treat_all$time)
+
+### Đổi tên nghiệm thức
+treat_all$group[treat_all$group == "T1"] <- "Basal"
+treat_all$group[treat_all$group == "T3"] <- "B50 8%"
+treat_all$group[treat_all$group == "T5"] <- "B50 16%"
+treat_all$group[treat_all$group == "T6"] <- "B60 8%"
+treat_all$group[treat_all$group == "T8"] <- "B60 16%"
+
+treat_all$group <- factor(treat_all$group,
+                          levels = c("Basal", "B50 8%", "B50 16%", "B60 8%", "B60 16%"))
+```
+
+# Survival analysis
+
+**Tạo object survival**
+
+```{r}
+library(survival)
+
+all_survival <- survival::survfit(survival::Surv(time, status == 1) ~ group,
+                                  data = treat_all)
+
+summary(all_survival)
+```
+
+**Tính p-value**
+
+```{r}
+p_sur <- survival::survdiff(survival::Surv(time, status == 1) ~ group,
+                                  data = treat_all)
+p_sur
+
+round(p_sur$chisq, 2) -> chi_sur
+round(p_sur$pvalue, 5) -> p_sur_ok
+```
+
+# Vẽ đồ thị
+
+## Sử dụng package `ggsurvfit`
+
+```{r}
+library(ggsurvfit)
+all_survival %>% 
+  ggsurvfit::ggsurvfit() +
+  
+  labs(x = "Time in hours post challange",
+       y = "Cumulative survival probability") + 
+  
+  # add_confidence_interval() +
+  
+  scale_ggsurvfit(x_scales = list(breaks = seq(0, 138, by = 6))) +
+  # scale_ggsurvfit(y_scales = list(expand = c(0, 0))) +
+  
+  add_risktable() +
+  
+  # add_risktable_strata_symbol(symbol = "\U25CF", size = 10) +
+  
+  add_censor_mark(size = 2, alpha = 0.2) +
+  
+  # add_quantile(y_value = 0.5, linetype = "dotted", color = "grey30", linewidth = 0.8) +
+  add_quantile(x_value = 90,  color = "grey30", linewidth = 0.8) +
+  
+  coord_cartesian(xlim = c(0, 138)) +
+  
+  theme(legend.position = "top")
+```
+
+## Sử dụng package `survminer`
+
+```{r, fig.width=12, fig.height=9}
+options(scipen = 10)
+library(survminer)
+yes <- survminer::ggsurvplot(all_survival,
+                             data = treat_all, 
+                             censor.shape="|", 
+                             censor.size = 2,
+                             palette = c("coral", "yellow", "blue", "darkgreen", "black"),
+                             # conf.int = TRUE,
+                             # pval = TRUE,
+                             risk.table = TRUE,
+                             risk.table.col = "black",
+                             fontsize = 3,
+                             break.time.by = 6,
+                             legend.labs = c("Basal", 
+                                             "B50 8%", 
+                                             "B50 16%", 
+                                             "B60 8%", 
+                                             "B60 16%"),
+                             cumevents = TRUE,
+                             cumcensor = TRUE,
+                             # table.height = 0.02,
+                             # surv.plot.height = 0.9,
+                             ggtheme = theme_bw() + 
+                               theme(panel.border = element_blank(),
+                                     axis.text = element_text(face = "bold",
+                                                              color = "black"),
+                                     axis.title.x = element_text(color = "red", margin = margin(t = 10, r = 0, b = 0, l = 0, unit = "pt")),
+                                     plot.margin = margin(20, 20, 20, 20)),
+                             legend.title = "Diet",
+                             xlim = c(0, 138),
+                             tables.y.text.col = FALSE,
+                             test.for.trend = TRUE,
+                             tables.col = "black",
+                             xlab = "Time in hours post challange",
+                             surv.median.line = "hv",
+                             )
+
+final <- yes$plot +
+  ggplot2::annotate("text",
+                    x = 12,
+                    y = 0.2,
+                    label = bquote("\u03C7"^2 == .(chi_sur) ~~~~~~ "p" == .(p_sur_ok)),
+                    size = 4)
+    # geom_hline(yintercept = 0.5,
+    #          linetype = 2)
+library(patchwork)
+
+final / yes$table / yes$cumevents / yes$ncensor.plot
+```
+
+# Kaplan-Meier and Cox hazard ratio 
+
+```{r}
+library(gtsummary)
+library(tidycmprsk)
+all_survival
+
+survival::coxph(Surv(time, status) ~ group, data = treat_all) %>% 
+  tbl_regression(exp = TRUE)
+
+
+```
+
+# Cumulative percentage mortality
+
+```{r}
+treat_all$status <- factor(treat_all$status, levels = c(0, 1))
+
+cum_mortal <- tidycmprsk:::cuminc.formula(tidycmprsk::Surv(time, status) ~ group,
+                                  data = treat_all)
+cum_mortal 
+# summary(cum_mortal)
+```
+
+```{r}
+tidycmprsk:::crr.formula(tidycmprsk::Surv(time, status) ~ group,
+                                  data = treat_all) |> tbl_regression(exp = TRUE)
+```
+
+```{r}
+cum_mortal |> ggcuminc() + 
+  labs(
+    x = "Hours"
+  ) + 
+  add_confidence_interval() +
+  add_risktable()
+```
+
+
+# Tài liệu tham khảo
+
+1. <https://en.wikipedia.org/wiki/Survival_analysis>
+
+2. <https://www.emilyzabor.com/tutorials/survival_analysis_in_r_tutorial.html>
+
+3. <https://bioconnector.github.io/workshops/r-survival.html>
+
+4. <https://cran.r-project.org/web/packages/ggsurvfit/ggsurvfit.pdf>
+
+5. <https://www.danieldsjoberg.com/ggsurvfit/>
+
+6. <https://github.com/kassambara/survminer/issues/54>
+
+7. <https://www.statology.org/arcsine-transformation-in-r/>
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+
+
+
+

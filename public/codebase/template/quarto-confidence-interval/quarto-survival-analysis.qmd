@@ -25,7 +25,7 @@ format:
     smooth-scroll: true
     link-external-newwindow: true
     code-tools:
-      source: https://applyr.netlify.app/codebase/quarto-hypothesis-testing/quarto-hypothesis-testing.txt
+      source: https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.txt
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
@@ -60,11 +60,10 @@ file <- list.files(pattern="*.qmd")
 newfile <- gsub("\\.qmd", ".txt", file)
 file.copy(from = file, to = newfile, overwrite = TRUE)
 
-zip(zipfile = "quarto-hypothesis-testing", 
-    files = c("quarto-hypothesis-testing.qmd", 
-              "FuelsCosts.csv",
+zip(zipfile = "quarto-survival-analysis", 
+    files = c("quarto-survival-analysis.qmd", 
               "style.scss", "reborn_1.bib", "logor.png",
-              "quarto-hypothesis-testing.Rproj", 
+              "quarto-survival-analysis.Rproj", 
               "_extensions/")
     )
 ```
@@ -73,7 +72,7 @@ zip(zipfile = "quarto-hypothesis-testing",
 
 <!-- https://icons.getbootstrap.com/?q=file -->
 
-<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-hypothesis-testing.zip dname="quarto-hypothesis-testing" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-hypothesis-testing/quarto-hypothesis-testing.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-hypothesis-testing/quarto-hypothesis-testing.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-survival-analysis.zip dname="quarto-survival-analysis" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-survival-analysis/quarto-survival-analysis.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
 
 <!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
 
@@ -81,20 +80,6 @@ zip(zipfile = "quarto-hypothesis-testing",
 
 Bạn có dataset
 
-```{r}
-df <- read.csv("FuelsCosts.csv")
-df
-
-curve(dt(x, df = 24), from = - 4, to = 4)
-```
-
-`https://blog.minitab.com/en/adventures-in-statistics-2/how-to-create-a-graphical-version-of-the-1-sample-t-test-in-minitab`
-
-<!-- Transforming the t-values to energy costs for a distribution centered on the null hypothesis mean requires a simple calculation: -->
-
-<!-- Energy Cost = Null Hypothesis Mean + (t-value * SE Mean) -->
-
-<!-- We’ll use the null hypothesis value that we entered in the dialog box (260) and the SE Mean value that appears in the 1-sample t-test output (30.8). We need to calculate the energy cost values for all of the t-values that will appear on the x-axis (-4 to +4). -->
 
 # Tài liệu tham khảo
 
