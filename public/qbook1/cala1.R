@@ -22,4 +22,8 @@
 # terminal
 # quarto publish quarto-pub
 
+library(quarto)
 # quarto publish quarto-pub --no-prompt
+# quarto_preview()
+# quarto_preview_stop()
+# quarto_render()

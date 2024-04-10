@@ -30,12 +30,14 @@ book:
         - phan-tich-anova-2-yeu-to-trong-r.qmd
         - so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.qmd
         - phan-tich-ancova-trong-r.qmd
+        - cac-lenh-r-thuong-dung-khi-thuc-hien-thong-ke-mo-ta.qmd
         - quy-trinh-phan-tich-logistic-regression.qmd
         - khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.qmd
         - bo-tri-thi-nghiem-toi-uu-hoa-bang-r.qmd
         - workflow-phan-tich-thong-ke-qua-dataset-iris.qmd
         # - huong-dan-phan-tich-logistic-regression.qmd
         - example-partial-least-squares-and-principal-component-regression.qmd
+        - quy-cach-ghi-ky-hieu-toan-hoc-trong-cong-thuc-xac-suat-thong-ke.qmd
         - tai-lieu-phan-tich-pca.qmd
     - part: "Kỹ thuật xử lý dữ liệu"
       chapters:

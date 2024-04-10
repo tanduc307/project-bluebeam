@@ -84,11 +84,12 @@ zip(zipfile = "quarto-confidence-interval",
 
 # Tình huống thường gặp
 
-Bạn có dataset
 
 ```{r}
 df <- read.csv("df.csv")
-df
+head(df)
+hist(df$WEIGHT)
+plot(df)
 ```
 
 

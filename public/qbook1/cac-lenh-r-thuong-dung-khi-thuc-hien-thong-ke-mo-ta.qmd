@@ -1,0 +1,21 @@
+# <b>Các lệnh R thường dùng khi thực hiện thống kê mô tả</b>
+
+<!-- [**Bài viết chi tiết**](https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics) -->
+
+<!-- <iframe width="1920" height="1080" src="https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics"></iframe> -->
+
+<!-- ```{=html} -->
+<!-- <script type="text/javascript"> -->
+<!-- window.open("https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics", "_blank"); -->
+<!-- </script> -->
+<!-- ``` -->
+
+<!-- The second parameter is what makes it open in a new window. Don't forget to read Jakob Nielsen's informative article :) -->
+
+<!-- https://stackoverflow.com/questions/7554108/javascript-window-location-in-new-tab -->
+
+```{=html}
+<script type="text/javascript">
+window.location.replace("https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics");
+</script>
+```

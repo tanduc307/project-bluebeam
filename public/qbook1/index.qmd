@@ -4,6 +4,8 @@ Mục tiêu của trang web là cung cấp bài tập và lời giải cho các 
 
 Các trao đổi cụ thể hơn bạn có thể liên hệ qua email **`tuhocr.com@gmail.com`** hoặc group facebook **[Cộng Đồng Tự Học R](https://www.facebook.com/groups/tuhocr)** để làm sáng tỏ thêm các chủ đề mình trình bày nhé.
 
+**Mirror:** [[**1**]](https://tanduc307.github.io/rcoding/)      [[**2**]](https://tuhocr.github.io/rcoding/)      [[**3**]](https://thongkesinhhoc.quarto.pub/)
+
 Trân trọng\
 Duc Nguyen\
 Founder of tuhocr.com

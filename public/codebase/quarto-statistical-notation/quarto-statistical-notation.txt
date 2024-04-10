@@ -97,19 +97,20 @@ zip(zipfile = "quarto-statistical-notation",
       <td class="text-start">Có nhiều cách ký hiệu (khác nhau chỗ ed ở square)[^1]: 
       <br>• Pearson's **chi-squared** test for count data[^2]
       <br>• Một số tài liệu ghi là **chi square** (không có ed và không có gạch nối) [@mann2010, p. 498]
-      <br>• Hoặc là **chi-square** (không có ed và có gạch nối) [@le2016, p. 470]</td>
+      <br>• Hoặc là **chi-square** (không có ed và có gạch nối) [@le2016, p. 470]
+      <br> Để thống nhất, mình chọn cách viết chi-squared có ed và gạch nối.</td>
     </tr>
       <tr>
       <th>2</th>
-      <td><div style="font-size: 200%; color: red;">*t* test</div></td>
+      <td><div style="font-size: 200%; color: red;">t-test</div></td>
       <td>**/ ˈtiˌtɛst /** <input type="image" src="volume-up.svg" onclick="t_test()" /> 
-      <br>**Kiểm định *t***</td>
+      <br>**Kiểm định t**</td>
       <td class="text-start">Có nhiều cách ký hiệu (khác nhau chỗ t in nghiêng hay viết thường, có gạch nối hay không): 
       <br> • Student's **t-test**[^3]
       <br> • Student's ***t*-test** (chữ t in nghiêng)[^4]^,&nbsp;^[^5]^,&nbsp;^[^7]
       <br> • Student's ***t* test** (chữ t in nghiêng, không có gạch nối)[^6] [@crawley2015, p. 94]
       <br> Về mặt thuật ngữ, *t* test là kiểm định *t*, với *t* là một chỉ số thống kê. Ta có *t* distribution hay ghi đầy đủ là Student's *t* distribution. Rất ít tài liệu viết hoa chữ T. 
-      <br>Mình chọn cách viết chữ t trong chữ *t* test là viết in nghiêng, không gạch nối.</td>
+      <br> Để đơn giản, mình chọn cách viết chữ t trong chữ t-test là viết bình thường, có gạch nối.</td>
     </tr>
   </tbody>
 </table>

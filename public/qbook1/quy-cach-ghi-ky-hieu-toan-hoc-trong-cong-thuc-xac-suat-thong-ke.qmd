@@ -1,0 +1,7 @@
+# <b>Quy cách ghi ký hiệu toán học trong công thức xác suất thống kê</b>
+
+```{=html}
+<script type="text/javascript">
+window.location.replace("https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation");
+</script>
+```
