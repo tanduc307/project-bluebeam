@@ -194,6 +194,7 @@ summary(glht(res.aov, linfct = mcp(group = "Tukey")))
 `https://statsandr.com/blog/kruskal-wallis-test-nonparametric-version-anova/`
 
 ```{r, fig.width = 8, fig.height = 8}
+library(dplyr)
 library(ggstatsplot)
 
 df$group <- factor(df$group, levels = c("ctrl", "trt1", "trt2"))
