@@ -16,6 +16,6 @@
 
 ```{=html}
 <script type="text/javascript">
-window.location.replace("https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics");
+window.location.replace("https://applyr.netlify.app/codebase/quarto-descriptive-statistics/quarto-descriptive-statistics.html");
 </script>
 ```

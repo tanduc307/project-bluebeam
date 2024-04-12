@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Thống kê sinh học: Từ lý thuyết đến ứng dụng - 14&nbsp; Bố trí thí nghiệm tối ưu hóa bằng R</title>
+<title>Thống kê sinh học: Từ lý thuyết đến ứng dụng - 15&nbsp; Bố trí thí nghiệm tối ưu hóa bằng R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -186,6 +186,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn vẽ đồ thị bằng package <code>lattice</code></b></span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./so-sanh-cu-phap-ve-do-thi-qua-cac-package-khac-nhau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><b>So sánh cú pháp vẽ đồ thị trong R qua các package khác nhau</b></span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -200,79 +206,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./khoang-tin-cay.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title"><b>Khoảng tin cậy là gì?</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><b>Khoảng tin cậy là gì?</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./huong-dan-phan-tich-t-test-trong-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn phân tích t-test trong R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn phân tích t-test trong R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./phan-tich-anova-2-yeu-to-trong-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title"><b>Phân tích ANOVA 2 yếu tố trong R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title"><b>Phân tích ANOVA 2 yếu tố trong R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./so-sanh-ket-qua-giua-parametric-va-non-parametric-anova.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title"><b>So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title"><b>So sánh kết quả giữa phân tích parametric và non-parametric ANOVA</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./phan-tich-ancova-trong-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title"><b>Phân tích ANCOVA trong R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title"><b>Phân tích ANCOVA trong R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./cac-lenh-r-thuong-dung-khi-thuc-hien-thong-ke-mo-ta.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title"><b>Các lệnh R thường dùng khi thực hiện thống kê mô tả</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title"><b>Các lệnh R thường dùng khi thực hiện thống kê mô tả</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./quy-trinh-phan-tich-logistic-regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title"><b>Quy trình phân tích logistic regression</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title"><b>Quy trình phân tích logistic regression</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title"><b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Workflow phân tích thống kê qua dataset <code>iris</code> </b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title"><b>Workflow phân tích thống kê qua dataset <code>iris</code> </b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./example-partial-least-squares-and-principal-component-regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title"><b>Example for Partial Least Squares and Principal Component Regression</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title"><b>Example for Partial Least Squares and Principal Component Regression</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./quy-cach-ghi-ky-hieu-toan-hoc-trong-cong-thuc-xac-suat-thong-ke.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title"><b>Quy cách ghi ký hiệu toán học trong công thức xác suất thống kê</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><b>Quy cách ghi ký hiệu toán học trong công thức xác suất thống kê</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tai-lieu-phan-tich-pca.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><b>Tài liệu phân tích PCA</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><b>Tài liệu phân tích PCA</b></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./xay-dung-mo-hinh-GAM-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title"><b>Xây dựng mô hình GAM trong R</b></span></span></a>
   </div>
 </li>
       </ul>
@@ -289,25 +301,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./huong-dan-convert-tu-csv-qua-tsv-trong-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn convert từ file <code>csv</code> qua <code>tsv</code> trong R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn convert từ file <code>csv</code> qua <code>tsv</code> trong R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./huong-dan-cach-lam-tron-so-trong-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn cách làm tròn số trong R</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn cách làm tròn số trong R</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./huong-dan-show-all-data-tren-console.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn show all data trên console</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title"><b>Hướng dẫn show all data trên console</b></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ky-thuat-reshape-du-lieu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title"><b>Kỹ thuật reshape dữ liệu</b></span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title"><b>Kỹ thuật reshape dữ liệu</b></span></span></a>
   </div>
 </li>
       </ul>
@@ -327,9 +339,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content column-page-right" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./co-so-ly-thuyet.html">Cơ sở lý thuyết</a></li><li class="breadcrumb-item"><a href="./bo-tri-thi-nghiem-toi-uu-hoa-bang-r.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></h1>
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Bố trí thí nghiệm tối ưu hóa bằng R</b></span></h1>
 </div>
 
 
@@ -346,20 +358,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa" class="level3" data-number="14.0.1">
-<h3 data-number="14.0.1" class="anchored" data-anchor-id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa"><span class="header-section-number">14.0.1</span> Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa</h3>
+<section id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa" class="level3" data-number="15.0.1">
+<h3 data-number="15.0.1" class="anchored" data-anchor-id="cơ-sở-lý-thuyết-về-bố-trí-thí-nghiệm-tối-ưu-hóa"><span class="header-section-number">15.0.1</span> Cơ sở lý thuyết về bố trí thí nghiệm tối ưu hóa</h3>
 <p><span style="color: blue"><strong>Phương pháp bề mặt đáp ứng (Response surface)</strong></span></p>
 <p><code>https://xdulieu.com/thiet-ke-thi-nghiem/tn5-be-mat-dap-ung/index.html</code></p>
 <p><span style="color: blue"><strong>Hướng dẫn cách sử dụng package <code>rsm</code> để xử lý thí nghiệm tối ưu hóa</strong></span></p>
 <p><code>https://r-inthelab.net/2022/06/15/response-surface-designs-and-their-analysis-with-r/</code></p>
 </section>
-<section id="tình-huống-thường-gặp" class="level3" data-number="14.0.2">
-<h3 data-number="14.0.2" class="anchored" data-anchor-id="tình-huống-thường-gặp"><span class="header-section-number">14.0.2</span> Tình huống thường gặp</h3>
+<section id="tình-huống-thường-gặp" class="level3" data-number="15.0.2">
+<h3 data-number="15.0.2" class="anchored" data-anchor-id="tình-huống-thường-gặp"><span class="header-section-number">15.0.2</span> Tình huống thường gặp</h3>
 <p>Bạn làm việc trong lĩnh vực công nghệ vi sinh, muốn tìm ra công thức nuôi cấy tế bào vi khuẩn tối ưu bằng phương pháp bề mặt đáp ứng (bố trí theo kiểu Box-Behnken design) với các yếu tố lần lượt là nhiệt độ, glucose, peptone, thời gian. Bình thường nếu làm trên Statgraphics thì cũng được, tuy nhiên giờ bạn muốn làm trên R thì như thế nào, có dễ thực hiện hay không.</p>
 <p>Bạn tham khảo cách làm như sau nhé.</p>
 </section>
-<section id="cách-thực-hiện" class="level3" data-number="14.0.3">
-<h3 data-number="14.0.3" class="anchored" data-anchor-id="cách-thực-hiện"><span class="header-section-number">14.0.3</span> Cách thực hiện</h3>
+<section id="cách-thực-hiện" class="level3" data-number="15.0.3">
+<h3 data-number="15.0.3" class="anchored" data-anchor-id="cách-thực-hiện"><span class="header-section-number">15.0.3</span> Cách thực hiện</h3>
 <p><span style="color: red"><strong>Bước 1: Thiết kế thí nghiệm gồm 4 yếu tố, 3 mức để làm cơ sở cho bố trí thực nghiệm</strong></span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsm)</span>
@@ -663,8 +675,8 @@ x4  0.4424620  0.67967846 -0.5826295 0.05298518</code></pre>
 </div>
 </div>
 <p><strong><mark>Kết quả trên có nghĩa là với điều kiện nuôi cấy ở <code>nhiệt độ</code> 40.1 (°C), <code>thời gian</code> 31.3 giờ, sử dụng môi trường nuôi cấy có <code>glucose</code> 87.1 g/L và <code>peptone</code> 13.5 g/L thì sẽ thu được kết quả tối ưu là 7.13 log CFU/mL hay là 1.3 × 10<sup>7</sup> CFU/mL.</mark></strong></p>
-<section id="tài-liệu-tham-khảo" class="level4" data-number="14.0.3.1">
-<h4 data-number="14.0.3.1" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">14.0.3.1</span> Tài liệu tham khảo</h4>
+<section id="tài-liệu-tham-khảo" class="level4" data-number="15.0.3.1">
+<h4 data-number="15.0.3.1" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">15.0.3.1</span> Tài liệu tham khảo</h4>
 <ol type="1">
 <li><p><code>https://cran.r-project.org/web/packages/plot3D/</code></p></li>
 <li><p><code>http://www.sthda.com/english/wiki/impressive-package-for-3d-and-4d-graph-r-software-and-data-visualization</code></p></li>
@@ -1066,12 +1078,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation column-page-right">
   <div class="nav-page nav-page-previous">
       <a href="./khai-niem-bootstrap-qua-vi-du-tinh-trung-binh-mau.html" class="pagination-link" aria-label="<b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b>">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title"><b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b></span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title"><b>Khái niệm về bootstrap qua ví dụ tính trung bình mẫu</b></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./workflow-phan-tich-thong-ke-qua-dataset-iris.html" class="pagination-link" aria-label="<b>Workflow phân tích thống kê qua dataset <code>iris</code> </b>">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title"><b>Workflow phân tích thống kê qua dataset <code>iris</code> </b></span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title"><b>Workflow phân tích thống kê qua dataset <code>iris</code> </b></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

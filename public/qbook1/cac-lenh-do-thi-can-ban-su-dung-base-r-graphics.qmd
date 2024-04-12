@@ -1,4 +1,6 @@
 # Các lệnh đồ thị căn bản sử dụng Base R Graphics {.unnumbered} 
 
-Các kỹ thuật vẽ đồ thị thường gặp trong R.
+**Để nắm vững các kỹ thuật vẽ đồ thị thường gặp trong R thân mời bạn tham gia chuyên đề [TRỰC QUAN HÓA DỮ LIỆU TRONG R](https://www.tuhocr.com/r-courses/data-visualization-in-r)**.
+
+![](DATAVIZ.png)
 

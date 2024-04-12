@@ -7,7 +7,7 @@ book:
   site-url: https://www.tuhocr.com/
   date: last-modified
   date-format: "[Cập nhật:] YYYY MMMM DD"
-  cover-image: cover.png
+  # cover-image: cover.png
   favicon: favicon.png
   # comments:
   #   hypothesis:
@@ -21,6 +21,7 @@ book:
         - tinh-huong-base-r-graphics-thuong-gap.qmd
         - huong-dan-ve-do-thi-nhieu-truc-y.qmd
         - huong-dan-ve-do-thi-bang-package-lattice.qmd
+        - so-sanh-cu-phap-ve-do-thi-qua-cac-package-khac-nhau.qmd
         # - cac-lenh-do-thi-su-dung-package-ggplot2.qmd
     - part: co-so-ly-thuyet.qmd
       chapters:
@@ -39,6 +40,7 @@ book:
         - example-partial-least-squares-and-principal-component-regression.qmd
         - quy-cach-ghi-ky-hieu-toan-hoc-trong-cong-thuc-xac-suat-thong-ke.qmd
         - tai-lieu-phan-tich-pca.qmd
+        - xay-dung-mo-hinh-GAM-trong-r.qmd
     - part: "Kỹ thuật xử lý dữ liệu"
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd
@@ -61,6 +63,10 @@ format:
     page-layout: full
   # pdf:
   #   documentclass: scrreprt
-
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 200
 
 

@@ -2,6 +2,6 @@
 
 ```{=html}
 <script type="text/javascript">
-window.location.replace("https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation");
+window.location.replace("https://applyr.netlify.app/codebase/quarto-statistical-notation/quarto-statistical-notation.html");
 </script>
 ```

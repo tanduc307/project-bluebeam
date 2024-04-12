@@ -1,0 +1,7 @@
+# <b>So sánh cú pháp vẽ đồ thị trong R qua các package khác nhau</b>
+
+```{=html}
+<script type="text/javascript">
+window.location.replace("https://applyr.netlify.app/codebase/quarto-compare-plot/quarto-compare-plot.html");
+</script>
+```

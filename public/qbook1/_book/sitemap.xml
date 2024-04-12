@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.tuhocr.com/index.html</loc>
-    <lastmod>2024-04-10T07:21:57.245Z</lastmod>
+    <lastmod>2024-04-12T15:51:12.768Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/cac-lenh-do-thi-can-ban-su-dung-base-r-graphics.html</loc>
-    <lastmod>2024-01-12T13:54:00.509Z</lastmod>
+    <lastmod>2024-04-12T14:41:07.030Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/huong-dan-ve-do-thi-cot-base-r-graphics.html</loc>
@@ -27,6 +27,10 @@
   <url>
     <loc>https://www.tuhocr.com/huong-dan-ve-do-thi-bang-package-lattice.html</loc>
     <lastmod>2024-03-03T15:46:42.019Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/so-sanh-cu-phap-ve-do-thi-qua-cac-package-khac-nhau.html</loc>
+    <lastmod>2024-04-12T15:01:30.729Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/co-so-ly-thuyet.html</loc>
@@ -54,7 +58,7 @@
   </url>
   <url>
     <loc>https://www.tuhocr.com/cac-lenh-r-thuong-dung-khi-thuc-hien-thong-ke-mo-ta.html</loc>
-    <lastmod>2024-04-10T06:33:03.812Z</lastmod>
+    <lastmod>2024-04-12T15:02:16.733Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/quy-trinh-phan-tich-logistic-regression.html</loc>
@@ -78,11 +82,15 @@
   </url>
   <url>
     <loc>https://www.tuhocr.com/quy-cach-ghi-ky-hieu-toan-hoc-trong-cong-thuc-xac-suat-thong-ke.html</loc>
-    <lastmod>2024-04-10T06:34:46.632Z</lastmod>
+    <lastmod>2024-04-12T15:02:02.036Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/tai-lieu-phan-tich-pca.html</loc>
     <lastmod>2024-01-12T14:31:21.539Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.tuhocr.com/xay-dung-mo-hinh-GAM-trong-r.html</loc>
+    <lastmod>2024-04-12T17:19:07.667Z</lastmod>
   </url>
   <url>
     <loc>https://www.tuhocr.com/huong-dan-convert-tu-csv-qua-tsv-trong-r.html</loc>
