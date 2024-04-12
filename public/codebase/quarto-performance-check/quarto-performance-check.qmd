@@ -80,7 +80,7 @@ zip(zipfile = "quarto-performance-check",
 
 **Khi làm việc trong R bạn sẽ có nhu cầu muốn biết R sử dụng bao nhiêu phần trăm CPU. Thông thường mỗi session trong R sẽ dùng 1 core CPU, nếu bạn muốn R chạy nhiều core CPU thì sẽ áp dụng các kỹ thuật chạy song song trên nhiều core.** 
 
-**Trong phạm vi bài hướng dẫn này ta tập trung vào các lệnh kiểm tra tổng quát hiệu năng máy tính khi sử dụng R, đây là cơ sở giúp ta đánh giá tốc độ xử lý của R trong các tình huống cụ thể sau này. Các lệnh này được mình test trên máy tính để bàn sử dụng hệ điều hành windows.**
+**Trong phạm vi bài hướng dẫn này ta tập trung vào các lệnh kiểm tra tổng quát hiệu năng máy tính khi sử dụng R, đây là cơ sở giúp ta đánh giá tốc độ xử lý của R trong các tình huống cụ thể sau này.**
 
 # Kiểm tra thông tin máy tính
 
@@ -198,7 +198,7 @@ pryr::mem_used()
 
 ## Kiểm tra RAM còn trống
 
-```{r}
+```{r, message=TRUE, warning=TRUE}
 gc(TRUE)
 memfree <- as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo",
                              intern=TRUE))
@@ -296,6 +296,37 @@ mtcars -> ok
 object.size(ok)
 ```
 
+# Các lệnh làm việc với package
+
+```{r}
+# packageVersion("car")
+
+# install.packages("car")
+# remove.packages("car")
+
+# install.packages("https://cran.r-project.org/src/contrib/Archive/FAOSTAT/FAOSTAT_2.2.4.tar.gz",
+#                  repos = NULL, 
+#                  type = "source")
+
+# library(devtools)
+# install_version("ggplot2", version = "0.9.1", repos = "http://cran.us.r-project.org")
+
+# chỉ detach package và function thôi
+# unloadNamespace("plot.matrix")
+# 
+# detach("package:plot.matrix",
+#        unload = TRUE,
+#        force = TRUE)
+
+### detach triệt để package và method đi kèm
+# pkgload:::unload("plot.matrix")
+# devtools::unload("plot.matrix")
+```
+
+
+
+
+
 # Tài liệu tham khảo
 
 1. <https://jstaf.github.io/hpc-r/parallel/>
@@ -303,6 +334,8 @@ object.size(ok)
 2. <https://waterprogramming.wordpress.com/2020/03/16/parallel-processing-with-r-on-windows/>
 
 3. <https://forum.posit.co/t/how-many-cores-used-when-processing-2-r-sessions/166728/1>
+
+4. <https://support.posit.co/hc/en-us/articles/219949047-Installing-older-versions-of-packages>
 
 <!-- top -->
 
