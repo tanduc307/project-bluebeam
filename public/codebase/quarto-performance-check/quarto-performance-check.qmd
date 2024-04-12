@@ -1,0 +1,340 @@
+---
+title: "Các lệnh kiểm tra hiệu năng máy tính"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    code-tools:
+      source: https://applyr.netlify.app/codebase/quarto-performance-check/quarto-performance-check.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 130
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 8,
+                      fig.height = 8,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = FALSE         # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+file <- list.files(pattern="*.qmd")
+newfile <- gsub("\\.qmd", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
+
+zip(zipfile = "quarto-performance-check", 
+    files = c("quarto-performance-check.qmd", 
+              "style.scss", "reborn_1.bib", "logor.png",
+              "quarto-performance-check.Rproj", 
+              "_extensions/")
+    )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-performance-check.zip dname="quarto-performance-check" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-performance-check/quarto-performance-check.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-performance-check/quarto-performance-check.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+
+<!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
+
+# Tình huống thường gặp
+
+**Khi làm việc trong R bạn sẽ có nhu cầu muốn biết R sử dụng bao nhiêu phần trăm CPU. Thông thường mỗi session trong R sẽ dùng 1 core CPU, nếu bạn muốn R chạy nhiều core CPU thì sẽ áp dụng các kỹ thuật chạy song song trên nhiều core.** 
+
+**Trong phạm vi bài hướng dẫn này ta tập trung vào các lệnh kiểm tra tổng quát hiệu năng máy tính khi sử dụng R, đây là cơ sở giúp ta đánh giá tốc độ xử lý của R trong các tình huống cụ thể sau này. Các lệnh này được mình test trên máy tính để bàn sử dụng hệ điều hành windows.**
+
+# Kiểm tra thông tin máy tính
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+library(benchmarkme)
+get_cpu()
+get_ram()
+```
+
+# Kiểm tra các tác vụ đang thực hiện
+
+```{r}
+library(dplyr)
+library(ps)
+task <- ps::ps()
+task <- as.data.frame(task[, -c(4, 11)])
+task |> dplyr::arrange(name) -> task
+task
+```
+
+## Tách riêng các tác vụ liên quan đến R
+
+```{r}
+task |> subset(name == "Rscript.exe" | name == "rsession-utf8.exe" | name == "quarto.exe" | name == "rstudio.exe") -> r_task
+
+r_task
+```
+
+## Kiểm tra phần trăm hoạt động của CPU
+
+```{r}
+library(reticulate)
+working <- reticulate::import("psutil")
+working$cpu_percent()
+```
+
+## Kiểm tra R sử dụng bao nhiêu phần trăm CPU 
+
+```{r}
+a <- system("wmic path Win32_PerfFormattedData_PerfProc_Process get Name,PercentProcessorTime", 
+            intern = TRUE)
+
+df <- do.call(rbind, 
+              lapply(strsplit(a, " "), 
+                     function(x) {x <- x[x != ""]
+                                  data.frame(process = x[1], cpu = x[2])
+                                  }
+                     )
+              )
+
+r_cpu <- df[grepl("Rgui|rstudio|Rscript|quarto", df$process),]
+
+names(r_cpu) <- c("process", "precent_processor_time_cpu")
+row.names(r_cpu) <- NULL
+
+r_cpu
+```
+
+## Kiểm tra session R đang hoạt động
+
+```{r}
+ps::ps_handle()
+ps::ps_num_threads(ps::ps_handle())
+```
+
+## Kiểm tra các core CPU đang hoạt động
+
+```{r}
+library(tidyverse)
+
+command = 'Get-WmiObject -Query \'select Name, PercentProcessorTime from Win32_PerfFormattedData_PerfOS_Processor\' | foreach-object { write-host "$($_.Name): $($_.PercentProcessorTime)" }; '
+output = system2('powershell', c('-Command', command), stdout = T)
+
+output_lst = strsplit(output, split = " : ") 
+cores = data.frame(t(sapply(output_lst,c))) %>% 
+  rename( "Core" = X1 , `CPU_%` = X2)
+
+cores
+
+free_cores = cores %>% filter(`CPU_%` == 0) %>% nrow()
+
+free_cores ### số core còn trống
+```
+
+```{r}
+library(doParallel)
+detectCores()
+
+library(parallelly)
+availableCores()
+
+library(future)
+availableWorkers()
+availableCores() 
+```
+
+# Kiểm tra RAM được R sử dụng
+
+```{r}
+library(memuse)
+memuse::Sys.meminfo()
+```
+
+## Kiểm tra RAM được package R sử dụng trong session hiện tại
+
+```{r}
+search() ### liệt kê package đang load trong session
+library(pryr)
+pryr::mem_used()
+```
+
+## Kiểm tra RAM còn trống
+
+```{r}
+gc(TRUE)
+memfree <- as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo",
+                             intern=TRUE))
+
+memfree ### đơn vị kilobyte [kB]
+```
+
+```{r}
+available_memory <- function()
+{
+
+  # Get operating system
+  OS <- tolower(Sys.info()["sysname"])
+
+  # Branch based on OS
+  if(OS == "windows"){ # Windows
+
+    # System information
+    system_info <- system("systeminfo", intern = TRUE)
+
+    # Get available memory
+    value <- system_info[
+      grep("Available Physical Memory", system_info)
+    ]
+
+    # Remove extraneous information
+    value <- gsub("Available Physical Memory: ", "", value)
+    value <- gsub("\\,", "", value)
+    
+    # Convert to bytes
+    value_split <- unlist(strsplit(value, split = " "))
+    
+    # Check for second value
+    bytes <- as.numeric(value_split[1]) * switch(
+      value_split[2],
+      "KB" = 1e03,
+      "MB" = 1e06,
+      "GB" = 1e09
+    )
+
+  }else if(OS == "linux"){ # Linux
+    
+    # Split system information
+    info_split <- strsplit(system("free", intern = TRUE), split = " ")
+    
+    # Remove "Mem:" and "Swap:"
+    info_split <- lapply(info_split, function(x){gsub("Mem:", "", x)})
+    info_split <- lapply(info_split, function(x){gsub("Swap:", "", x)})
+    
+    # Get actual values
+    info_split <- lapply(info_split, function(x){x[x != ""]})
+    
+    # Bind values
+    info_split <- do.call(rbind, info_split[1:2])
+    
+    # Get free values
+    bytes <- as.numeric(info_split[2, info_split[1,] == "free"])
+    
+  }else{ # Mac
+    
+    # System information
+    system_info <- system("top -l 1 -s 0 | grep PhysMem", intern = TRUE)
+
+    # Get everything after comma
+    unused <- gsub(" .*,", "", system_info)
+    
+    # Get values only
+    value <- gsub("PhysMem: ", "", unused)
+    value <- gsub(" unused.", "", value)
+    
+    # Check for bytes
+    if(grepl("M", value)){
+      bytes <- as.numeric(gsub("M", "", value)) * 1e06
+    }else if(grepl("G", value)){
+      bytes <- as.numeric(gsub("G", "", value)) * 1e09
+    }else if(grepl("K", value)){
+      bytes <- as.numeric(gsub("K", "", value)) * 1e03
+    }
+    
+  }
+  
+  # Return bytes
+  return(bytes)
+
+}
+
+options(scipen = 999)
+available_memory() ### đơn vị byte [B]
+```
+
+## Kiểm tra dung lượng của object trong R
+
+```{r}
+mtcars -> ok
+object.size(ok)
+```
+
+# Tài liệu tham khảo
+
+1. <https://jstaf.github.io/hpc-r/parallel/>
+
+2. <https://waterprogramming.wordpress.com/2020/03/16/parallel-processing-with-r-on-windows/>
+
+3. <https://forum.posit.co/t/how-many-cores-used-when-processing-2-r-sessions/166728/1>
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+
+
+
+
