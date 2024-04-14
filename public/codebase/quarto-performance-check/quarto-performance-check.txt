@@ -82,6 +82,9 @@ zip(zipfile = "quarto-performance-check",
 
 **Trong phạm vi bài hướng dẫn này ta tập trung vào các lệnh kiểm tra tổng quát hiệu năng máy tính khi sử dụng R, đây là cơ sở giúp ta đánh giá tốc độ xử lý của R trong các tình huống cụ thể sau này.**
 
+**Xem thêm: [HƯỚNG DẪN KIỂM TRA HIỆU NĂNG MÁY TÍNH KHI R HOẠT ĐỘNG (tình huống export file image kích thước lớn)](https://www.tuhocr.com/articles/huong-dan-kiem-tra-hieu-nang-may-tinh-khi-r-hoat-dong)**
+
+
 # Kiểm tra thông tin máy tính
 
 ```{r}
