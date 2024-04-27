@@ -1,0 +1,121 @@
+# <b>Kỹ thuật kiểm tra missing value <code>NA</code></b>
+
+```{r, include=FALSE}
+options(width = 1200)
+knitr::opts_chunk$set(fig.width = 6, fig.height = 6, warning = FALSE, message = FALSE)
+```
+
+**Ta có 1 dataset gồm 30 dòng và 6 cột, trong đó có 1 số cột bị missing value. Để kiểm tra nhanh, ta sẽ dùng lệnh `summary()` tuy nhiên lệnh này không kiểm tra được các cột là `character`.**
+
+```{r, echo=FALSE}
+df <- readRDS("raw_data.rds")
+set.seed(1)
+df <- df[sample(1:nrow(df), 30), -c(1, 3, 4, 7:42)]
+row.names(df) <- NULL
+names(df) <- c("name", "school", "student", "revenue", "expenditure", "type")
+df$expenditure[c(3, 5:8, 12:19)] <- NA
+```
+
+```{r, echo=TRUE}
+dim(df)
+df
+sapply(df, class)
+summary(df)
+```
+
+**Do vậy để kiểm tra nhanh toàn bộ dataset `df` này có bao nhiêu giá trị missing value ở tất cả các cột (gồm `character` và `numeric`) thì ta dùng function `md.pattern()` trong package `mice`.**
+
+>This function is useful for investigating any structure of missing observations in the data.
+
+```{r}
+library(mice)
+mice::md.pattern(df, plot = TRUE, rotate.names = TRUE)
+```
+
+**Ở đây ta phân tích kỹ các con số từ đồ thị này để đánh giá tình hình missing value trong bộ dữ liệu. Cụ thể:**
+
+* Giá trị nằm ngang dưới cùng (0, 0, 0, 0, 13, 26 và 39) lần lượt là ***số lượng*** missing value trong từng cột, còn số **39** nghĩa là trong toàn bộ dataset `df` (gồm 30 dòng và 6 cột, tạo thành tổng cộng 180 ô dữ liệu) có 39 ô bị giá trị trống. Được tính theo công thức: $0 + 0 + 0 + 0 + 13 + 26 = 39$.
+
+* Giá trị nằm bên trái (2, 15, 2, 11) tương ứng với các con số bên phải (0, 1, 1, 2) có ý nghĩa là:
+
+```{r}
+### số 2 là dataset chỉ còn 2 dòng (hàng) dữ liệu sau khi na.omit() toàn bộ các cột
+### nghĩa là lúc này dataset không (số 0) còn cột nào có giá trị missing value
+
+df_clean_all_column <- na.omit(df)
+
+row.names(df_clean_all_column) <- NULL
+
+dim(df_clean_all_column)
+
+df_clean_all_column
+```
+
+```{r}
+### số 15 là dataset có 15 dòng (hàng) dữ liệu đầy đủ tất cả thông tin (từ cột đầu tiên đến cột expenditure) 
+### ngoại trừ cột type (màu đỏ), lúc này toàn bộ giá trị ở cột type là NA.
+
+df_clean_1 <- df[complete.cases(df$name, df$school, df$student, df$revenue, df$expenditure), ]
+
+df_clean_1a <- df_clean_1[is.na(df_clean_1$type), ] 
+
+row.names(df_clean_1a) <- NULL
+
+dim(df_clean_1a) 
+
+df_clean_1a
+```
+
+```{r}
+### số 2 là dataset có 2 dòng (hàng) dữ liệu đầy đủ tất cả thông tin (từ cột đầu tiên đến cột type) 
+### ngoại trừ cột expenditure (màu đỏ), lúc này toàn bộ giá trị ở cột expenditure là NA.
+
+df_clean_2 <- df[complete.cases(df$name, df$school, df$student, df$revenue, df$type), ]
+
+df_clean_2a <- df_clean_2[is.na(df_clean_2$expenditure), ] 
+
+row.names(df_clean_2a) <- NULL
+
+dim(df_clean_2a) 
+
+df_clean_2a
+```
+
+```{r}
+### số 11 là dataset có 11 dòng (hàng) dữ liệu đầy đủ tất cả thông tin (từ cột đầu tiên đến cột revenue) 
+### ngoại trừ cột expenditure và type (màu đỏ), lúc này toàn bộ giá trị ở cột expenditure và type là NA.
+
+df_clean_3 <- df[complete.cases(df$name, df$school, df$student, df$revenue), ]
+
+df_clean_3a <- df_clean_3[is.na(df_clean_3$type), ] 
+
+df_clean_3b <- df_clean_3a[is.na(df_clean_3a$expenditure), ] 
+
+row.names(df_clean_3b) <- NULL
+
+dim(df_clean_3b) 
+
+df_clean_3b
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

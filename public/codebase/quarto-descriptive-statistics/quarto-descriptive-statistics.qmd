@@ -231,7 +231,7 @@ library(mice)
 mice::md.pattern(df, plot = TRUE, rotate.names = TRUE)
 ```
 
-Kết quả này đọc là có 1753 sinh viên có đủ các thông tin ở tất cả các cột, 3139 sinh viên có đủ thông tin (chỉ trừ cột `salary` là có missing value), 3347 sinh viên có đủ thông tin (chỉ trừ các cột `score1`, `score2`, và `salary`). Có tổng cộng 13180 giá trị `NA` trong toàn bộ dataset.
+Kết quả này đọc là có 1753 sinh viên có đủ các thông tin ở tất cả các cột, 3139 sinh viên có đủ thông tin (chỉ trừ cột `salary` là có missing value), 3347 sinh viên có đủ thông tin (chỉ trừ các cột `score1`, `score2`, và `salary`). Có tổng cộng 13180 giá trị `NA` trong toàn bộ dataset. Cụ thể cách phân tích kết quả missing value theo package `mice` được trình bày ở đây [**link**](https://thongkesinhhoc.com/ky-thuat-kiem-tra-missing-value)
 
 ### Cách 2: Sử dụng package `VIM`
 

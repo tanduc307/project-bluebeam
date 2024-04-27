@@ -47,6 +47,7 @@ book:
         - huong-dan-cach-lam-tron-so-trong-r.qmd
         - huong-dan-show-all-data-tren-console.qmd   
         - ky-thuat-reshape-du-lieu.qmd
+        - ky-thuat-kiem-tra-missing-value.qmd
     - references.qmd
     
   sidebar:
