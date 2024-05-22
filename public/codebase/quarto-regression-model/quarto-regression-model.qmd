@@ -1,0 +1,178 @@
+---
+title: "Phân tích hồi quy tuyến tính"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    code-tools:
+      source: https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 1000
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 8,
+                      fig.height = 8,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = TRUE         # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+file <- list.files(pattern="*.qmd")
+newfile <- gsub("\\.qmd", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
+
+# df <- read.csv("df.csv")
+# write.table(x = df, file = "df.tsv", row.names = FALSE, sep = "\t\t", quote = FALSE)
+# file_a <- list.files(pattern="*.tsv")
+# newfile_a <- gsub("\\.tsv", ".txt", file_a)
+# file.copy(from = file_a, to = newfile_a, overwrite = TRUE)
+
+zip(zipfile = "quarto-regression-model", 
+    files = c("quarto-regression-model.qmd", 
+              "style.scss", "reborn_1.bib", "logor.png",
+              "quarto-regression-model.Rproj", 
+              "_extensions/")
+    )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+<!-- <a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a>  -->
+
+{{< downloadthis quarto-regression-model.zip dname="quarto-regression-model" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.html" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+
+<!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
+
+# Định nghĩa về hồi quy tuyến tính
+
+Hồi quy tuyến tính (simple linear regression model) theo cách hiểu thông thường $y = ax + b$ hay $y = b_0 + b_1x$ là mô hình toán học biểu diễn mối quan hệ giữa hai biến định lượng (continuous variable) là $x$ và $y$. 
+
+Trong đó biến $x$ gọi là biến độc lập (independent), biến tiên lượng (predictor), biến giải thích (explanatory) hay là biến hồi quy (regressor), còn biến $y$ là biến phụ thuộc (dependent), biến dự báo/dự đoán (predicted), biến phản hồi (response) hay là biến hồi quy phụ thuộc (regressand).
+
+Mô hình hồi quy tuyến tính này, có tên gọi cụ thể là hồi quy tuyến tính đơn biến đa thức bậc 1 khi chỉ sử dụng 1 biến $x$ (bậc 1, lũy thừa 1) để dự đoán cho biến $y$. Tên gọi mô hình này là Ordinary least squares (OLS) hay là hồi quy tuyến tính theo phương pháp bình phương tối thiểu theo kiểu bình thường (ordinary) là một loại trong các mô hình hồi quy tuyến tính linear regression[^1]. 
+
+Mô hình hồi quy tuyến tính hay gọi là mô hình thống kê (model statistics) về bản chất là công thức toán biểu diễn mối quan hệ giữa các biến (các tham số trong công thức đó) với các miền giá trị của từng tham số. Chi tiết tham khảo ở link này[^2].
+
+Cần lưu ý là: giữa hai biến $x$ và $y$ trong ngữ cảnh nói về sự hồi quy (regression) là ta xác định biến nào là biến độc lập, biến nào là biến phụ thuộc, còn trong ngữ cảnh khi nói về sự tương quan (correlation) thì ta chỉ xét về mức độ dao động của cả hai biến xem có cùng tăng hay cùng giảm hay không. Vì vậy phân tích tương quan là cơ sở để ta làm phân tích hồi quy.
+
+# Đọc kết quả của phương trình hồi quy tuyến tính
+
+Đồ thị bên dưới cho thấy mối quan hệ giữa đường kính thân cây và thể tích thân cây có mối quan hệ tương quan tỷ lệ thuận. Công thức $y = -36.94 + 5.07 \times x$ có $b_0 = -36.94$ là hệ số chặn (intercept) là giá trị của $y$ khi $x = 0$, $b_1 = 5.07$ là hệ số góc (độ dốc, slope) đại diện cho mức độ tăng (hay giảm) của biến $y$ khi $x$ tăng lên 1 đơn vị.
+
+Thông thường ta chỉ có thể dự đoán được biến $y$ trong khoảng cho trước của biến $x$ gọi là phương pháp nội suy (interpolate), các giá trị $y$ được tính theo phương trình gọi là fitted values hay là predicted values của $y$ (hay là giá trị $y_{dự~đoán}$). 
+
+Nếu cho biến $x$ nằm ngoài khoảng giá trị của biến $x$ ban đầu dùng xây dựng mô hình thì khi ta dự đoán biến $y$ sẽ không chính xác (vì không đảm bảo ngoài khoảng đó thì mối quan hệ giữa $x$ và $y$ còn tuyến tính hay không), phương pháp ngoại suy (extrapolate) khi áp dụng cho mô hình hồi quy tuyến tính cần rất thận trọng.
+
+Khoảng chênh lệch giữa $y_{dự~đoán}$ trừ đi $y_{thực~nghiệm}$ (actual observed values of $y$) gọi là phần dư, residuals hay là sai số errors.
+
+Phương trình đường thẳng $y = -36.94 + 5.07 \times x$ gọi là line of best fit là một trong rất nhiều đường tuyến tính có thể có để "fit" hay là "đi qua nhiều điểm nhất với ít sai số nhất". Việc ước lượng giá trị $\beta_0$ và $\beta_1$ để tìm ra giá trị $b_0$ và $b_1$ với p-value có ý nghĩa thống kê được gọi là quá trình xây dựng mô hình hồi quy tuyến tính.
+
+[![](https://tuhocr.netlify.app/excellent.png)](https://tuhocr.netlify.app/excellent.png)
+
+# Phân tích hồi quy tuyến tính trong R
+
+## Bước 1: Phân tích dataset
+
+```{r}
+trees -> df
+
+names(df) <- c("duong_kinh", "chieu_cao", "the_tich")
+
+df
+
+dim(df)
+summary(df)
+str(df)
+```
+
+## Bước 2: Kiểm tra giả định
+
+Mô hình hồi quy tuyến tính cần được đáp ứng các giả định sau[^3]^,&nbsp;^[^4]^,&nbsp;^[^5]
+
+# Tài liệu tham khảo
+
+[^1]: <https://en.wikipedia.org/wiki/Ordinary_least_squares>
+
+[^2]: <https://www.stat.uchicago.edu/~pmcc/pubs/AOS023.pdf>
+
+[^3]: <https://stataguide.wordpress.com/2020/04/19/cac-gia-dinh-cua-mo-hinh-hoi-quy-tuyen-tinh/>
+
+[^4]: <https://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/R/R5_Correlation-Regression/R5_Correlation-Regression4.html>
+
+[^5]: <https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/regression-and-correlation/assumptions-of-regression-analysis.html>
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+
+
+
+
