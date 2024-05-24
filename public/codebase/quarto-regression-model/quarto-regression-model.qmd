@@ -13,14 +13,15 @@ format:
   html:
     toc: true
     toc-title: "Mục lục"
-    toc-expand: 6
+    toc-expand: 8
+    toc-depth: 6
     toc-location: left
     number-sections: true
-    number-depth: 6
+    number-depth: 8
     theme: [style.scss]
     page-layout: full
     # code-annotations: below # không thuận tiện cho 2 code chunk
-    embed-resources: true
+    # embed-resources: true
     anchor-sections: true
     smooth-scroll: true
     link-external-newwindow: true
@@ -37,13 +38,13 @@ engine: knitr
 knitr:
   opts_chunk:
     R.options:
-      width: 1000
+      width: 120
 editor_options: 
   chunk_output_type: console
 ---
 
 ```{r, echo=FALSE, results='hide'}
-knitr::opts_chunk$set(error = TRUE,        # suppress errors
+knitr::opts_chunk$set(error = FALSE,        # suppress errors
                       message = FALSE,     # suppress messages
                       warning = FALSE,     # suppress warnings
                       fig.width = 8,
@@ -51,7 +52,7 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
                       # results = 'hide',  # suppress code output
                       echo = TRUE,         # suppress code
                       # fig.show = 'hide', # suppress plots
-                      cache = TRUE         # enable caching
+                      cache = FALSE         # enable caching
                       )        
 # library(ggfortify)
 # autoplot(lm(cars$dist ~ cars$speed))
@@ -80,13 +81,17 @@ zip(zipfile = "quarto-regression-model",
 
 <!-- <a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a>  -->
 
-{{< downloadthis quarto-regression-model.zip dname="quarto-regression-model" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.html" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Premium service</a> {{< downloadthis quarto-regression-model.zip dname="quarto-regression-model" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.html" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-filetype-html"></i> Web</a>  
 
 <!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
 
 # Định nghĩa về hồi quy tuyến tính
 
-Hồi quy tuyến tính (simple linear regression model) theo cách hiểu thông thường $y = ax + b$ hay $y = b_0 + b_1x$ là mô hình toán học biểu diễn mối quan hệ giữa hai biến định lượng (continuous variable) là $x$ và $y$. 
+Hồi quy (regression) là cách tiếp cận xây dựng mô hình toán học (công thức toán) để biểu diễn mối quan hệ giữa một biến $y$ với một hay nhiều biến $x$. Theo nghĩa rộng thì đặc tính của các biến $x$ và $y$ có thể là biến liên tục (continuous variable), biến số đếm (discrete quantitative variable) hay biến phân loại (discrete qualitative hay categorical varaible). 
+
+Hồi quy tuyến tính đơn biến là dạng căn bản và đơn giản nhất của các mô hình hồi quy.
+
+Hồi quy tuyến tính (simple linear regression model - SLR) theo cách hiểu thông thường $y = ax + b$ hay $y = b_0 + b_1x$ là mô hình toán học biểu diễn mối quan hệ giữa hai biến định lượng (continuous variable) là $x$ và $y$. 
 
 Trong đó biến $x$ gọi là biến độc lập (independent), biến tiên lượng (predictor), biến giải thích (explanatory) hay là biến hồi quy (regressor), còn biến $y$ là biến phụ thuộc (dependent), biến dự báo/dự đoán (predicted), biến phản hồi (response) hay là biến hồi quy phụ thuộc (regressand).
 
@@ -94,19 +99,50 @@ Mô hình hồi quy tuyến tính này, có tên gọi cụ thể là hồi quy 
 
 Mô hình hồi quy tuyến tính hay gọi là mô hình thống kê (model statistics) về bản chất là công thức toán biểu diễn mối quan hệ giữa các biến (các tham số trong công thức đó) với các miền giá trị của từng tham số. Chi tiết tham khảo ở link này[^2].
 
-Cần lưu ý là: giữa hai biến $x$ và $y$ trong ngữ cảnh nói về sự hồi quy (regression) là ta xác định biến nào là biến độc lập, biến nào là biến phụ thuộc, còn trong ngữ cảnh khi nói về sự tương quan (correlation) thì ta chỉ xét về mức độ dao động của cả hai biến xem có cùng tăng hay cùng giảm hay không. Vì vậy phân tích tương quan là cơ sở để ta làm phân tích hồi quy.
+Cần lưu ý là giữa hai biến $x$ và $y$ trong ngữ cảnh nói về sự hồi quy (regression) là ta xác định biến nào là biến độc lập, biến nào là biến phụ thuộc, còn trong ngữ cảnh khi nói về sự tương quan (correlation) thì ta chỉ xét về mức độ dao động của cả hai biến xem có cùng tăng hay cùng giảm hay không. Vì vậy phân tích tương quan là cơ sở để ta làm phân tích hồi quy.
 
 # Đọc kết quả của phương trình hồi quy tuyến tính
 
-Đồ thị bên dưới cho thấy mối quan hệ giữa đường kính thân cây và thể tích thân cây có mối quan hệ tương quan tỷ lệ thuận. Công thức $y = -36.94 + 5.07 \times x$ có $b_0 = -36.94$ là hệ số chặn (intercept) là giá trị của $y$ khi $x = 0$, $b_1 = 5.07$ là hệ số góc (độ dốc, slope) đại diện cho mức độ tăng (hay giảm) của biến $y$ khi $x$ tăng lên 1 đơn vị.
+Đồ thị bên dưới cho thấy mối quan hệ giữa đường kính thân cây và thể tích thân cây có mối quan hệ tương quan tỷ lệ thuận. Công thức $y = -36.94 + 5.07 \times x$ có $b_0 = -36.94$ là hệ số chặn (intercept/constant) là giá trị của $y$ khi $x = 0$; $b_1 = 5.07$ là hệ số góc (độ dốc/slope/coefficicent) đại diện cho mức độ tăng (hay giảm) của biến $y$ khi $x$ tăng lên 1 đơn vị.
 
 Thông thường ta chỉ có thể dự đoán được biến $y$ trong khoảng cho trước của biến $x$ gọi là phương pháp nội suy (interpolate), các giá trị $y$ được tính theo phương trình gọi là fitted values hay là predicted values của $y$ (hay là giá trị $y_{dự~đoán}$). 
 
 Nếu cho biến $x$ nằm ngoài khoảng giá trị của biến $x$ ban đầu dùng xây dựng mô hình thì khi ta dự đoán biến $y$ sẽ không chính xác (vì không đảm bảo ngoài khoảng đó thì mối quan hệ giữa $x$ và $y$ còn tuyến tính hay không), phương pháp ngoại suy (extrapolate) khi áp dụng cho mô hình hồi quy tuyến tính cần rất thận trọng.
 
-Khoảng chênh lệch giữa $y_{dự~đoán}$ trừ đi $y_{thực~nghiệm}$ (actual observed values of $y$) gọi là phần dư, residuals hay là sai số errors.
+>There are certain guidelines for regression lines[^13]
+>
+> * Use regression lines when there is a significant correlation to predict values.
+> * Do not use if there is not a significant correlation.
+> * Stay within the range of the data. Do not extrapolate!! For example, if the data is from 10 to 60, do not predict a value for 400.
+> * Do not make predictions for a population based on another population's regression line.
+
+Khoảng chênh lệch giữa $y_{thực~nghiệm}$ (actual observed values of $y$) trừ đi $y_{dự~đoán}$ gọi là phần dư, residuals hay là sai số errors.
 
 Phương trình đường thẳng $y = -36.94 + 5.07 \times x$ gọi là line of best fit là một trong rất nhiều đường tuyến tính có thể có để "fit" hay là "đi qua nhiều điểm nhất với ít sai số nhất". Việc ước lượng giá trị $\beta_0$ và $\beta_1$ để tìm ra giá trị $b_0$ và $b_1$ với p-value có ý nghĩa thống kê được gọi là quá trình xây dựng mô hình hồi quy tuyến tính.
+
+::: {.callout-important}
+Normally we then predict values for $y$ based on values of $x$. This *still does not mean* that $y$ is caused by $x$.
+
+Remember, correlation does not imply causation.
+
+Phân tích tương quan hay phân tích hồi quy không ngụ ý là hai biến $x$ và $y$ có mối quan hệ nhân quả (vì có $x$ nên mới có $y$) mà muốn xác định quan hệ nhân quả (cause-and-effect relationship) giữa hai biến này ta cần làm thêm một số bước phân tích về cơ chế cũng như bố trí thí nghiệm theo khối ngẫu nhiên.[^14]^,&nbsp;^[^15]
+:::
+
+**Phân tích kỹ hơn**
+
+Công thức hồi quy tuyến tính với hệ số góc $\beta_1$ và hệ số chặn $\beta_0$ là chỉ số của quần thể (population statistics), ký hiệu là chữ cái Hy Lạp. 
+
+$$y = \beta_0 + \beta_1 \times x$$ 
+
+Điều này có nghĩa là ta có nhiều hơn 1 hệ số góc và 1 hệ số chặn để tạo thành đường hồi quy tuyến tính, hệ số góc và hệ số chặn được tìm ra bằng phương pháp bình phương tối thiểu hay bằng phương pháp nào khác được ký hiệu với dấu mũ (hat).
+
+$$y = \hat{\beta_0} + \hat{\beta_1} \times x$$
+
+Hay được viết theo kiểu thông thường là:
+
+$$y = b_0 + b_1 \times x$$
+
+**$b_0$ và $b_1$ gọi là hệ số chặn và hệ số góc của đường best-fitting line.**
 
 [![](https://tuhocr.netlify.app/excellent.png)](https://tuhocr.netlify.app/excellent.png)
 
@@ -128,9 +164,545 @@ str(df)
 
 ## Bước 2: Kiểm tra giả định
 
-Mô hình hồi quy tuyến tính cần được đáp ứng các giả định sau[^3]^,&nbsp;^[^4]^,&nbsp;^[^5]
+Mô hình hồi quy tuyến tính cần được đáp ứng các giả định sau[^3]^,&nbsp;^[^4]^,&nbsp;^[^5]^,&nbsp;^[^6] 
+
+There are four principal assumptions which justify the use of linear regression models for purposes of inference or prediction:
+
+1/ linearity and additivity of the relationship between dependent and independent variables:
+
+    1.1/ The expected value of dependent variable is a straight-line function of each independent variable, holding the others fixed.
+
+    1.2/ The slope of that line does not depend on the values of the other variables.
+
+    1.3/ The effects of different independent variables on the expected value of the dependent variable are additive.
+
+2/ statistical independence of the errors (in particular, no correlation between consecutive errors in the case of time series data)
+
+3/ homoscedasticity (constant variance) of the errors
+    
+    3.1/ Versus time (in the case of time series data)
+
+    3.2/ Versus the predictions
+
+    3.3/ Versus any independent variable
+
+4/ normality of the error distribution.
+
+Việc đáp ứng được các giả định này rất quan trọng để đảm bảo kết quả ước lượng "gần" với thực tế, nếu mô hình hồi quy tuyến tính violate/không thỏa mãn các giả định trên thì kết quả ước lượng sẽ bị sai lệch (biased), dự đoán kém chính xác.
+
+Đánh giá mô hình hồi quy tốt hay không (đáp ứng tiêu chí về độ nhạy, độ chính xác) thì ta sẽ thực hiện bước validate mô hình được đề cập ở phần sau.
+
+# Kiểm tra giả định về mối quan hệ giữa biến độc lập và biến phụ thuộc có là tuyến tính
+
+## Cách 1: Phân tích tương quan
+
+Trong dataset này, ta *chọn* biến $x$ là `duong_kinh`, biến $y$ là `the_tich`, để đánh giá mức độ tuyến tính giữa hai biến này, sử dụng function `cor()` với method là `pearson`.
+
+```{r}
+cor(x = df$duong_kinh,
+    y = df$the_tich,
+    method = "pearson")
+```
+
+## Cách 2: Vẽ đồ thị scatter plot
+
+```{r}
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = "red",
+     pch = 1,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     main = "Tương quan giữa đường kính và thể tích của cây black cherry")
+```
+
+```{r}
+pairs(df)
+```
+
+## Cách 3: Vẽ ma trận tương quan
+
+```{r}
+library(corrplot)
+
+res <- cor(df, method = "pearson",
+           use = "complete.obs")
+
+round(res, 2) -> res
+
+corrplot(res)
+```
+
+# [**Simple linear regression model fitting**]{style="color:red"}
+
+**Để thực hiện kiểm tra giả thuyết về phần dư (errors / residuals) ta cần phải xây dựng mô hình hồi quy tuyến tính thì mới có giá trị $y_{dự~đoán}$ nhằm so sánh với $y_{thực~nghiệm}$. Bản chất của việc đánh giá *đặc điểm* của phần dư này (có phân bố chuẩn không, phương sai có thay đổi hay là hằng số) chính là một phần trong các bước để validate/kiểm tra xem model này hoạt động của chính xác với giá trị thực hay không.**
+
+**Ta có thể chia bộ dữ liệu ra 80% để xây dựng model (dataset `train`), còn lại 20% (dataset `test`) để kiểm tra lại xem model có dự đoán chính xác hay không. Cách tiếp cận này liên quan đến khái niệm overfitting và underfitting.** 
+
+**Ngắn gọn thì underfitting là model được xây dựng từ dataset `train` không dự đoán chính xác giá trị trong cả dataset `train` và dataset `test`, do đó model bị underfitting thì không chính xác, không sử dụng được. Còn overfitting là model dự đoán chính xác ở dataset `train` nhưng không dự đoán tốt ở dataset `test`, như vậy cũng không chính xác trong thực tế. Model có khả năng dự đoán tốt cả ở dataset `train` và `test` gọi là cần được trải qua kiểm định độ phù hợp `goodness of fit`.**
+
+```{r}
+fit <- lm(formula = the_tich ~ duong_kinh,
+          data = df)
+
+summary(fit)
+```
+
+```{r, fig.width=12, fig.height=9}
+par(pty = "m")
+
+par(mar = c(5, 5, 5, 5))
+par(font.axis = 2)
+par(font.lab = 2)
+par(cex.axis = 1.3)
+par(cex.lab = 1.3)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.5),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 30),
+     ylim = c(0, 100),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+coef(fit)[1] -> b_0
+round(b_0, 2) -> b_0
+
+coef(fit)[2] -> b_1
+round(b_1, 2) -> b_1
+
+# Tách hệ số multiple R-squared
+round(unclass(summary(fit))$r.squared, 4) -> r_squared 
+round(unclass(summary(fit))$adj.r.squared, 4) -> r_adj 
+
+text(x = 10, 
+     y = 80,
+     labels = bquote(
+       atop(
+         Y == ~ .(b_0) + .(b_1) ~ "\u00D7" ~ X,
+         atop(
+         Multiple~R^2 == .(r_squared),
+         Adjusted~R^2 == .(r_adj) 
+             )
+       )
+                    ),
+     cex = 2)
+```
+
+## Cách tính hệ số $Multiple~R^2$
+
+Hệ số R bình phương cung cấp thông tin về độ phù hợp của đường hồi quy, goodness of fit of a model[^9]. Vì vậy đây là hệ số mang tính quyết định đến chất lượng hồi quy của model (coefficient of determination).
+
+$R^2 = 0.93$ có nghĩa là 93% thay đổi/biến động của $y$ là do $x$ gây ra khi $x$ tăng 1 đơn vị (93% of the variation in the $y$ values is accounted for by the $x$ values)[^10].
+
+Phân biệt giữa $Multiple~R^2$, $R~Square$ và $Adjusted~R^2$ (tham khảo[^7]^,&nbsp;^[^8]). Hệ số R bình phương có thể tính bằng hai cách sau:
+
+### Tính trực tiếp từ hệ số tương quan tuyến tính: $Multiple~R^2 = r^2$
+
+$$r = \frac{\sum_{i=1}^n(x_i- \bar x)(y_i - \bar y)}{\sqrt{\sum_{i=1}^n(x_i- \bar x)^2}\sqrt{\sum_{i=1}^n(y_i- \bar y)^2}}=\frac{s_{xy}}{s_x s_y}$$
+
+Trong đó: 
+
+* $s_{xy}$ là hiệp phương sai (covariance) của $x$ và $y$ 
+
+* $s_x$ là độ lệch chuẩn của $x$
+
+* $s_y$ là độ lệch chuẩn của $y$
+
+```{r}
+# covariance
+cov(x = df$duong_kinh,
+    y = df$the_tich,
+    use = "everything")
+# standard deviation of x
+sd(df$duong_kinh)
+# standard deviation of x
+sd(df$the_tich)
+
+# Pearson correlation coefficient
+r_p <- cov(x = df$duong_kinh, y = df$the_tich, use = "everything") /
+  (sd(df$duong_kinh) * sd(df$the_tich))
+
+r_p
+
+# Tính theo function
+cor(x = df$duong_kinh,
+    y = df$the_tich,
+    method = "pearson")
+```
+
+```{r}
+# Multiple R^2
+r_p^2
+```
+
+### Tính trực tiếp từ chênh lệch giữa $y_{thực~nghiệm}$ và $y_{dự~đoán}$
+
+$${R^2} = 1 - \frac{{sum~squared~regression~(SSR)}}{{total~sum~of~squares~(SST)}} = 1 - \frac{{\sum\limits_{i = 1}^n {({y_i} - } {{\hat y}_i}{)^2}}}{{\sum\limits_{i = 1}^n {{{({y_i} - \bar y )}^2}} }}$$
+
+Trong đó:
+
+* $y_i$ là giá trị thực của $y$ ở quan sát thứ $i$, còn gọi là $y_{thực~nghiệm}$
+
+* $\hat y_i$ (y mũ, y hat) là giá trị dự đoán được tính từ mô hình của $y$ ở quan sát thứ $i$, còn gọi là $y_{dự~đoán}$
+
+* $\bar y$ (y bar) là giá trị trung bình của $y_{thực~nghiệm}$
+
+**Ta có 3 cách để ước lượng $y_{dự~đoán}$ trong R:**
+
+```{r}
+# Tính y_dudoan từ phương trình
+df$the_tich_dudoan <- coef(fit)[1] + coef(fit)[2]*df$duong_kinh 
+
+fit$fitted.values -> dudoan_fit
+
+predict(object = fit,
+        newdata = df[, "duong_kinh", drop = FALSE]) -> dudoan_predict
+
+# https://stackoverflow.com/questions/60357840/why-is-there-a-difference-in-linear-regression-fitted-values-and-predicted-value
+
+names(dudoan_fit) <- NULL
+names(dudoan_predict) <- NULL
+
+identical(dudoan_fit, dudoan_predict)
+
+all.equal(dudoan_fit, dudoan_predict)
+
+identical(df$the_tich_dudoan, dudoan_predict)
+
+df
+```
+
+```{r, fig.width=12, fig.height=9}
+par(pty = "m")
+
+par(mar = c(5, 5, 5, 5))
+par(font.axis = 2)
+par(font.lab = 2)
+par(cex.axis = 1.3)
+par(cex.lab = 1.3)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.5),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+coef(fit)[1] -> b_0
+round(b_0, 2) -> b_0
+
+coef(fit)[2] -> b_1
+round(b_1, 2) -> b_1
+
+# Tách hệ số multiple R-squared
+round(unclass(summary(fit))$r.squared, 4) -> r_squared 
+round(unclass(summary(fit))$adj.r.squared, 4) -> r_adj 
+
+text(x = 5, 
+     y = 70,
+     labels = bquote(
+       atop(
+         Y == ~ .(b_0) + .(b_1) ~ "\u00D7" ~ X,
+         atop(
+         Multiple~R^2 == .(r_squared),
+         Adjusted~R^2 == .(r_adj) 
+             )
+       )
+                    ),
+     cex = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+segments(x0 = df$duong_kinh,
+         y0 = df$the_tich,
+         x1 = df$duong_kinh,
+         y1 = df$the_tich_dudoan,
+         col = adjustcolor("darkgreen", alpha.f = 0.8),
+         cex = 1,
+         lwd = 3)
+
+legend(x = "bottomright",
+       y = NULL,
+       legend = c("y_thực nghiệm", 
+                  "y_dự đoán", 
+                  "y_trung bình",
+                  "phần dư (residual) dùng tính SSR", 
+                  "độ lệch với trung bình dùng tính SST"),
+       col = c("blue", "red", "yellow3", "darkgreen", "yellow3"),
+       pch = c(16, 16, 16, NA, NA),
+       lty = c(NA, NA, NA, 1, 1),
+       lwd = 3,
+       cex = 1.2,
+       merge = FALSE)
+
+points(x = df$duong_kinh,
+       y = rep(mean(df$the_tich), dim(df)[1]),
+       col = adjustcolor("yellow3", alpha.f = 0.8),
+       pch = 16,
+       cex = 1.5)
+
+segments(x0 = df$duong_kinh,
+         y0 = df$the_tich,
+         x1 = df$duong_kinh,
+         y1 = rep(mean(df$the_tich), dim(df)[1]),
+         col = adjustcolor("yellow3", alpha.f = 0.5),
+         cex = 1,
+         lwd = 3)
+
+```
+
+**Tính SSR và SST**
+
+```{r}
+# sum squared regression
+ssr <- sum((df$the_tich - df$the_tich_dudoan)^2)
+
+# total sum of squares
+sst <- sum((df$the_tich - mean(df$the_tich))^2)
+```
+
+**Tính $R^2$**
+
+```{r}
+1 - ssr/sst
+```
+
+```{r}
+identical(r_p^2, 1 - ssr/sst)
+all.equal(r_p^2, 1 - ssr/sst)
+# chênh lệch này do decimal tính toán của máy tính
+r_p^2 - (1 - ssr/sst)
+```
+
+## Cách tính hệ số $Adjusted~R^2$
+
+Hệ số R bình phương điều chỉnh, được "adjust" theo số lượng biến $x$ trong model, dùng để so sánh giữa các model khi có nhiều biến được đưa vào thì model nào có $Adjusted~R^2$ cao thì dự đoán chính xác hơn[^8].
+
+$$Adjusted~R^2 = 1 - \frac{{(1 - {R^2}) \times (n - 1)}}{{(n - k - 1)}}$$
+
+Trong đó:
+
+$n$ là số quan sát (observation)
+
+$k$ là số biến (predictor variable)
+
+Khi $k = 1$ thì $Multiple~R^2 = Adjusted~R^2$, khi $k > 1$ hay là khi tăng số biến lên thì $Multiple~R^2 > Adjusted~R^2$.
+
+```{r}
+# Adjusted R^2
+1 - ((1 - r_p^2) * (dim(df)[1] - 1)) / (dim(df)[1] - 1 - 1)
+```
+
+## Cách tính hệ số góc $b_1$
+
+>The $y$ variable is often termed the *criterion variable* and the $x$ variable the *predictor variable*. The slope $b_1$ is often called the *regression coefficient* (hệ số hồi quy) and the intercept $b_0$ the regression constant (hằng số hồi quy)[^13].
+
+$$slope = \frac{{rise}}{{run}} = \frac{{dy}}{{dx}} = \frac{{\Delta y}}{{\Delta x}} = \frac{{{y_2} - {y_1}}}{{{x_2} - {x_1}}}$$
+
+Tham khảo cách tính thủ công ở đây[^11]^,&nbsp;^[^12]
+
+### Tính từ hệ số tương quan và độ lệch chuẩn
+
+$$b_1 = r \times \left( {\frac{{{s_y}}}{{s{}_x}}} \right)$$
+
+Trong đó:
+
+* $b_1$ là hệ số góc (slope)
+
+* $r$ là hệ số tương quan tuyến tính theo Pearson
+
+* $s_x$ là độ lệch chuẩn của $x$
+
+* $s_y$ là độ lệch chuẩn của $y$
+
+```{r}
+b_1a <- r_p * (sd(df$the_tich) / sd(df$duong_kinh))
+b_1a
+```
+
+### Tính từ giá trị $x$ và $y$
+
+$${b_1} = \frac{{n \times (\sum {xy) - (\sum {x)} }  \times (\sum {y)} }}{{n \times (\sum {{x^2}) - {{(\sum x )}^2}} }}$$
+
+```{r}
+b_1b <- (dim(df)[1] * sum(df$duong_kinh*df$the_tich) - sum(df$duong_kinh) * sum(df$the_tich)) /
+  (dim(df)[1] * sum(df$duong_kinh^2) - sum(df$duong_kinh)^2)
+b_1b
+```
+
+**So sánh với hệ số góc tính bằng R**
+
+```{r}
+coef(fit)[2] -> b_1
+b_1
+```
+
+## Cách tính hệ số chặn $b_0$
+
+### Tính từ hệ số góc và trung bình của $x$ và $y$
+
+$$b_0 = \bar{y} - b_1 \times \bar{x}$$
+
+Trong đó:
+
+* $b_0$ là hệ số chặn (intercept)
+
+* $b_1$ là hệ số góc (slope)
+
+* $\bar{y}$ là trung bình của các giá trị $y_{thực~nghiệm}$
+
+* $\bar{x}$ là trung bình của các giá trị $x_{thực~nghiệm}$
+
+```{r}
+b_0a <- mean(df$the_tich) - (b_1a * mean(df$duong_kinh))
+b_0a
+```
+
+### Tính từ giá trị $x$ và $y$
+
+$${b_0} = \frac{{(\sum y) \times (\sum {x^2}) - (\sum x) \times (\sum xy)}}{{n \times (\sum {x^2}) - {{(\sum x )}^2}}}$$
+
+```{r}
+b_0b <- ((sum(df$the_tich) * sum(df$duong_kinh^2)) - (sum(df$duong_kinh) * sum(df$duong_kinh * df$the_tich))) /
+  (dim(df)[1] * sum(df$duong_kinh^2) - sum(df$duong_kinh)^2)
+b_0b
+```
+
+**So sánh với hệ số chặn tính bằng R**
+
+```{r}
+coef(fit)[1] -> b_0
+b_0
+```
+
+## Cách tính độ lệch chuẩn của phần dư
+
+### Tính trực tiếp từ chênh lệch giữa $y_{thực~nghiệm}$ và $y_{dự~đoán}$
+
+$$e = errors = residuals = y_{thực~nghiệm} - y_{dự~đoán}$$
+
+```{r}
+df$residuals <- df$the_tich - df$the_tich_dudoan
+df
+
+df$residuals
+
+unclass(summary(fit))$residuals
+```
+
+Phương sai của phần dư
+
+$$s_{residuals}^2 = \frac{{\sum\limits_{i = 1}^n {e_i^2} }}{{n - 2}}$$
+
+Trong đó:
+
+* $e$ là phần dư, chênh lệch giữa $y_{thực~nghiệm} - y_{dự~đoán}$ ở từng quan sát
+
+```{r}
+var_error <- sum(df$residuals^2) / (dim(df)[1] - 2) # 2 ở đây là hai biến x và y
+var_error
+```
+
+Độ lệch chuẩn của phần dư[^13] hay còn gọi là sai số chuẩn ước lượng **standard error of estimate** hay là **residual standard error**.
+
+```{r}
+sd_error <- sqrt(var_error)
+sd_error
+```
+
+## Tính theo công thức
+
+$${s_{residuals}} = {s_y} \times \sqrt {1 - {r^2}}  \times \sqrt {\frac{{n - 1}}{{n - 2}}}$$
+
+```{r}
+sd_error_ok <- sd(df$the_tich) * sqrt(1 - r_p^2) * sqrt((dim(df)[1] - 1) / (dim(df)[1] - 2))
+sd_error_ok
+```
+
+**Theo công thức này ta thấy rõ ảnh hưởng của số lượng mẫu quan sát đến sai số khi dự đoán. In this case the error is less than 2% when $n > 26$ and less than 1% when $n > 51$. However, it is 10% or larger when $n < 8$**
+
+**So sánh với cách tính residual standard error bằng R**
+
+```{r}
+# Residual standard error: 4.252 on 29 degrees of freedom
+unclass(summary(fit))$sigma
+```
+
+[**Nghĩa là kết quả dự đoán có độ lệch chuẩn so với giá trị thực nghiệm là `r round(sd_error, 2)`**]{style="color:blue"}
+
+::: {.callout-tip}
+[**The standard error is small when the correlation is high. This increases the accuracy of prediction.**]{style="color:red"}
+:::
+
+When we consider multiple distributions it is often assumed that their standard deviations are equal. 
+
+This property is called homoscedasticity. 
+
+We often consider the conditional distribution or distribution of all y scores with the same value of x.
+
+If we assume these conditional distributions are all normal and homoscedastic, we can make probabilistic statements about the predicted scores. 
+
+The standard deviation we use is the standard error calculated above.
+
+# Kiểm tra giả định về phần dư của mô hình tuyến tính
+
+## Phần dư có phân bố chuẩn?
+
+```{r}
+plot(fitted(fit), resid(fit))
+```
+
+https://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/R/R5_Correlation-Regression/R5_Correlation-Regression5.html
+
+có biện luận kết quả
 
 # Tài liệu tham khảo
+
+## Regression
+
+1. <https://www.personality-project.org/r/r.commands.html>
+
+2. <https://www.statology.org/linear-regression-assumptions/>
+
+3. <https://online.stat.psu.edu/stat500/lesson/9/9.2/9.2.3>
+
+4. <https://analystprep.com/study-notes/cfa-level-2/assumptions-of-the-simple-linear-regression-model/>
+
+5. <https://datatab.net/tutorial/pearson-correlation>
+
+6. <https://www.geo.fu-berlin.de/en/v/soga-r/Basics-of-statistics/Descriptive-Statistics/Measures-of-Relation-Between-Variables/Correlation/index.html>
+
+7. <https://stackoverflow.com/questions/12201439/is-there-a-difference-between-the-r-functions-fitted-and-predict>
+
+## R
+
+1. <https://stackoverflow.com/questions/19053440/r-legend-with-points-and-lines-being-different-colors-for-the-same-legend-item>
 
 [^1]: <https://en.wikipedia.org/wiki/Ordinary_least_squares>
 
@@ -142,6 +714,25 @@ Mô hình hồi quy tuyến tính cần được đáp ứng các giả định 
 
 [^5]: <https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/regression-and-correlation/assumptions-of-regression-analysis.html>
 
+[^6]: <https://people.duke.edu/~rnau/testing.htm>
+
+[^7]: <https://maths.uel.edu.vn/Resources/Docs/SubDomain/maths/TaiLieuHocTap/ToanUngDung/h_s_r_bnh_phng_v_r_bnh_phng_hiu_chnh.html>
+
+[^8]: <https://www.statology.org/multiple-r-vs-r-squared/>
+
+[^9]: <https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/regression-and-correlation/coefficient-of-determination-r-squared.html>
+
+[^10]: <https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/regression-and-correlation/coefficient-of-determination-r-squared.html>
+
+[^11]: <https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/>
+
+[^12]: <https://www.dummies.com/article/academics-the-arts/math/statistics/how-to-calculate-a-regression-line-169795/>
+
+[^13]: <https://www.andrews.edu/~calkins/math/edrm611/edrm06.htm>
+
+[^14]: <https://pedermisager.org/blog/why_does_correlation_not_equal_causation/>
+
+[^15]: <https://en.wikipedia.org/wiki/Bradford_Hill_criteria>
 <!-- top -->
 
 <button id="scrollBtnTop">
