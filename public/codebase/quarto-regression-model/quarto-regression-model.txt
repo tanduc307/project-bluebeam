@@ -249,6 +249,7 @@ summary(fit)
 ```
 
 ```{r, fig.width=12, fig.height=9}
+
 par(pty = "m")
 
 par(mar = c(5, 5, 5, 5))
