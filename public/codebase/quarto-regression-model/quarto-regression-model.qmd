@@ -85,7 +85,7 @@ zip(zipfile = "quarto-regression-model",
 
 <!-- [**Để phóng lớn hình ảnh *Open image in new tab*.**]{style="color:#006600"} -->
 
-# Định nghĩa về hồi quy tuyến tính a
+# Định nghĩa về hồi quy tuyến tính 
 
 Hồi quy (regression) là cách tiếp cận xây dựng mô hình toán học (công thức toán) để biểu diễn mối quan hệ giữa một biến $y$ với một hay nhiều biến $x$. Theo nghĩa rộng thì đặc tính của các biến $x$ và $y$ có thể là biến liên tục (continuous variable), biến số đếm (discrete quantitative variable) hay biến phân loại (discrete qualitative hay categorical varaible). 
 
