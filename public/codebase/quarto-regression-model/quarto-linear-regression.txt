@@ -1,0 +1,944 @@
+---
+title: "Đồ thị hồi quy tuyến tính"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 8
+    toc-depth: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 8
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    # code-tools:
+    #   source: https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = FALSE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE     # suppress warnings
+                      )   
+```
+
+# Dữ liệu của mẫu (sample data)
+
+```{r}
+trees -> df
+names(df) <- c("duong_kinh", "chieu_cao", "the_tich")
+
+fit <- lm(formula = the_tich ~ duong_kinh, 
+          data = df)
+
+summary(fit)
+
+df$the_tich_dudoan <- fit$fitted.values
+
+df
+```
+
+# Đường hồi quy tuyến tính
+
+```{r, fig.width=12, fig.height=8}
+par(pty = "m")
+
+par(mar = c(5, 5, 5, 5))
+par(font.axis = 2)
+par(font.lab = 2)
+par(cex.axis = 1.3)
+par(cex.lab = 1.3)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.7),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+```
+
+# Thêm giá trị dự đoán và trung bình của mẫu
+
+```{r, fig.width=12, fig.height=8}
+par(pty = "m")
+
+par(mar = c(5, 5, 5, 5))
+par(font.axis = 2)
+par(font.lab = 2)
+par(cex.axis = 1.3)
+par(cex.lab = 1.3)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.7),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+segments(x0 = df$duong_kinh,
+         y0 = df$the_tich,
+         x1 = df$duong_kinh,
+         y1 = df$the_tich_dudoan,
+         col = adjustcolor("darkgreen", alpha.f = 0.8),
+         cex = 1,
+         lwd = 3)
+
+legend(x = "bottomright",
+       y = NULL,
+       legend = c("y_thực nghiệm", 
+                  "y_dự đoán", 
+                  "y_trung bình",
+                  "phần dư (residual) dùng tính SSR", 
+                  "độ lệch với trung bình dùng tính SST"),
+       col = c("blue", "red", "yellow3", "darkgreen", "yellow3"),
+       pch = c(16, 16, 16, NA, NA),
+       lty = c(NA, NA, NA, 1, 1),
+       lwd = 3,
+       cex = 1.2,
+       merge = FALSE)
+
+points(x = df$duong_kinh,
+       y = rep(mean(df$the_tich), dim(df)[1]),
+       col = adjustcolor("yellow3", alpha.f = 0.8),
+       pch = 16,
+       cex = 1.5)
+
+segments(x0 = df$duong_kinh,
+         y0 = df$the_tich,
+         x1 = df$duong_kinh,
+         y1 = rep(mean(df$the_tich), dim(df)[1]),
+         col = adjustcolor("yellow3", alpha.f = 0.5),
+         cex = 1,
+         lwd = 3)
+```
+
+# Thêm phân phối của phần dư (tính từ giá trị của mẫu) để ước lượng giá trị của y khi ở tổng thể
+
+```{r, fig.width=12, fig.height=8}
+xp <- df$duong_kinh
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              sig = pred[[2]],
+              # sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:31) {
+
+x0 <- xp[i]
+
+mat <- lst[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+```
+
+# Mô hình hồi quy tuyến tính đơn biến "lý tưởng" là có sai số có trung bình là 0 và phương sai là 1 hằng số dọc theo các giá trị của x
+
+```{r, fig.width=12, fig.height=8}
+xp <- df$duong_kinh
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst_ok <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              # sig = pred[[2]],
+              sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:31) {
+
+x0 <- xp[i]
+
+mat <- lst_ok[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+```
+
+# Thêm khoảng tin cậy vào đường hồi quy tuyến tính
+
+```{r, fig.width=12, fig.height=8}
+xp <- df$duong_kinh
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              sig = pred[[2]],
+              # sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:31) {
+
+x0 <- xp[i]
+
+mat <- lst[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+
+
+## A grid is necessary for nice regression plot
+X.grid <- seq(min(df$duong_kinh), max(df$duong_kinh), length = 100)
+
+## 95%-CI based on t-statistic
+
+CI <- predict.lm(fit, 
+                 newdata = data.frame(duong_kinh = X.grid), 
+                 level = 0.95,
+                 interval = "confidence")
+
+lines(x = X.grid,
+      y = CI[ , 2],
+      col = "blue",
+      lty = 2)
+
+lines(x = X.grid,
+      y = CI[ , 3],
+      col = "blue",
+      lty = 2)
+```
+
+# Thêm phân phối của phần dư lý tưởng vào đồ thị
+
+```{r, fig.width=12, fig.height=8}
+xp <- df$duong_kinh
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              sig = pred[[2]],
+              # sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:31) {
+
+x0 <- xp[i]
+
+mat <- lst[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+
+
+## A grid is necessary for nice regression plot
+X.grid <- seq(min(df$duong_kinh), max(df$duong_kinh), length = 100)
+
+## 95%-CI based on t-statistic
+
+CI <- predict.lm(fit, 
+                 newdata = data.frame(duong_kinh = X.grid), 
+                 level = 0.95,
+                 interval = "confidence")
+
+lines(x = X.grid,
+      y = CI[ , 2],
+      col = "blue",
+      lty = 2)
+
+lines(x = X.grid,
+      y = CI[ , 3],
+      col = "blue",
+      lty = 2)
+
+
+
+for(i in 1:31) {
+
+x0 <- xp[i]
+
+mat <- lst_ok[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+lines(x = dx.,
+      y = x.,
+      col = "purple")
+
+# lines(x = 2*x0 - dx.,
+#       y = x.,
+#       col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "purple")
+}
+```
+
+# Phân tích kỹ hơn ở các khoảng bách phân vị
+
+```{r, fig.width=12, fig.height=8}
+xp <- quantile(df$duong_kinh, 
+               probs = c(0, 0.25, 0.5, 0.75, 1),
+               names = TRUE)
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              sig = pred[[2]],
+              # sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:5) {
+
+x0 <- xp[i]
+
+mat <- lst[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+
+
+## A grid is necessary for nice regression plot
+X.grid <- seq(min(df$duong_kinh), max(df$duong_kinh), length = 100)
+
+## 95%-CI based on t-statistic
+
+CI <- predict.lm(fit, 
+                 newdata = data.frame(duong_kinh = X.grid), 
+                 level = 0.95,
+                 interval = "confidence")
+
+lines(x = X.grid,
+      y = CI[ , 2],
+      col = "blue",
+      lty = 2)
+
+lines(x = X.grid,
+      y = CI[ , 3],
+      col = "blue",
+      lty = 2)
+
+
+pred_ok <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+lst_ok <- mapply(FUN = f, 
+              mu = pred_ok[[1]],
+              # mu = df$duong_kinh, 
+              # sig = pred[[2]],
+              sig = 1,
+              SIMPLIFY = FALSE)
+
+for(i in 1:5) {
+
+x0 <- xp[i]
+
+mat <- lst_ok[[i]]
+
+alpha <- 10
+
+dx. <- alpha * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+lines(x = dx.,
+      y = x.,
+      col = "purple")
+
+# lines(x = 2*x0 - dx.,
+#       y = x.,
+#       col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "purple")
+}
+
+abline(h = df$the_tich_dudoan[c(1, 31)],
+       col = "yellow3")
+```
+
+# Phân tích kỹ hơn ở các khoảng bách phân vị (ở giá trị thực của phân phối)
+
+```{r, fig.width=12, fig.height=8}
+xp <- quantile(df$duong_kinh, 
+               probs = c(0, 0.25, 0.5, 0.75, 1),
+               names = TRUE)
+
+pred <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+
+f <- function (mu, sig) {
+  
+  x <- seq(mu - 4 * sig, 
+           mu + 4 * sig, 
+           length = 100)
+  
+  dx <- dnorm(x, mu, sig)
+  
+  cbind(x, dx)
+  
+}
+
+## apply `f` to all `xp`
+lst <- mapply(FUN = f, 
+              mu = pred[[1]],
+              # mu = df$duong_kinh, 
+              sig = pred[[2]],
+              # sig = 1,
+              SIMPLIFY = FALSE)
+
+plot(x = df$duong_kinh,
+     y = df$the_tich,
+     col = adjustcolor("blue", alpha.f = 0.4),
+     pch = 16,
+     cex = 1.5,
+     xlab = "Đường kính",
+     ylab = "Thể tích",
+     xlim = c(0, 25),
+     ylim = c(0, 80),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1)
+
+abline(fit, 
+       col = "black",
+       lty = 1,
+       lwd = 2)
+
+points(x = df$duong_kinh,
+       y = df$the_tich_dudoan,
+       # type = "h",
+       col = adjustcolor("red", alpha.f = 0.7),
+       pch = 16,
+       cex = 1.5)
+
+points(x = df$duong_kinh,
+       y = ifelse(df$the_tich > df$the_tich_dudoan, df$the_tich, df$the_tich_dudoan),
+       type = "h",
+       col = adjustcolor("gray", alpha.f = 0.9),
+       lty = 2,
+       pch = 16,
+       cex = 1.5)
+
+for(i in 1:5) {
+
+x0 <- xp[i]
+
+mat <- lst[[i]]
+
+# alpha <- 10
+
+dx. <- 1 * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+# lines(x = dx.,
+#       y = x.,
+#       col = "red") 
+
+lines(x = 2*x0 - dx.,
+      y = x.,
+      col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "red")
+}
+
+
+## A grid is necessary for nice regression plot
+X.grid <- seq(min(df$duong_kinh), max(df$duong_kinh), length = 100)
+
+## 95%-CI based on t-statistic
+
+CI <- predict.lm(fit, 
+                 newdata = data.frame(duong_kinh = X.grid), 
+                 level = 0.95,
+                 interval = "confidence")
+
+lines(x = X.grid,
+      y = CI[ , 2],
+      col = "blue",
+      lty = 2)
+
+lines(x = X.grid,
+      y = CI[ , 3],
+      col = "blue",
+      lty = 2)
+
+
+pred_ok <- predict.lm(fit, 
+                   newdata = data.frame(duong_kinh = xp),
+                   se.fit = TRUE)[1:2]
+
+lst_ok <- mapply(FUN = f, 
+              mu = pred_ok[[1]],
+              # mu = df$duong_kinh, 
+              # sig = pred[[2]],
+              sig = 1,
+              SIMPLIFY = FALSE)
+
+for(i in 1:5) {
+
+x0 <- xp[i]
+
+mat <- lst_ok[[i]]
+
+# alpha <- 10
+
+dx. <- 1 * mat[, 2] + x0  # rescale and shift
+
+x. <- mat[, 1] 
+
+lines(x = dx.,
+      y = x.,
+      col = "purple")
+
+# lines(x = 2*x0 - dx.,
+#       y = x.,
+#       col = "red")
+
+segments(x0 = x0,
+         y0 = x.[1],
+         x1 = x0,
+         y1 = x.[100],
+         col = "purple")
+}
+
+abline(h = df$the_tich_dudoan[c(1, 31)],
+       col = "yellow3")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

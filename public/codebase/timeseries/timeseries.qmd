@@ -1,0 +1,580 @@
+---
+title: "Phân tích chuỗi thời gian"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+# cover-image: cover.png
+# favicon: favicon.png
+# bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 8
+    toc-depth: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 8
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    # code-tools:
+    #   source: https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+**Dữ liệu mã chứng khoán trong file này được mô phỏng giả lập trên máy tính, mục đích để minh họa cách phân tích chuỗi thời gian.**
+
+# 1. import dataset
+
+**Đề bài: Dự báo 15 phiên tiếp theo so sánh với thực tế xảy ra sử dụng ARIMA**
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readxl)
+ADP <- read_excel("ADP.xlsx")
+ADP <- as.data.frame(ADP)
+head(ADP)
+
+GHZ <- read_excel("GHZ.xlsx")
+GHZ <- as.data.frame(GHZ)
+head(GHZ)
+```
+
+# 2. check dataset
+
+```{r}
+# dim(ADP)
+# class(ADP$DATE)
+# class(ADP$PRICE)
+# head(ADP)
+summary(ADP)
+# str(ADP)
+# any(is.na(ADP))
+
+# dim(GHZ)
+# class(GHZ$DATE)
+# class(GHZ$PRICE)
+# head(GHZ)
+summary(GHZ)
+# str(GHZ)
+# any(is.na(GHZ))
+```
+
+# 3. convert datetime vector
+
+```{r}
+ADP$DATE <- as.Date(ADP$DATE, format = "%d/%m/%Y")
+GHZ$DATE <- as.Date(GHZ$DATE, format = "%d/%m/%Y")
+```
+
+# 4. plot timeseries
+
+```{r, fig.width=10, fig.height=6}
+par(mar = c(5, 5, 5, 5))
+par(mgp = c(4, 1, 0))
+
+plot(PRICE ~ DATE, data = ADP,
+     type = "l",
+     col = "blue",
+     ylim = c(0, 50000),
+     xlim = c(as.Date("2023-01-03"), 
+              as.Date("2024-12-01")),
+     xaxs = "i",
+     yaxs = "i",
+     las = 1,
+     main = "STOCK")
+
+points(PRICE ~ DATE, data = GHZ,
+       type = "l",
+       col = "red")
+
+
+legend(x = "topright",
+       y = NULL,
+       legend = c("ADP", "GHZ"),
+       col = c("blue", "red"),
+       lwd = 2,
+       lty = 1)
+```
+
+# 5. forcast cho `ADP`
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+library(zoo)
+ADP_ts <- read.zoo(ADP)
+zoo:::autoplot.zoo(ADP_ts)
+# autoplot(ADP_ts)
+
+library(fpp2)
+ADP_ts %>% diff() %>% ggtsdisplay(main = "ADP")
+```
+
+## 5.1 Phân tích ARIMA cho `ADP`
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+### chạy mô hình ARIMA ### chú ý season, các tham số ở order
+fit <- Arima(ADP_ts, order = c(1, 0, 0))
+checkresiduals(fit)
+
+### set ngày dự đoán
+dudoan <- 15 
+
+ketqua <- forecast(fit, h = dudoan)
+
+predict(fit, n.ahead = dudoan)
+
+# forecast:::plot.forecast(ketqua, showgap = TRUE)
+
+source("forcast_data.R")
+
+par(mar = c(5, 5, 5, 5))
+par(mgp = c(4, 1, 0))
+
+forcast_data(ketqua, xaxt = "n",
+             showgap = FALSE,
+             main = "ADP",
+             xlab = "DATE",
+             ylab = "PRICE",
+             las = 2,
+             ylim = c(0, 50000))
+
+head(all_date)
+tail(all_date)
+
+labels_ok <- seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks")
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     # col.ticks = NA,
+     col.axis = NA,
+     # col = NA
+     # line = 2
+)
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     col.ticks = NA,
+     col.axis = "black",
+     cex.axis = 1,
+     col = NA,
+     line = 1)
+
+abline(v = as.Date(all_date)[length(all_date)], col = "gray")
+abline(h = 20000, col = "red", lty = 2)
+abline(h = 30000, col = "red", lty = 2)
+```
+
+## 5.2 Đối chiếu với kết quả thực tế `ADP`
+
+```{r}
+ADP_BS15 <- read_excel("ADP_BS15.xlsx")
+ADP_BS15 <- as.data.frame(ADP_BS15)
+ADP_BS15$DATE <- as.Date(ADP_BS15$DATE, format = "%d/%m/%Y")
+
+ADP_thucte <- ADP_BS15 |> subset(DATE <= as.Date("2024-03-15"))
+
+ADP_thucte <- rbind(ADP_thucte, ADP[1, ])
+```
+
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+
+par(mar = c(5, 5, 5, 5))
+par(mgp = c(4, 1, 0))
+
+forcast_data(ketqua, xaxt = "n", yaxt = "n",
+             showgap = FALSE,
+             main = "ADP",
+             # shaded = FALSE,
+             # pi.col = "purple",
+             shadecols = "gray80",
+             xlab = "DATE",
+             ylab = "PRICE",
+             fcol = "blue",
+             las = 2,
+             xlim = c(as.numeric(as.Date("2024-02-27")), as.numeric(as.Date("2024-03-15"))),
+             ylim = c(25000, 35000))
+
+head(all_date)
+tail(all_date)
+
+labels_ok <- seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days")
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     # col.ticks = NA,
+     col.axis = NA,
+     # col = NA
+     # line = 2
+)
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     col.ticks = NA,
+     col.axis = "black",
+     cex.axis = 1,
+     col = NA,
+     line = 1)
+
+abline(v = as.Date("2024-02-29"), col = "gray")
+abline(v = as.Date("2024-03-15"), col = "gray")
+
+abline(h = ketqua$mean[length(ketqua$mean)], 
+       col = "blue", lty = 2)
+
+abline(h = ketqua$upper[nrow(ketqua$upper), 2], 
+       col = "blue", lty = 2)
+abline(h = ketqua$lower[nrow(ketqua$lower), 2], 
+       col = "blue", lty = 2)
+
+axis(side = 2,
+     at = round(c(25000, 26000, ketqua$lower[nrow(ketqua$lower), 2],
+            28000, 30000, 32000, ketqua$upper[nrow(ketqua$upper), 2],
+            35000), digits = 0),
+     las = 2)
+
+points(ADP_thucte$PRICE ~ ADP_thucte$DATE,
+       type = "o",
+       col = "red",
+       pch = 19)
+
+legend(x = "top",
+       y = NULL,
+       legend = c("ADP actual", "ADP predict"),
+       col = c("red", "blue"),
+       lwd = 2,
+       horiz = TRUE,
+       bty = "n")
+```
+
+## 5.3 Kiểm định thống kê kết quả dự đoán `ADP`
+
+**Để thực hiện t-test paired ta cần xếp lại dữ liệu khớp ngày tháng**
+
+```{r}
+
+unclass(ketqua$mean) -> dudoan_ADP_check
+attributes(dudoan_ADP_check)$tsp[1:2] -> date_ADP_check
+
+date_begin <- as.POSIXct.numeric(date_ADP_check[1] * 24 * 3600)
+date_end <- as.POSIXct.numeric(date_ADP_check[2] * 24 * 3600)
+date_begin <- as.Date(date_begin)
+date_end <- as.Date(date_end)
+
+date_ADP_check_ok <- seq(from = date_begin, to = date_end, by = "days")
+
+df_dudoan_ADP <- data.frame(DATE = date_ADP_check_ok, PRICE = dudoan_ADP_check)
+
+ADP_compare <- merge(x = df_dudoan_ADP,
+                     y = ADP_thucte,
+                     by = "DATE",
+                     all = TRUE)
+
+names(ADP_compare)[2:3] <- c("PRICE_dudoan", "PRICE_thucte")
+
+ADP_compare
+
+ADP_compare_clean <- na.omit(ADP_compare)
+
+ADP_compare_clean
+```
+
+**Kiểm tra giả thuyết cho t-test**
+
+```{r}
+### giả thuyết về phân bố chuẩn
+### p-value > 0.5 là phân bố chuẩn
+shapiro.test(ADP_compare_clean$PRICE_thucte)
+shapiro.test(ADP_compare_clean$PRICE_dudoan)
+
+### giả thuyết về phương sai đồng dạng 
+### p-value > 0.5 là phương sai đồng dạng
+var.test(ADP_compare_clean$PRICE_thucte, ADP_compare_clean$PRICE_dudoan)
+```
+
+**Thực hiện kiểm định t-test paired**
+
+```{r}
+t.test(x = ADP_compare_clean$PRICE_thucte,
+       y = ADP_compare_clean$PRICE_dudoan,
+       paired = TRUE,
+       var.equal = FALSE,
+       conf.level = 0.95,
+       alternative = "two.sided"
+       )
+```
+
+**Thực hiện kiểm định t-test cho `d` khoảng chênh lệch**
+
+```{r}
+d <- abs(ADP_compare_clean$PRICE_thucte - ADP_compare_clean$PRICE_dudoan)
+
+t.test(d, mu = 0,
+       conf.level = 0.95,
+       alternative = "two.sided"
+       )
+```
+
+**Kết luận: Khi dự đoán sơ bộ bằng mô hình ARIMA cho ADP (chưa kiểm tra về season, hay các kiểm định tính dừng, chuỗi trượt...) ta thu được giá trị dự đoán cho 15 ngày từ 1/3 đến 15/3/2024 có sự chênh lệch dữ liệu thực tế là 286 VNĐ (khoảng tin cậy 95%: từ 146 đến 425 VNĐ).**
+
+# 6. forcast cho `GHZ`
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+library(zoo)
+GHZ_ts <- read.zoo(GHZ)
+zoo:::autoplot.zoo(GHZ_ts)
+# autoplot(GHZ_ts)
+
+library(fpp2)
+GHZ_ts %>% diff() %>% ggtsdisplay(main = "GHZ")
+```
+
+## 6.1 Phân tích ARIMA cho `GHZ`
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+### chạy mô hình ARIMA ### chú ý season, các tham số ở order
+fit_GHZ <- Arima(GHZ_ts, order = c(1, 0, 0))
+checkresiduals(fit_GHZ)
+
+### set ngày dự đoán
+dudoan <- 15 
+
+ketqua_GHZ <- forecast(fit_GHZ, h = dudoan)
+predict(fit_GHZ, n.ahead = dudoan)
+
+# forecast:::plot.forecast(ketqua, showgap = TRUE)
+
+source("forcast_data.R")
+
+par(mar = c(5, 5, 5, 5))
+forcast_data(ketqua_GHZ, xaxt = "n",
+             showgap = FALSE,
+             main = "GHZ",
+             xlab = "DATE",
+             ylab = "PRICE",
+             las = 2,
+             ylim = c(0, 50000))
+
+head(all_date)
+tail(all_date)
+
+labels_ok <- seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks")
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     # col.ticks = NA,
+     col.axis = NA,
+     # col = NA
+     # line = 2
+)
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "weeks"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     col.ticks = NA,
+     col.axis = "black",
+     cex.axis = 1,
+     col = NA,
+     line = 1)
+
+abline(v = as.Date(all_date)[length(all_date)], col = "gray")
+abline(h = 20000, col = "red", lty = 2)
+abline(h = 30000, col = "red", lty = 2)
+```
+
+## 6.2 Đối chiếu với kết quả thực tế `GHZ`
+
+```{r}
+GHZ_BS15 <- read_excel("GHZ_BS15.xlsx")
+GHZ_BS15 <- as.data.frame(GHZ_BS15)
+GHZ_BS15$DATE <- as.Date(GHZ_BS15$DATE, format = "%d/%m/%Y")
+
+GHZ_thucte <- GHZ_BS15 |> subset(DATE <= as.Date("2024-03-15"))
+
+GHZ_thucte <- rbind(GHZ_thucte, GHZ[1, ])
+```
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+
+par(mar = c(5, 5, 5, 5))
+par(mgp = c(4, 1, 0))
+
+forcast_data(ketqua_GHZ, xaxt = "n", yaxt = "n",
+             showgap = FALSE,
+             main = "GHZ",
+             # shaded = FALSE,
+             # pi.col = "purple",
+             shadecols = "gray80",
+             xlab = "DATE",
+             ylab = "PRICE",
+             fcol = "blue",
+             las = 2,
+             xlim = c(as.numeric(as.Date("2024-02-27")), as.numeric(as.Date("2024-03-15"))),
+             ylim = c(10000, 30000))
+
+head(all_date)
+tail(all_date)
+
+labels_ok <- seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days")
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     # col.ticks = NA,
+     col.axis = NA,
+     # col = NA
+     # line = 2
+)
+
+axis(side = 1, 
+     at = c(seq(as.Date(all_date)[1], as.Date(all_date)[length(all_date)], by = "days"), as.Date(all_date)[length(all_date)]),
+     labels = c(format(labels_ok, format="%Y\n%m-%d"), 
+                format(as.Date(all_date)[length(all_date)], format="%Y\n%m-%d")),
+     col.ticks = NA,
+     col.axis = "black",
+     cex.axis = 1,
+     col = NA,
+     line = 1)
+
+abline(v = as.Date("2024-02-29"), col = "gray")
+abline(v = as.Date("2024-03-15"), col = "gray")
+
+abline(h = ketqua_GHZ$mean[length(ketqua_GHZ$mean)], 
+       col = "blue", lty = 2)
+
+abline(h = ketqua_GHZ$upper[nrow(ketqua_GHZ$upper), 2], 
+       col = "blue", lty = 2)
+abline(h = ketqua_GHZ$lower[nrow(ketqua_GHZ$lower), 2], 
+       col = "blue", lty = 2)
+
+axis(side = 2,
+     at = round(c(10000, 12000, 14000, 16000, 18000,
+                  ketqua_GHZ$lower[nrow(ketqua_GHZ$lower), 2],
+            20000, 22000, 24000, ketqua_GHZ$upper[nrow(ketqua_GHZ$upper), 2],
+            28000, 30000), digits = 0),
+     las = 2)
+
+points(GHZ_thucte$PRICE ~ GHZ_thucte$DATE,
+       type = "o",
+       col = "red",
+       pch = 19)
+
+legend(x = "top",
+       y = NULL,
+       legend = c("GHZ actual", "GHZ predict"),
+       col = c("red", "blue"),
+       lwd = 2,
+       horiz = TRUE,
+       bty = "n")
+```
+
+## 6.3 Kiểm định thống kê kết quả dự đoán `GHZ`
+
+**Để thực hiện t-test paired ta cần xếp lại dữ liệu khớp ngày tháng**
+
+```{r}
+
+unclass(ketqua_GHZ$mean) -> dudoan_GHZ_check
+attributes(dudoan_GHZ_check)$tsp[1:2] -> date_GHZ_check
+
+date_begin <- as.POSIXct.numeric(date_GHZ_check[1] * 24 * 3600)
+date_end <- as.POSIXct.numeric(date_GHZ_check[2] * 24 * 3600)
+date_begin <- as.Date(date_begin)
+date_end <- as.Date(date_end)
+
+date_GHZ_check_ok <- seq(from = date_begin, to = date_end, by = "days")
+
+df_dudoan_GHZ <- data.frame(DATE = date_GHZ_check_ok, PRICE = dudoan_GHZ_check)
+
+GHZ_compare <- merge(x = df_dudoan_GHZ,
+                     y = GHZ_thucte,
+                     by = "DATE",
+                     all = TRUE)
+
+names(GHZ_compare)[2:3] <- c("PRICE_dudoan", "PRICE_thucte")
+
+GHZ_compare
+
+GHZ_compare_clean <- na.omit(GHZ_compare)
+
+GHZ_compare_clean
+```
+
+**Kiểm tra giả thuyết cho t-test**
+
+```{r}
+### giả thuyết về phân bố chuẩn
+### p-value > 0.5 là phân bố chuẩn
+shapiro.test(GHZ_compare_clean$PRICE_thucte)
+shapiro.test(GHZ_compare_clean$PRICE_dudoan)
+
+### giả thuyết về phương sai đồng dạng 
+### p-value > 0.5 là phương sai đồng dạng
+var.test(GHZ_compare_clean$PRICE_thucte, GHZ_compare_clean$PRICE_dudoan)
+```
+
+**Thực hiện kiểm định t-test paired**
+
+```{r}
+t.test(x = GHZ_compare_clean$PRICE_thucte,
+       y = GHZ_compare_clean$PRICE_dudoan,
+       paired = TRUE,
+       var.equal = FALSE,
+       conf.level = 0.95,
+       alternative = "two.sided"
+       )
+```
+
+**Thực hiện kiểm định t-test cho `d` khoảng chênh lệch**
+
+```{r}
+d <- abs(GHZ_compare_clean$PRICE_thucte - GHZ_compare_clean$PRICE_dudoan)
+
+t.test(d, mu = 0,
+       conf.level = 0.95,
+       alternative = "two.sided"
+       )
+```
+
+**Kết luận: Khi dự đoán sơ bộ bằng mô hình ARIMA cho GHZ (chưa kiểm tra về season, hay các kiểm định tính dừng, chuỗi trượt...) ta thu được giá trị dự đoán cho 15 ngày từ 1/3 đến 15/3/2024 có sự chênh lệch dữ liệu thực tế là 403 VNĐ (khoảng tin cậy 95%: từ 227 đến 580 VNĐ).**
+
+# Tài liệu tham khảo
+
+1. <https://rpubs.com/phamdinhkhanh/429934>
+2. <https://otexts.com/fpp2/arima-r.html>
+3. <https://github.com/dogmatica/arima-time-series>
+4. <https://jtr13.github.io/EDAVold/missingTS.html>
