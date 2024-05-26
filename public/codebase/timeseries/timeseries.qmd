@@ -45,7 +45,13 @@ editor_options:
 
 **Dữ liệu mã chứng khoán trong file này được mô phỏng giả lập trên máy tính, mục đích để minh họa cách phân tích chuỗi thời gian.**
 
-# 1. import dataset
+<https://applyr.netlify.app/codebase/timeseries/timeseries.rar>
+
+# Time series patterns
+
+<https://otexts.com/fpp3/tspatterns.html>
+
+# Import dataset
 
 **Đề bài: Dự báo 15 phiên tiếp theo so sánh với thực tế xảy ra sử dụng ARIMA**
 
@@ -62,7 +68,7 @@ GHZ <- as.data.frame(GHZ)
 head(GHZ)
 ```
 
-# 2. check dataset
+# Check dataset
 
 ```{r}
 # dim(ADP)
@@ -82,7 +88,7 @@ summary(GHZ)
 # any(is.na(GHZ))
 ```
 
-# 3. convert datetime vector
+# Convert datetime vector
 
 ```{r}
 ADP$DATE <- as.Date(ADP$DATE, format = "%d/%m/%Y")
@@ -572,9 +578,58 @@ t.test(d, mu = 0,
 
 **Kết luận: Khi dự đoán sơ bộ bằng mô hình ARIMA cho GHZ (chưa kiểm tra về season, hay các kiểm định tính dừng, chuỗi trượt...) ta thu được giá trị dự đoán cho 15 ngày từ 1/3 đến 15/3/2024 có sự chênh lệch dữ liệu thực tế là 403 VNĐ (khoảng tin cậy 95%: từ 227 đến 580 VNĐ).**
 
+# Đường trung bình động/trượt (moving average)
+
+A moving average is a commonly used technique for analyzing time series data. 
+
+It helps smooth out short-term fluctuations and highlight underlying trends or patterns in the data. 
+
+The concept of a moving average involves calculating the average of a subset of data points within a specified window and moving that window along the time series.
+
+```{r, message=FALSE, warning=FALSE}
+library(quantmod)
+
+# AAPL (Apple Corporation)
+quantmod::getSymbols("AAPL", 
+           src = 'yahoo',
+           from = as.Date('2021-01-01'))
+
+AAPL
+```
+
+```{r, fig.width=12, fig.height=8}
+quantmod::chartSeries(AAPL, 
+            theme = 'white',
+            type = c("auto", "matchsticks"), 
+            subset = '2021-01::', # define a time range subset
+            show.grid = TRUE,
+            major.ticks='auto', 
+            minor.ticks=TRUE,
+            multi.col = FALSE,
+            TA=c(addMACD(),
+                 addVo(),
+                 addSMA(n=200,col = 'blue'), # add moving average of ‘n’ periods
+                 addSMA(n=50,col = 'red'),
+                 addSMA(n=22,col = 'green'),
+                 addROC(n=200,col = 'blue'), # Add Rate Of Change indicator to chart
+                 addROC(n=50,col = 'red'),
+                 addROC(n=22,col = 'green')) # a vector of technical indicators and params, or character strings
+            )
+```
+
+
+
+
+
+
+
+
+
+
 # Tài liệu tham khảo
 
 1. <https://rpubs.com/phamdinhkhanh/429934>
 2. <https://otexts.com/fpp2/arima-r.html>
 3. <https://github.com/dogmatica/arima-time-series>
 4. <https://jtr13.github.io/EDAVold/missingTS.html>
+5. <https://www.facebook.com/groups/1406923959879637/permalink/1415474475691252>
