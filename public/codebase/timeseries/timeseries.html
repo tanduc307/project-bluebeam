@@ -3086,10 +3086,16 @@ vertical-align: -.125em;
   <ul>
   <li><a href="#phân-tích-arima-cho-ghz" id="toc-phân-tích-arima-cho-ghz" class="nav-link" data-scroll-target="#phân-tích-arima-cho-ghz"><span class="header-section-number">6.1</span> Phân tích ARIMA cho <code>GHZ</code></a></li>
   <li><a href="#đối-chiếu-với-kết-quả-thực-tế-ghz" id="toc-đối-chiếu-với-kết-quả-thực-tế-ghz" class="nav-link" data-scroll-target="#đối-chiếu-với-kết-quả-thực-tế-ghz"><span class="header-section-number">6.2</span> Đối chiếu với kết quả thực tế <code>GHZ</code></a></li>
-  <li><a href="#kiểm-định-thống-kê-kết-quả-dự-đoán-ghz" id="toc-kiểm-định-thống-kê-kết-quả-dự-đoán-ghz" class="nav-link" data-scroll-target="#kiểm-định-thống-kê-kết-quả-dự-đoán-ghz"><span class="header-section-number">6.3</span> 6.3 Kiểm định thống kê kết quả dự đoán <code>GHZ</code></a></li>
+  <li><a href="#kiểm-định-thống-kê-kết-quả-dự-đoán-ghz" id="toc-kiểm-định-thống-kê-kết-quả-dự-đoán-ghz" class="nav-link" data-scroll-target="#kiểm-định-thống-kê-kết-quả-dự-đoán-ghz"><span class="header-section-number">6.3</span> Kiểm định thống kê kết quả dự đoán <code>GHZ</code></a></li>
   </ul></li>
   <li><a href="#đường-trung-bình-độngtrượt-moving-average" id="toc-đường-trung-bình-độngtrượt-moving-average" class="nav-link" data-scroll-target="#đường-trung-bình-độngtrượt-moving-average"><span class="header-section-number">7</span> Đường trung bình động/trượt (moving average)</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">8</span> Tài liệu tham khảo</a></li>
+  <li><a href="#lệnh-lag-trong-r" id="toc-lệnh-lag-trong-r" class="nav-link" data-scroll-target="#lệnh-lag-trong-r"><span class="header-section-number">8</span> Lệnh <code>lag()</code> trong R</a>
+  <ul>
+  <li><a href="#lệnh-lag-áp-dụng-cho-ts-object-ở-dạng-matrix" id="toc-lệnh-lag-áp-dụng-cho-ts-object-ở-dạng-matrix" class="nav-link" data-scroll-target="#lệnh-lag-áp-dụng-cho-ts-object-ở-dạng-matrix"><span class="header-section-number">8.1</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object ở dạng matrix</a></li>
+  <li><a href="#lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency" id="toc-lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency" class="nav-link" data-scroll-target="#lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency"><span class="header-section-number">8.2</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object khi chỉ có 1 frequency</a></li>
+  <li><a href="#lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency-và-ở-dạng-vector" id="toc-lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency-và-ở-dạng-vector" class="nav-link" data-scroll-target="#lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency-và-ở-dạng-vector"><span class="header-section-number">8.3</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object khi chỉ có 1 frequency và ở dạng vector</a></li>
+  </ul></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">9</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
 </div>
@@ -3116,7 +3122,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading"><b>Cập nhật</b></div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2024 May 26</p>
+      <p class="date">2024 May 27</p>
     </div>
   </div>
   
@@ -3265,16 +3271,16 @@ Time Series:
 Start = 19783 
 End = 19797 
 Frequency = 1 
- [1] 22720.75 22691.68 22662.80 22634.10 22605.58 22577.25 22549.09 22521.12 22493.32 22465.70 22438.25 22410.98
-[13] 22383.88 22356.96 22330.20
+ [1] 22720.75 22691.68 22662.80 22634.10 22605.58 22577.25 22549.09 22521.12 22493.32 22465.70
+[11] 22438.25 22410.98 22383.88 22356.96 22330.20
 
 $se
 Time Series:
 Start = 19783 
 End = 19797 
 Frequency = 1 
- [1]  443.7371  625.5483  763.7118  879.0728  979.7354 1069.8707 1151.9656 1227.6462 1298.0463 1363.9943 1426.1180
-[12] 1484.9070 1540.7521 1593.9713 1644.8278</code></pre>
+ [1]  443.7371  625.5483  763.7118  879.0728  979.7354 1069.8707 1151.9656 1227.6462 1298.0463
+[10] 1363.9943 1426.1180 1484.9070 1540.7521 1593.9713 1644.8278</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>forecast<span class="sc">:::</span><span class="fu">plot.forecast</span>(ketqua_GHZ, <span class="at">showgap =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -3435,7 +3441,7 @@ Frequency = 1
 </div>
 </section>
 <section id="kiểm-định-thống-kê-kết-quả-dự-đoán-ghz" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="kiểm-định-thống-kê-kết-quả-dự-đoán-ghz"><span class="header-section-number">6.3</span> 6.3 Kiểm định thống kê kết quả dự đoán <code>GHZ</code></h2>
+<h2 data-number="6.3" class="anchored" data-anchor-id="kiểm-định-thống-kê-kết-quả-dự-đoán-ghz"><span class="header-section-number">6.3</span> Kiểm định thống kê kết quả dự đoán <code>GHZ</code></h2>
 <p><strong>Để thực hiện t-test paired ta cần xếp lại dữ liệu khớp ngày tháng</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(ketqua_GHZ<span class="sc">$</span>mean) <span class="ot">-&gt;</span> dudoan_GHZ_check</span>
@@ -3623,8 +3629,319 @@ mean of x
 </div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Tài liệu tham khảo</h1>
+<section id="lệnh-lag-trong-r" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Lệnh <code>lag()</code> trong R</h1>
+<p>Lệnh <code>lag()</code> dùng để thay đổi mốc thời gian trong bộ dữ liệu, sử dụng cho việc tính trung bình cho từng khoảng thời gian khác nhau khi phân tích time series.</p>
+<section id="lệnh-lag-áp-dụng-cho-ts-object-ở-dạng-matrix" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="lệnh-lag-áp-dụng-cho-ts-object-ở-dạng-matrix"><span class="header-section-number">8.1</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object ở dạng matrix</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>ts_year <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">ts</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">frequency =</span> <span class="dv">12</span>,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">start =</span> <span class="dv">2001</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">end =</span> <span class="dv">2020</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>ts_year</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+2001   1   2   3   4   5   6   7   8   9  10  11  12
+2002  13  14  15  16  17  18  19  20   1   2   3   4
+2003   5   6   7   8   9  10  11  12  13  14  15  16
+2004  17  18  19  20   1   2   3   4   5   6   7   8
+2005   9  10  11  12  13  14  15  16  17  18  19  20
+2006   1   2   3   4   5   6   7   8   9  10  11  12
+2007  13  14  15  16  17  18  19  20   1   2   3   4
+2008   5   6   7   8   9  10  11  12  13  14  15  16
+2009  17  18  19  20   1   2   3   4   5   6   7   8
+2010   9  10  11  12  13  14  15  16  17  18  19  20
+2011   1   2   3   4   5   6   7   8   9  10  11  12
+2012  13  14  15  16  17  18  19  20   1   2   3   4
+2013   5   6   7   8   9  10  11  12  13  14  15  16
+2014  17  18  19  20   1   2   3   4   5   6   7   8
+2015   9  10  11  12  13  14  15  16  17  18  19  20
+2016   1   2   3   4   5   6   7   8   9  10  11  12
+2017  13  14  15  16  17  18  19  20   1   2   3   4
+2018   5   6   7   8   9  10  11  12  13  14  15  16
+2019  17  18  19  20   1   2   3   4   5   6   7   8
+2020   9                                            </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(ts_year, <span class="at">k =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+2000                                               1
+2001   2   3   4   5   6   7   8   9  10  11  12  13
+2002  14  15  16  17  18  19  20   1   2   3   4   5
+2003   6   7   8   9  10  11  12  13  14  15  16  17
+2004  18  19  20   1   2   3   4   5   6   7   8   9
+2005  10  11  12  13  14  15  16  17  18  19  20   1
+2006   2   3   4   5   6   7   8   9  10  11  12  13
+2007  14  15  16  17  18  19  20   1   2   3   4   5
+2008   6   7   8   9  10  11  12  13  14  15  16  17
+2009  18  19  20   1   2   3   4   5   6   7   8   9
+2010  10  11  12  13  14  15  16  17  18  19  20   1
+2011   2   3   4   5   6   7   8   9  10  11  12  13
+2012  14  15  16  17  18  19  20   1   2   3   4   5
+2013   6   7   8   9  10  11  12  13  14  15  16  17
+2014  18  19  20   1   2   3   4   5   6   7   8   9
+2015  10  11  12  13  14  15  16  17  18  19  20   1
+2016   2   3   4   5   6   7   8   9  10  11  12  13
+2017  14  15  16  17  18  19  20   1   2   3   4   5
+2018   6   7   8   9  10  11  12  13  14  15  16  17
+2019  18  19  20   1   2   3   4   5   6   7   8   9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(ts_year, <span class="at">k =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+2001   1   2   3   4   5   6   7   8   9  10  11  12
+2002  13  14  15  16  17  18  19  20   1   2   3   4
+2003   5   6   7   8   9  10  11  12  13  14  15  16
+2004  17  18  19  20   1   2   3   4   5   6   7   8
+2005   9  10  11  12  13  14  15  16  17  18  19  20
+2006   1   2   3   4   5   6   7   8   9  10  11  12
+2007  13  14  15  16  17  18  19  20   1   2   3   4
+2008   5   6   7   8   9  10  11  12  13  14  15  16
+2009  17  18  19  20   1   2   3   4   5   6   7   8
+2010   9  10  11  12  13  14  15  16  17  18  19  20
+2011   1   2   3   4   5   6   7   8   9  10  11  12
+2012  13  14  15  16  17  18  19  20   1   2   3   4
+2013   5   6   7   8   9  10  11  12  13  14  15  16
+2014  17  18  19  20   1   2   3   4   5   6   7   8
+2015   9  10  11  12  13  14  15  16  17  18  19  20
+2016   1   2   3   4   5   6   7   8   9  10  11  12
+2017  13  14  15  16  17  18  19  20   1   2   3   4
+2018   5   6   7   8   9  10  11  12  13  14  15  16
+2019  17  18  19  20   1   2   3   4   5   6   7   8
+2020   9                                            </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(ts_year, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+2001       1   2   3   4   5   6   7   8   9  10  11
+2002  12  13  14  15  16  17  18  19  20   1   2   3
+2003   4   5   6   7   8   9  10  11  12  13  14  15
+2004  16  17  18  19  20   1   2   3   4   5   6   7
+2005   8   9  10  11  12  13  14  15  16  17  18  19
+2006  20   1   2   3   4   5   6   7   8   9  10  11
+2007  12  13  14  15  16  17  18  19  20   1   2   3
+2008   4   5   6   7   8   9  10  11  12  13  14  15
+2009  16  17  18  19  20   1   2   3   4   5   6   7
+2010   8   9  10  11  12  13  14  15  16  17  18  19
+2011  20   1   2   3   4   5   6   7   8   9  10  11
+2012  12  13  14  15  16  17  18  19  20   1   2   3
+2013   4   5   6   7   8   9  10  11  12  13  14  15
+2014  16  17  18  19  20   1   2   3   4   5   6   7
+2015   8   9  10  11  12  13  14  15  16  17  18  19
+2016  20   1   2   3   4   5   6   7   8   9  10  11
+2017  12  13  14  15  16  17  18  19  20   1   2   3
+2018   4   5   6   7   8   9  10  11  12  13  14  15
+2019  16  17  18  19  20   1   2   3   4   5   6   7
+2020   8   9                                        </code></pre>
+</div>
+</div>
+</section>
+<section id="lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency"><span class="header-section-number">8.2</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object khi chỉ có 1 frequency</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2001-01-01&quot;</span>),</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">by =</span> <span class="st">&quot;year&quot;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                                ), </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">price =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">20</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">0</span>))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>test_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         year price
+1  2001-01-01    65
+2  2002-01-01    78
+3  2003-01-01    97
+4  2004-01-01    31
+5  2005-01-01     8
+6  2006-01-01    80
+7  2007-01-01    23
+8  2008-01-01    31
+9  2009-01-01    65
+10 2010-01-01    68
+11 2011-01-01    38
+12 2012-01-01     6
+13 2013-01-01    35
+14 2014-01-01    19
+15 2015-01-01    60
+16 2016-01-01    61
+17 2017-01-01    76
+18 2018-01-01    63
+19 2019-01-01    82
+20 2020-01-01     7</code></pre>
+</div>
+</div>
+<p><strong>Khi convert data frame qua <code>ts</code> object sử dụng lệnh của base R thì đơn vị thời gian sẽ chuyển về số giây (tính từ năm <code>1970-01-01</code>)</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>test_1_ts_a <span class="ot">&lt;-</span> <span class="fu">as.ts</span>(test_1)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>test_1_ts_a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1 
+End = 20 
+Frequency = 1 
+    year price
+ 1 11323    65
+ 2 11688    78
+ 3 12053    97
+ 4 12418    31
+ 5 12784     8
+ 6 13149    80
+ 7 13514    23
+ 8 13879    31
+ 9 14245    65
+10 14610    68
+11 14975    38
+12 15340     6
+13 15706    35
+14 16071    19
+15 16436    60
+16 16801    61
+17 17167    76
+18 17532    63
+19 17897    82
+20 18262     7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_a, <span class="at">k =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 0 
+End = 19 
+Frequency = 1 
+    year price
+ 0 11323    65
+ 1 11688    78
+ 2 12053    97
+ 3 12418    31
+ 4 12784     8
+ 5 13149    80
+ 6 13514    23
+ 7 13879    31
+ 8 14245    65
+ 9 14610    68
+10 14975    38
+11 15340     6
+12 15706    35
+13 16071    19
+14 16436    60
+15 16801    61
+16 17167    76
+17 17532    63
+18 17897    82
+19 18262     7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_a, <span class="at">k =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1 
+End = 20 
+Frequency = 1 
+    year price
+ 1 11323    65
+ 2 11688    78
+ 3 12053    97
+ 4 12418    31
+ 5 12784     8
+ 6 13149    80
+ 7 13514    23
+ 8 13879    31
+ 9 14245    65
+10 14610    68
+11 14975    38
+12 15340     6
+13 15706    35
+14 16071    19
+15 16436    60
+16 16801    61
+17 17167    76
+18 17532    63
+19 17897    82
+20 18262     7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_a, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 2 
+End = 21 
+Frequency = 1 
+    year price
+ 2 11323    65
+ 3 11688    78
+ 4 12053    97
+ 5 12418    31
+ 6 12784     8
+ 7 13149    80
+ 8 13514    23
+ 9 13879    31
+10 14245    65
+11 14610    68
+12 14975    38
+13 15340     6
+14 15706    35
+15 16071    19
+16 16436    60
+17 16801    61
+18 17167    76
+19 17532    63
+20 17897    82
+21 18262     7</code></pre>
+</div>
+</div>
+</section>
+<section id="lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency-và-ở-dạng-vector" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="lệnh-lag-áp-dụng-cho-ts-object-khi-chỉ-có-1-frequency-và-ở-dạng-vector"><span class="header-section-number">8.3</span> Lệnh <code>lag()</code> áp dụng cho <code>ts</code> object khi chỉ có 1 frequency và ở dạng vector</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>test_1_ts_b <span class="ot">&lt;-</span> zoo<span class="sc">::</span><span class="fu">read.zoo</span>(test_1)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>test_1_ts_b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
+        65         78         97         31          8         80         23         31         65 
+2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
+        68         38          6         35         19         60         61         76         63 
+2019-01-01 2020-01-01 
+        82          7 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
+        78         97         31          8         80         23         31         65         68 
+2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
+        38          6         35         19         60         61         76         63         82 
+2019-01-01 
+         7 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
+        65         78         97         31          8         80         23         31         65 
+2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
+        68         38          6         35         19         60         61         76         63 
+2019-01-01 2020-01-01 
+        82          7 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 2010-01-01 
+        65         78         97         31          8         80         23         31         65 
+2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 2019-01-01 
+        68         38          6         35         19         60         61         76         63 
+2020-01-01 
+        82 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tài-liệu-tham-khảo" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Tài liệu tham khảo</h1>
 <ol type="1">
 <li><a href="https://rpubs.com/phamdinhkhanh/429934" class="uri">https://rpubs.com/phamdinhkhanh/429934</a></li>
 <li><a href="https://otexts.com/fpp2/arima-r.html" class="uri">https://otexts.com/fpp2/arima-r.html</a></li>

@@ -38,7 +38,7 @@ engine: knitr
 knitr:
   opts_chunk:
     R.options:
-      width: 120
+      width: 100
 editor_options: 
   chunk_output_type: console
 ---
@@ -255,7 +255,7 @@ legend(x = "top",
        bty = "n")
 ```
 
-## 6.3 Kiểm định thống kê kết quả dự đoán `GHZ`
+## Kiểm định thống kê kết quả dự đoán `GHZ`
 
 **Để thực hiện t-test paired ta cần xếp lại dữ liệu khớp ngày tháng**
 
@@ -365,6 +365,77 @@ quantmod::chartSeries(AAPL,
                  addROC(n=22,col = 'green')) # a vector of technical indicators and params, or character strings
             )
 ```
+
+# Lệnh `lag()` trong R
+
+Lệnh `lag()` dùng để thay đổi mốc thời gian trong bộ dữ liệu, sử dụng cho việc tính trung bình cho từng khoảng thời gian khác nhau khi phân tích time series.
+
+## Lệnh `lag()` áp dụng cho `ts` object ở dạng matrix
+
+```{r}
+ts_year <- stats::ts(data = 1:20,
+                     frequency = 12,
+                     start = 2001,
+                     end = 2020)
+
+ts_year
+```
+
+```{r}
+stats::lag(ts_year, k = 1)
+stats::lag(ts_year, k = 0)
+stats::lag(ts_year, k = -1)
+```
+
+## Lệnh `lag()` áp dụng cho `ts` object khi chỉ có 1 frequency
+
+```{r}
+test_1 <- data.frame(year = seq(from = as.Date("2001-01-01"),
+                                to = as.Date("2020-01-01"),
+                                by = "year"
+                                ), 
+                     price = round(runif(20) * 100, 0))
+
+test_1
+```
+
+**Khi convert data frame qua `ts` object sử dụng lệnh của base R thì đơn vị thời gian sẽ chuyển về số giây (tính từ năm `1970-01-01`)**
+
+```{r}
+test_1_ts_a <- as.ts(test_1)
+
+test_1_ts_a
+```
+
+```{r}
+stats::lag(test_1_ts_a, k = 1)
+stats::lag(test_1_ts_a, k = 0)
+stats::lag(test_1_ts_a, k = -1)
+```
+
+## Lệnh `lag()` áp dụng cho `ts` object khi chỉ có 1 frequency và ở dạng vector
+
+```{r}
+
+test_1_ts_b <- zoo::read.zoo(test_1)
+
+test_1_ts_b
+```
+
+```{r}
+stats::lag(test_1_ts_b, k = 1)
+stats::lag(test_1_ts_b, k = 0)
+stats::lag(test_1_ts_b, k = -1)
+```
+
+
+
+
+
+
+
+
+
 
 # Tài liệu tham khảo
 
