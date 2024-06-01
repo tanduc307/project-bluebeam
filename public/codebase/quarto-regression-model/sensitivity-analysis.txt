@@ -1,0 +1,73 @@
+---
+title: "Phân tích độ nhạy"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 8
+    toc-depth: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 8
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    # code-tools:
+    #   source: https://applyr.netlify.app/codebase/quarto-regression-model/quarto-regression-model.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = FALSE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE     # suppress warnings
+                      )   
+```
+
+# Dữ liệu của mẫu (sample data)
+
+<!-- https://bluefoxr.github.io/COINrDoc/sensitivity-analysis.html -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

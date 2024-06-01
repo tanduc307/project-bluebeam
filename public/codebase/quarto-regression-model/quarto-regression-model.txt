@@ -136,13 +136,15 @@ $$y = \beta_0 + \beta_1 \times x$$
 
 Điều này có nghĩa là ta có nhiều hơn 1 hệ số góc và 1 hệ số chặn để tạo thành đường hồi quy tuyến tính, hệ số góc và hệ số chặn được tìm ra bằng phương pháp bình phương tối thiểu hay bằng phương pháp nào khác được ký hiệu với dấu mũ (hat).
 
-$$y = \hat{\beta_0} + \hat{\beta_1} \times x$$
+$$\hat{y_i} = \hat{\beta_0} + \hat{\beta_1} \times x_i$$
 
 Hay được viết theo kiểu thông thường là:
 
 $$y = b_0 + b_1 \times x$$
 
 **$b_0$ và $b_1$ gọi là hệ số chặn và hệ số góc của đường best-fitting line.**
+
+[**Đồ thị hồi quy tuyến tính**](https://applyr.netlify.app/codebase/quarto-regression-model/quarto-linear-regression.html)
 
 [![](https://tuhocr.netlify.app/excellent.png)](https://tuhocr.netlify.app/excellent.png)
 
@@ -606,7 +608,13 @@ b_0
 
 ### Tính trực tiếp từ chênh lệch giữa $y_{thực~nghiệm}$ và $y_{dự~đoán}$
 
-$$e = errors = residuals = y_{thực~nghiệm} - y_{dự~đoán}$$
+Cần phân biệt giữa phần dư (residuals) và sai số (errors)[^16]. 
+
+Residuals là phần dư được tính từ model của mình trên cơ sở các giá trị quan sát trong mẫu (sample) trừ đi giá trị được dự đoán.
+
+Errors thì lại khác, nó là phần chênh lệch, sai số giữa giá trị thực (true value) trừ đi giá trị quan sát khi ta quan sát ở tổng thể (population). 
+
+$$e = errors \sim residuals = y_{thực~nghiệm} - y_{dự~đoán}$$
 
 ```{r}
 df$residuals <- df$the_tich - df$the_tich_dudoan
@@ -734,6 +742,9 @@ có biện luận kết quả
 [^14]: <https://pedermisager.org/blog/why_does_correlation_not_equal_causation/>
 
 [^15]: <https://en.wikipedia.org/wiki/Bradford_Hill_criteria>
+
+[^16]: <https://www.quora.com/What-is-the-difference-between-an-error-term-and-residual>
+
 <!-- top -->
 
 <button id="scrollBtnTop">
