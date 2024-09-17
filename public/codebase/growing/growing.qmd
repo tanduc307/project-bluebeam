@@ -1,0 +1,153 @@
+---
+title: "Tài liệu chọn lọc"
+author-title: <b>Biên soạn</b>
+author: ThS. Nguyễn Tấn Đức | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+# bibliography: reborn_1.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme: [style.scss]
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    # code-tools:
+    #   source: https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 1000
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 8,
+                      fig.height = 6,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = TRUE         # enable caching
+                      )        
+# library(ggfortify)
+# autoplot(lm(cars$dist ~ cars$speed))
+
+# file <- list.files(pattern="*.qmd")
+# newfile <- gsub("\\.qmd", ".txt", file)
+# file.copy(from = file, to = newfile, overwrite = TRUE)
+# 
+# zip(zipfile = "quarto-high-density-data", 
+#     files = c("quarto-high-density-data.qmd", 
+#               "style.scss", "reborn_1.bib",
+#               "gplot_hexbin.R",
+#               "quarto-high-density-data.Rproj", 
+#               "_extensions/")
+#     )
+```
+
+<!-- https://github.com/shafayetShafee/downloadthis -->
+
+<!-- https://icons.getbootstrap.com/?q=file -->
+
+<!-- <a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-high-density-data.zip dname="quarto-high-density-data" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>   -->
+
+<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
+
+# Probability and statistics
+
+Giáo trình xác suất thống kê
+
+[`Probability and Statistics for Engineering and the Sciences. 8th edition. Jay L. Devore`](https://longliveturtle.github.io/water/p4.pdf)[^1]
+
+Tài liệu này được recommend[^2]
+
+[`Probability and Statistics with R, 2nd edition. Ugarte, Militino, and Arnholt`](https://longliveturtle.github.io/water/p6.pdf)
+
+# Linear regression
+
+Cách giải thích kết quả hồi quy tuyến tính đơn biến
+
+[`Simple linear regression. Slide from https://www.colorado.edu/amath`](https://longliveturtle.github.io/water/p2.pdf)
+
+[`Linear models. Slide from https://amath.colorado.edu/faculty/vdukic/4570/`](https://longliveturtle.github.io/water/p3.pdf)
+
+# Logistic regression
+
+Cách vẽ đường cong ROC (Receiver Operating Characteristics)
+
+[`Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.`](https://longliveturtle.github.io/water/p1.pdf)
+
+# R Programming
+
+[`Using R for Data Analysis and Graphics from https://cran.r-project.org/doc/contrib/`](https://longliveturtle.github.io/water/p5.pdf)
+
+[`Hướng dẫn sử dụng R của trường UCLA`](https://stats.oarc.ucla.edu/r/)
+
+[`R in Action https://www.manning.com/books/r-in-action`](https://longliveturtle.github.io/water/p8.pdf)[^3] | [`3th edition`](https://longliveturtle.github.io/water/p9.pdf)
+
+# Nguồn
+
+[^1]: <http://drhuang.com/science/mathematics/book/>
+
+[^2]: <https://amath.colorado.edu/faculty/vdukic/4570/>
+
+[^3]: File data <https://longliveturtle.github.io/water/p7.pdf>
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+
+
+
+
