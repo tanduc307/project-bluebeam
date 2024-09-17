@@ -2,7 +2,7 @@
 
 Mục tiêu của trang web là cung cấp bài tập và lời giải cho các tình huống thống kê sinh học thường gặp với trích dẫn cụ thể đến các nguồn tài liệu gốc (đến từng trang trong sách hoặc từng phút trong video hướng dẫn) nhằm giúp các bạn sinh viên, học viên cao học có cơ sở để tiếp tục tìm hiểu về chủ đề này nhằm củng cố sự tự tin trong việc đưa ra quyết định khi thiết kế nghiên cứu và biện luận kết quả thống kê cũng như các kỹ thuật vẽ đồ thị bằng R.
 
-Các trao đổi cụ thể hơn bạn có thể liên hệ qua email **`tuhocr.com@gmail.com`** hoặc group facebook **[Cộng Đồng Tự Học R](https://www.facebook.com/groups/tuhocr)** để làm sáng tỏ thêm các chủ đề mình trình bày nhé. Mirror: [[**1**]](https://tanduc307.github.io/rcoding/)  [[**2**]](https://tuhocr.github.io/rcoding/)  [[**3**]](https://thongkesinhhoc.quarto.pub/)
+Các trao đổi cụ thể bạn có thể liên hệ qua email **`tuhocr.com@gmail.com`** hoặc group facebook **[Cộng Đồng Tự Học R](https://www.facebook.com/groups/tuhocr)** để làm sáng tỏ thêm các chủ đề mình trình bày nhé. Mirror: [[**1**]](https://tanduc307.github.io/rcoding/)  [[**2**]](https://tuhocr.github.io/rcoding/)  [[**3**]](https://thongkesinhhoc.quarto.pub/)
 
 Trân trọng,\
 Duc Nguyen\

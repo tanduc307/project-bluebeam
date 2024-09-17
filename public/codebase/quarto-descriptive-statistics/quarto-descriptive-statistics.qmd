@@ -9,7 +9,6 @@ date-format: "YYYY MMMM DD"
 cover-image: cover.png
 favicon: favicon.png
 bibliography: reborn_1.bib
-
 format:
   html:
     toc: true
@@ -41,7 +40,6 @@ knitr:
       width: 1000
 editor_options: 
   chunk_output_type: console
- 
 ---
 
 ```{r, echo=FALSE, results='hide'}

@@ -25,6 +25,7 @@ book:
         # - cac-lenh-do-thi-su-dung-package-ggplot2.qmd
     - part: co-so-ly-thuyet.qmd
       chapters:
+        - tong-quan-tai-lieu.qmd
         - khoang-tin-cay.qmd
         # - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
         - huong-dan-phan-tich-t-test-trong-r.qmd
@@ -55,7 +56,7 @@ book:
     search: true
     title: "<a href='https://thongkesinhhoc.com/'>Thống kê sinh học: Từ lý thuyết đến ứng dụng</a>"
           
-bibliography: references.bib
+bibliography: F:/VAULT12/GRAND/grand.bib
 number-sections: true
 format:
   html:

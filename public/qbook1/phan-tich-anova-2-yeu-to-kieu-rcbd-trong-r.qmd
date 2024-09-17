@@ -196,3 +196,7 @@ HSD.test(res.aov2, c("diet", "time"), console = TRUE)
 5.  RMSE (Root Mean Square Error) `https://agronomy4future.org/?p=15930`
 
 6.  `https://stats.stackexchange.com/questions/445200/coefficient-of-variation-for-beween-groups`
+
+#### Một số kỹ thuật xử lý ANOVA 2 yếu tố
+
+

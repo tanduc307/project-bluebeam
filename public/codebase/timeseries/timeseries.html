@@ -3122,7 +3122,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading"><b>Cập nhật</b></div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2024 May 27</p>
+      <p class="date">2024 June 06</p>
     </div>
   </div>
   
@@ -3752,26 +3752,26 @@ mean of x
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>test_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         year price
-1  2001-01-01    65
-2  2002-01-01    78
-3  2003-01-01    97
-4  2004-01-01    31
-5  2005-01-01     8
-6  2006-01-01    80
-7  2007-01-01    23
-8  2008-01-01    31
-9  2009-01-01    65
-10 2010-01-01    68
-11 2011-01-01    38
-12 2012-01-01     6
-13 2013-01-01    35
-14 2014-01-01    19
-15 2015-01-01    60
-16 2016-01-01    61
-17 2017-01-01    76
-18 2018-01-01    63
-19 2019-01-01    82
-20 2020-01-01     7</code></pre>
+1  2001-01-01    21
+2  2002-01-01    56
+3  2003-01-01    13
+4  2004-01-01    20
+5  2005-01-01    97
+6  2006-01-01    84
+7  2007-01-01    43
+8  2008-01-01    25
+9  2009-01-01    78
+10 2010-01-01    41
+11 2011-01-01    65
+12 2012-01-01    95
+13 2013-01-01    61
+14 2014-01-01    74
+15 2015-01-01    31
+16 2016-01-01    52
+17 2017-01-01    62
+18 2018-01-01    45
+19 2019-01-01    40
+20 2020-01-01    19</code></pre>
 </div>
 </div>
 <p><strong>Khi convert data frame qua <code>ts</code> object sử dụng lệnh của base R thì đơn vị thời gian sẽ chuyển về số giây (tính từ năm <code>1970-01-01</code>)</strong></p>
@@ -3785,26 +3785,26 @@ Start = 1
 End = 20 
 Frequency = 1 
     year price
- 1 11323    65
- 2 11688    78
- 3 12053    97
- 4 12418    31
- 5 12784     8
- 6 13149    80
- 7 13514    23
- 8 13879    31
- 9 14245    65
-10 14610    68
-11 14975    38
-12 15340     6
-13 15706    35
-14 16071    19
-15 16436    60
-16 16801    61
-17 17167    76
-18 17532    63
-19 17897    82
-20 18262     7</code></pre>
+ 1 11323    21
+ 2 11688    56
+ 3 12053    13
+ 4 12418    20
+ 5 12784    97
+ 6 13149    84
+ 7 13514    43
+ 8 13879    25
+ 9 14245    78
+10 14610    41
+11 14975    65
+12 15340    95
+13 15706    61
+14 16071    74
+15 16436    31
+16 16801    52
+17 17167    62
+18 17532    45
+19 17897    40
+20 18262    19</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -3815,26 +3815,26 @@ Start = 0
 End = 19 
 Frequency = 1 
     year price
- 0 11323    65
- 1 11688    78
- 2 12053    97
- 3 12418    31
- 4 12784     8
- 5 13149    80
- 6 13514    23
- 7 13879    31
- 8 14245    65
- 9 14610    68
-10 14975    38
-11 15340     6
-12 15706    35
-13 16071    19
-14 16436    60
-15 16801    61
-16 17167    76
-17 17532    63
-18 17897    82
-19 18262     7</code></pre>
+ 0 11323    21
+ 1 11688    56
+ 2 12053    13
+ 3 12418    20
+ 4 12784    97
+ 5 13149    84
+ 6 13514    43
+ 7 13879    25
+ 8 14245    78
+ 9 14610    41
+10 14975    65
+11 15340    95
+12 15706    61
+13 16071    74
+14 16436    31
+15 16801    52
+16 17167    62
+17 17532    45
+18 17897    40
+19 18262    19</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_a, <span class="at">k =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3843,26 +3843,26 @@ Start = 1
 End = 20 
 Frequency = 1 
     year price
- 1 11323    65
- 2 11688    78
- 3 12053    97
- 4 12418    31
- 5 12784     8
- 6 13149    80
- 7 13514    23
- 8 13879    31
- 9 14245    65
-10 14610    68
-11 14975    38
-12 15340     6
-13 15706    35
-14 16071    19
-15 16436    60
-16 16801    61
-17 17167    76
-18 17532    63
-19 17897    82
-20 18262     7</code></pre>
+ 1 11323    21
+ 2 11688    56
+ 3 12053    13
+ 4 12418    20
+ 5 12784    97
+ 6 13149    84
+ 7 13514    43
+ 8 13879    25
+ 9 14245    78
+10 14610    41
+11 14975    65
+12 15340    95
+13 15706    61
+14 16071    74
+15 16436    31
+16 16801    52
+17 17167    62
+18 17532    45
+19 17897    40
+20 18262    19</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_a, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3871,26 +3871,26 @@ Start = 2
 End = 21 
 Frequency = 1 
     year price
- 2 11323    65
- 3 11688    78
- 4 12053    97
- 5 12418    31
- 6 12784     8
- 7 13149    80
- 8 13514    23
- 9 13879    31
-10 14245    65
-11 14610    68
-12 14975    38
-13 15340     6
-14 15706    35
-15 16071    19
-16 16436    60
-17 16801    61
-18 17167    76
-19 17532    63
-20 17897    82
-21 18262     7</code></pre>
+ 2 11323    21
+ 3 11688    56
+ 4 12053    13
+ 5 12418    20
+ 6 12784    97
+ 7 13149    84
+ 8 13514    43
+ 9 13879    25
+10 14245    78
+11 14610    41
+12 14975    65
+13 15340    95
+14 15706    61
+15 16071    74
+16 16436    31
+17 16801    52
+18 17167    62
+19 17532    45
+20 17897    40
+21 18262    19</code></pre>
 </div>
 </div>
 </section>
@@ -3902,40 +3902,40 @@ Frequency = 1
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>test_1_ts_b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
-        65         78         97         31          8         80         23         31         65 
+        21         56         13         20         97         84         43         25         78 
 2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
-        68         38          6         35         19         60         61         76         63 
+        41         65         95         61         74         31         52         62         45 
 2019-01-01 2020-01-01 
-        82          7 </code></pre>
+        40         19 </code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
-        78         97         31          8         80         23         31         65         68 
+        56         13         20         97         84         43         25         78         41 
 2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
-        38          6         35         19         60         61         76         63         82 
+        65         95         61         74         31         52         62         45         40 
 2019-01-01 
-         7 </code></pre>
+        19 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2001-01-01 2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 
-        65         78         97         31          8         80         23         31         65 
+        21         56         13         20         97         84         43         25         78 
 2010-01-01 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 
-        68         38          6         35         19         60         61         76         63 
+        41         65         95         61         74         31         52         62         45 
 2019-01-01 2020-01-01 
-        82          7 </code></pre>
+        40         19 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">lag</span>(test_1_ts_b, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2002-01-01 2003-01-01 2004-01-01 2005-01-01 2006-01-01 2007-01-01 2008-01-01 2009-01-01 2010-01-01 
-        65         78         97         31          8         80         23         31         65 
+        21         56         13         20         97         84         43         25         78 
 2011-01-01 2012-01-01 2013-01-01 2014-01-01 2015-01-01 2016-01-01 2017-01-01 2018-01-01 2019-01-01 
-        68         38          6         35         19         60         61         76         63 
+        41         65         95         61         74         31         52         62         45 
 2020-01-01 
-        82 </code></pre>
+        40 </code></pre>
 </div>
 </div>
 </section>
