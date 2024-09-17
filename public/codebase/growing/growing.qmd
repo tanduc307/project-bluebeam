@@ -101,6 +101,10 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 [`Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.`](https://longliveturtle.github.io/water/p1.pdf)
 
+# Deep learning
+
+[`Deep learning in R`](https://www.r-tutor.com/deep-learning/introduction)
+
 # R Programming
 
 [`Using R for Data Analysis and Graphics from https://cran.r-project.org/doc/contrib/`](https://longliveturtle.github.io/water/p5.pdf)
@@ -109,6 +113,16 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 [`R in Action https://www.manning.com/books/r-in-action`](https://longliveturtle.github.io/water/p8.pdf)[^3] | [`3th edition`](https://longliveturtle.github.io/water/p9.pdf)
 
+[`R Tutorial https://www.r-tutor.com/`](https://www.r-tutor.com/elementary-statistics)
+
+[`simpleR - Using R for Introductory Statistics`](https://longliveturtle.github.io/water/p10.pdf)
+
+# Dataset
+
+Trang này được recommend[^4]
+
+[Dataset minh họa các bài tập thống kê](http://www.statsci.org/datasets.html)
+
 # Nguồn
 
 [^1]: <http://drhuang.com/science/mathematics/book/>
@@ -116,6 +130,8 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 [^2]: <https://amath.colorado.edu/faculty/vdukic/4570/>
 
 [^3]: File data <https://longliveturtle.github.io/water/p7.pdf>
+
+[^4]: <https://amath.colorado.edu/faculty/vdukic/4570/4570resources.html>
 
 <!-- top -->
 
