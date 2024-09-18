@@ -101,6 +101,18 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 [`Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.`](https://longliveturtle.github.io/water/p1.pdf)
 
+# Poisson regression
+
+# Ước tính trữ lượng thủy sản
+
+Estimating total mortality rates
+
+[`Huynh, Q. C., Gedamke, T., Porch, C. E., Hoenig, J. M., Walter, J. F., Bryan, M., & Brodziak, J. (2017). Estimating Total Mortality Rates from Mean Lengths and Catch Rates in Nonequilibrium Situations. Transactions of the American Fisheries Society, 146(4), 803–815.`](https://longliveturtle.github.io/water/p11.pdf)
+
+Ước tính trữ lượng thủy sản dựa vào chiều dài cá 
+
+[`Length-based integrated mixed effects model`](https://github.com/merrillrudd/LIME) | [LIME](https://github.com/tanduc307/LIME)
+
 # Deep learning
 
 [`Deep learning in R`](https://www.r-tutor.com/deep-learning/introduction)
@@ -121,7 +133,7 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 Trang này được recommend[^4]
 
-[Dataset minh họa các bài tập thống kê](http://www.statsci.org/datasets.html)
+[Dataset minh họa các bài tập thống kê](http://www.statsci.org/datasets.html) | [https://web.archive.org/](https://web.archive.org/)
 
 # Nguồn
 
