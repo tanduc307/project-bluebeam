@@ -101,7 +101,13 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 [`Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.`](https://longliveturtle.github.io/water/p1.pdf)
 
+[`Bài giảng 35 (Dịch tễ học): Cách vẽ đường cong ROC với R`](https://longliveturtle.github.io/water/p14.mp4) | [youtube](https://youtu.be/Ugnebc0rYHo?si=jm6urto5YysB-uY9)
+
 # Poisson regression
+
+Model GPL~Poisson~ ước tính tỷ lệ tử vong của cá theo độ tuổi
+
+[`Mainguy, J., & De Andrade Moral, R. (2021). An Improved Method for the Estimation and Comparison of Mortality Rates in Fish from Catch‐Curve Data. North American Journal of Fisheries Management, 41(5), 1436–1453.`](https://longliveturtle.github.io/water/p13.pdf)
 
 # Ước tính trữ lượng thủy sản
 
@@ -119,6 +125,14 @@ Estimating total mortality rates
 
 # R Programming
 
+## Data visualization
+
+Vẽ đồ thị cho biến phân loại sử dụng R
+
+[`Discrete data analysis with R`](https://t.me/solid_recovering/3)
+
+## R coding
+
 [`Using R for Data Analysis and Graphics from https://cran.r-project.org/doc/contrib/`](https://longliveturtle.github.io/water/p5.pdf)
 
 [`Hướng dẫn sử dụng R của trường UCLA`](https://stats.oarc.ucla.edu/r/)
@@ -134,6 +148,12 @@ Estimating total mortality rates
 Trang này được recommend[^4]
 
 [Dataset minh họa các bài tập thống kê](http://www.statsci.org/datasets.html) | [https://web.archive.org/](https://web.archive.org/)
+
+# Citation tool
+
+Tự động tạo citation
+
+[`https://quillbot.com/citation-generator/`](https://quillbot.com/citation-generator/)
 
 # Nguồn
 
