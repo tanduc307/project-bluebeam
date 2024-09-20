@@ -8,7 +8,7 @@ date: last-modified
 date-format: "YYYY MMMM DD"
 cover-image: cover.png
 favicon: favicon.png
-# bibliography: reborn_1.bib
+bibliography: growing.bib
 format:
   html:
     toc: true
@@ -24,8 +24,8 @@ format:
     anchor-sections: true
     smooth-scroll: true
     link-external-newwindow: true
-    # code-tools:
-    #   source: https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt
+    code-tools:
+      source: growing.bib
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
@@ -127,9 +127,7 @@ Estimating total mortality rates
 
 ## Data visualization
 
-Vẽ đồ thị cho biến phân loại sử dụng R
-
-[`Discrete data analysis with R`](https://t.me/solid_recovering/3)
+Vẽ đồ thị cho biến phân loại sử dụng R [@p12]
 
 ## R coding
 
@@ -155,6 +153,12 @@ Tự động tạo citation
 
 [`https://quillbot.com/citation-generator/`](https://quillbot.com/citation-generator/)
 
+# Download tool
+
+Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó gõ `yt-dlp url`
+
+[`https://github.com/yt-dlp/yt-dlp`](https://github.com/yt-dlp/yt-dlp)
+
 # Nguồn
 
 [^1]: <http://drhuang.com/science/mathematics/book/>
@@ -164,6 +168,8 @@ Tự động tạo citation
 [^3]: File data <https://longliveturtle.github.io/water/p7.pdf>
 
 [^4]: <https://amath.colorado.edu/faculty/vdukic/4570/4570resources.html>
+
+[^5]: <https://blogchiasekienthuc.com/thu-thuat-internet/cach-su-dung-yt-dlp-de-tai-video.html>
 
 <!-- top -->
 
