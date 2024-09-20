@@ -104,6 +104,12 @@ Estimating total mortality rates
 
 [`Length-based integrated mixed effects model`](https://github.com/merrillrudd/LIME) | [LIME](https://github.com/tanduc307/LIME)
 
+# R in HPC
+
+[`Managing R on HPC systems`](https://hackmd.io/@bbolker/r_hpc)
+
+[`Exploiting parallelism in R`](https://docs.alliancecan.ca/wiki/R#Exploiting_parallelism_in_R)
+
 # Deep learning
 
 [`Deep learning in R`](https://www.r-tutor.com/deep-learning/introduction)
@@ -142,6 +148,8 @@ Tự động tạo citation
 
 [`https://quillbot.com/citation-generator/`](https://quillbot.com/citation-generator/)
 
+Sử dụng Recoll để index và search nhanh nội dung file[^8] | [Hướng dẫn sử dụng](https://www.recoll.org/usermanual/webhelp/docs/index.html). Để mở đến trang PDF quan tâm, ta cần cấu hình [như sau](img/r1.png).
+
 # Download tool
 
 Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó gõ `yt-dlp url`
@@ -151,6 +159,10 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 # Password protected
 
 Để tạo file HTML có password, ta cài đặt [`Node.js`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager) khi đó có gói package `npm` dùng để install tiếp package [`staticrypt`](https://www.npmjs.com/package/staticrypt).
+
+# Other tools
+
+Để backup file giữa các ổ đĩa, sử dụng FreeFileSync[^6]. Sử dụng KeePass[^7] để lưu mật khẩu.
 
 # Nguồn
 
@@ -163,6 +175,12 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 [^4]: <https://amath.colorado.edu/faculty/vdukic/4570/4570resources.html>
 
 [^5]: <https://blogchiasekienthuc.com/thu-thuat-internet/cach-su-dung-yt-dlp-de-tai-video.html>
+
+[^6]: <https://freefilesync.org/>
+
+[^7]: <https://keepass.info/>
+
+[^8]: <https://www.recoll.org/>
 
 <!-- top -->
 
