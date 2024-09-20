@@ -1,0 +1,1 @@
+staticrypt growing.html -t template.html --short

@@ -24,8 +24,8 @@ format:
     anchor-sections: true
     smooth-scroll: true
     link-external-newwindow: true
-    code-tools:
-      source: growing.txt
+    # code-tools:
+      # source: growing.txt
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
@@ -53,29 +53,14 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
                       # fig.show = 'hide', # suppress plots
                       cache = TRUE         # enable caching
                       )        
-# library(ggfortify)
-# autoplot(lm(cars$dist ~ cars$speed))
 
 file <- list.files(pattern="*.bib")
 newfile <- gsub("\\.bib", ".txt", file)
 file.copy(from = file, to = newfile, overwrite = TRUE)
-# 
-# zip(zipfile = "quarto-high-density-data", 
-#     files = c("quarto-high-density-data.qmd", 
-#               "style.scss", "reborn_1.bib",
-#               "gplot_hexbin.R",
-#               "quarto-high-density-data.Rproj", 
-#               "_extensions/")
-#     )
+
 ```
 
-<!-- https://github.com/shafayetShafee/downloadthis -->
-
-<!-- https://icons.getbootstrap.com/?q=file -->
-
-<!-- <a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> {{< downloadthis quarto-high-density-data.zip dname="quarto-high-density-data" label="RStudio project" icon=file-zip type=primary >}} <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>   -->
-
-<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
+<a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> <a href="https://www.tuhocr.com/" target="_blank" class="btn btn-primary" role="button"> <i class="bi bi-filetype-html"></i> Web</a> <a href="https://applyr.netlify.app/codebase/growing/growing.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> BibTeX</a> 
 
 # Probability and statistics
 
@@ -158,6 +143,10 @@ Tự động tạo citation
 Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó gõ `yt-dlp url`
 
 [`https://github.com/yt-dlp/yt-dlp`](https://github.com/yt-dlp/yt-dlp)
+
+# Password protected
+
+Để tạo file HTML có password, ta cài đặt [`Node.js`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager) khi đó có gói package `npm` dùng để install tiếp package [`staticrypt`](https://www.npmjs.com/package/staticrypt).
 
 # Nguồn
 

@@ -3077,7 +3077,8 @@ vertical-align: -.125em;
   <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset"><span class="header-section-number">8</span> Dataset</a></li>
   <li><a href="#citation-tool" id="toc-citation-tool" class="nav-link" data-scroll-target="#citation-tool"><span class="header-section-number">9</span> Citation tool</a></li>
   <li><a href="#download-tool" id="toc-download-tool" class="nav-link" data-scroll-target="#download-tool"><span class="header-section-number">10</span> Download tool</a></li>
-  <li><a href="#nguồn" id="toc-nguồn" class="nav-link" data-scroll-target="#nguồn"><span class="header-section-number">11</span> Nguồn</a></li>
+  <li><a href="#password-protected" id="toc-password-protected" class="nav-link" data-scroll-target="#password-protected"><span class="header-section-number">11</span> Password protected</a></li>
+  <li><a href="#nguồn" id="toc-nguồn" class="nav-link" data-scroll-target="#nguồn"><span class="header-section-number">12</span> Nguồn</a></li>
   </ul>
 </nav>
 </div>
@@ -3087,7 +3088,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Tài liệu chọn lọc</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="growing.txt"><i class="bi"></i> Code</button></div></div>
+<h1 class="title">Tài liệu chọn lọc</h1>
 </div>
 
 
@@ -3116,10 +3117,7 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- https://github.com/shafayetShafee/downloadthis -->
-<!-- https://icons.getbootstrap.com/?q=file -->
-<!-- <a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a>  <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> Source</a> <a href="https://applyr.netlify.app/codebase/quarto-high-density-data/quarto-high-density-data.html" target="_blank" class="btn btn-info" role="button"> <i class="bi bi-filetype-html"></i> Web</a>   -->
-<!-- [**Để phóng lớn hình ảnh, bạn right-click vào hình chọn *Open image in new tab*.**]{style="color:#006600"} -->
+<p><a href="https://www.tuhocr.com/register" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Register</a> <a href="https://www.tuhocr.com/" target="_blank" class="btn btn-primary" role="button"> <i class="bi bi-filetype-html"></i> Web</a> <a href="https://applyr.netlify.app/codebase/growing/growing.txt" target="_blank" class="btn btn-warning" role="button"> <i class="bi bi-file-code"></i> BibTeX</a></p>
 <section id="probability-and-statistics" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Probability and statistics</h1>
 <p>Giáo trình xác suất thống kê</p>
@@ -3185,8 +3183,12 @@ vertical-align: -.125em;
 <p>Tải video youtube. Cách sử dụng<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>: mở <code>cmd</code> trên windows sau đó gõ <code>yt-dlp url</code></p>
 <p><a href="https://github.com/yt-dlp/yt-dlp"><code>https://github.com/yt-dlp/yt-dlp</code></a></p>
 </section>
-<section id="nguồn" class="level1" data-number="11">
-<h1 data-number="11"><span class="header-section-number">11</span> Nguồn</h1>
+<section id="password-protected" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Password protected</h1>
+<p>Để tạo file HTML có password, ta cài đặt <a href="https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager"><code>Node.js</code></a> khi đó có gói package <code>npm</code> dùng để install tiếp package <a href="https://www.npmjs.com/package/staticrypt"><code>staticrypt</code></a>.</p>
+</section>
+<section id="nguồn" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Nguồn</h1>
 <!-- top -->
 <button id="scrollBtnTop">
 <span><i class="bi bi-arrow-up"></i></span>
@@ -3309,57 +3311,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
