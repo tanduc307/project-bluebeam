@@ -25,7 +25,7 @@ format:
     smooth-scroll: true
     link-external-newwindow: true
     code-tools:
-      source: growing.bib
+      source: growing.txt
     # grid:
     #   sidebar-width: 0px
     #   body-width: 2000px
@@ -56,9 +56,9 @@ knitr::opts_chunk$set(error = TRUE,        # suppress errors
 # library(ggfortify)
 # autoplot(lm(cars$dist ~ cars$speed))
 
-# file <- list.files(pattern="*.qmd")
-# newfile <- gsub("\\.qmd", ".txt", file)
-# file.copy(from = file, to = newfile, overwrite = TRUE)
+file <- list.files(pattern="*.bib")
+newfile <- gsub("\\.bib", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
 # 
 # zip(zipfile = "quarto-high-density-data", 
 #     files = c("quarto-high-density-data.qmd", 

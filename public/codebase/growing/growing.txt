@@ -1,0 +1,7 @@
+@Book{p12,
+author    = {Michael Friendly and David Meyer},
+publisher = {CRC Press},
+title     = {Discrete data analysis with {R}},
+year      = {2016},
+url       = {https://t.me/self_sustaining_system/3},
+}
