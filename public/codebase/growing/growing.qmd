@@ -108,7 +108,7 @@ Estimating total mortality rates
 
 [`Deep learning in R`](https://www.r-tutor.com/deep-learning/introduction)
 
-# R Programming
+# R programming
 
 ## Data visualization
 
@@ -125,6 +125,10 @@ Vẽ đồ thị cho biến phân loại sử dụng R [@p12]
 [`R Tutorial https://www.r-tutor.com/`](https://www.r-tutor.com/elementary-statistics)
 
 [`simpleR - Using R for Introductory Statistics`](https://longliveturtle.github.io/water/p10.pdf)
+
+# Bash programming
+
+Các lệnh Bash script [@p15]
 
 # Dataset
 
