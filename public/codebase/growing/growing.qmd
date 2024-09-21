@@ -64,6 +64,8 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 
 # Probability and statistics
 
+TÀI LIỆU CỦA MR TÂM VỀ MARKETING ANALYSIS
+
 Giáo trình xác suất thống kê
 
 [`Probability and Statistics for Engineering and the Sciences. 8th edition. Jay L. Devore`](https://longliveturtle.github.io/water/p4.pdf)[^1]
@@ -87,6 +89,10 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 [`Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.`](https://longliveturtle.github.io/water/p1.pdf)
 
 [`Bài giảng 35 (Dịch tễ học): Cách vẽ đường cong ROC với R`](https://longliveturtle.github.io/water/p14.mp4) | [youtube](https://youtu.be/Ugnebc0rYHo?si=jm6urto5YysB-uY9)
+
+# Time series in R
+
+Forecasting economic time series [@p7]
 
 # Poisson regression
 
@@ -170,7 +176,7 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 
 [^2]: <https://amath.colorado.edu/faculty/vdukic/4570/>
 
-[^3]: File data <https://longliveturtle.github.io/water/p7.pdf>
+[^3]: File data <https://longliveturtle.github.io/water/p8.zip>
 
 [^4]: <https://amath.colorado.edu/faculty/vdukic/4570/4570resources.html>
 
