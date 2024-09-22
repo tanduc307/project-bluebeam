@@ -64,11 +64,9 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 
 # Probability and statistics
 
-TÀI LIỆU CỦA MR TÂM VỀ MARKETING ANALYSIS
-
 Giáo trình xác suất thống kê
 
-[`Probability and Statistics for Engineering and the Sciences. 8th edition. Jay L. Devore`](https://longliveturtle.github.io/water/p4.pdf)[^1]
+<img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p4.png" width="90" height="120"> Probability and Statistics for Engineering and the Sciences. 8th edition. Jay L. Devore [@p4][^1]
 
 Tài liệu này được recommend[^2]
 
@@ -92,13 +90,19 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 # Time series in R
 
-Forecasting economic time series [@p7]
+<img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p7.jpg" width="90" height="120"> Forecasting economic time series [@p7]
 
 # Poisson regression
 
 Model GPL~Poisson~ ước tính tỷ lệ tử vong của cá theo độ tuổi
 
 [`Mainguy, J., & De Andrade Moral, R. (2021). An Improved Method for the Estimation and Comparison of Mortality Rates in Fish from Catch‐Curve Data. North American Journal of Fisheries Management, 41(5), 1436–1453.`](https://longliveturtle.github.io/water/p13.pdf)
+
+# Economics
+
+<img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p16.jpg" width="90" height="120"> Marketing analytics sử dụng Excel [@p16]
+
+<img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p17.png" width="90" height="120"> Business analytics sử dụng Excel [@p17]
 
 # Ước tính trữ lượng thủy sản
 
@@ -148,6 +152,10 @@ Trang này được recommend[^4]
 
 [Dataset minh họa các bài tập thống kê](http://www.statsci.org/datasets.html) | [https://web.archive.org/](https://web.archive.org/)
 
+::: {.callout-tip title="Các kỹ thuật tin học thường dùng"}
+Đây là các công cụ mình áp dụng trên máy tính, các bạn tham khảo nhé. Thanks.
+:::
+
 # Citation tool
 
 Tự động tạo citation
@@ -170,7 +178,18 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 
 Để backup file giữa các ổ đĩa, sử dụng FreeFileSync[^6]. Sử dụng KeePass[^7] để lưu mật khẩu.
 
+
+
+# Kiến trúc HTML
+
+1. <https://hocwebchuan.com/reference/cssSection/pr_vertical-align.php>
+
+2. Tạo callout (note ghi chú) trong Quarto <https://quarto.org/docs/authoring/callouts.html>
+
 # Nguồn
+
+::: {#refs}
+:::
 
 [^1]: <http://drhuang.com/science/mathematics/book/>
 
@@ -187,6 +206,8 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 [^7]: <https://keepass.info/>
 
 [^8]: <https://www.recoll.org/>
+
+
 
 <!-- top -->
 

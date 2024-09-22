@@ -1,3 +1,13 @@
+@Book{p4,
+author    = {Jay L. Devore},
+publisher = {Cengage Learning},
+edition   = {8},
+title     = {Probability and statistics},
+year      = {2011},
+url       = {https://longliveturtle.github.io/water/p4.pdf},
+image     = {https://longliveturtle.github.io/water/p4.png},
+}
+
 @Book{p7,
 author    = {Michael P. Clements and David F. Hendry},
 publisher = {CRC Press},
@@ -22,3 +32,32 @@ year      = {2011},
 url       = {https://longliveturtle.github.io/water/p15.pdf},
 url1      = {https://www.shellscript.sh/}
 }
+
+@Book{p16,
+author    = {Wayne L. Winston},
+publisher = {Wiley},
+title     = {Marketing analytics},
+year      = {2014},
+url       = {https://longliveturtle.github.io/water/p16.pdf},
+image     = {https://longliveturtle.github.io/water/p16.jpg},
+}
+
+@Book{p17,
+author    = {James Evans},
+publisher = {Pearson},
+edition   = {2},
+title     = {Business analytics},
+year      = {2017},
+url       = {https://longliveturtle.github.io/water/p17.pdf},
+image     = {https://longliveturtle.github.io/water/p17.png},
+}
+
+
+
+
+
+
+
+
+
+
