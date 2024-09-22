@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # <b>Kỹ thuật reshape dữ liệu</b>
 
 ```{r, include=FALSE}
@@ -304,10 +309,123 @@ survey_wide_ok_2 |> dplyr::arrange(!!! rlang::syms(names(survey_wide_ok_2))) -> 
 identical(survey_chuan, survey_wide_ok_2_chuan)
 ```
 
+## Các tình huống reshape thường gặp
 
+### Chuyển dữ liệu từ hàng ngang sang hàng dọc
 
+```{r}
+df_cor_small <- readRDS("df_cor_small.rds")
 
+df_cor_small
 
+library(tidyr)
+long_df <- tidyr:::pivot_longer(df_cor_small, 
+                        cols = c(4:8), # vị trí các cột cần rã về dạng long
+                        # Lệnh này tìm kiếm theo tên cột
+                        # bản chất là dùng function grep()
+                        # cols = starts_with("K12"),
+                        names_to = "Test", 
+                        values_to = "Score")
+
+long_df <- as.data.frame(long_df)
+
+long_df
+```
+
+### Chuyển dữ liệu từ hàng dọc sang hàng ngang
+
+**Trường hợp 1: Dữ liệu đơn giản**
+
+```{r}
+ok_1 <- readRDS("ok_1.rds")
+
+ok_1_short <- ok_1[ , c(2, 3, 4)]
+
+ok_1_short
+```
+
+**Ta chuyển qua dạng wide**
+
+```{r}
+ok_1_short |> tidyr:::pivot_wider(
+  names_from = c(variable),
+  values_from = c(estimate)
+) -> ok_1_wide
+
+ok_1_wide
+```
+
+**Nếu muốn chuyển về dạng long thì áp dụng cách sau:**
+
+```{r}
+ok_1_long <- tidyr:::pivot_longer(ok_1_wide, 
+                        cols = c("income", "rent"),
+                        names_to = "variable", 
+                        values_to = "estimate")
+
+ok_1_long
+```
+
+**Trường hợp 2: Dữ liệu phức tạp**
+
+**Chuyển qua dạng wide**
+
+```{r}
+ok_1 <- readRDS("ok_1.rds")
+
+ok_1
+
+ok_1 |> pivot_wider(
+  names_from = c(variable),
+  values_from = c(estimate, moe)
+) -> ok_1_wide_yes
+```
+
+**Nếu muốn chuyển về dạng long**
+
+```{r}
+ok_1_long_yes <- tidyr:::pivot_longer(ok_1_wide_yes, 
+                        cols = 3:6,
+                        names_to = "variable",
+                        values_to = "value")
+
+ok_1_long_yes # đây là dạng true long
+```
+
+**Nếu muốn chuyển về dạng semi-long**
+
+```{r}
+ok_1_long_yes_a <- tidyr:::pivot_longer(ok_1_wide_yes[ , 1:4], 
+                        cols = 3:4,
+                        names_to = "variable",
+                        values_to = "estimate")
+
+ok_1_long_yes_a$variable <- gsub(pattern = "estimate_",
+                                 replacement = "",
+                                 x = ok_1_long_yes_a$variable)
+
+ok_1_long_yes_b <- tidyr:::pivot_longer(ok_1_wide_yes[ , c(1, 2, 5, 6)], 
+                        cols = 3:4,
+                        names_to = "variable",
+                        values_to = "moe")
+
+ok_1_long_yes_b$variable <- gsub(pattern = "moe_",
+                                 replacement = "",
+                                 x = ok_1_long_yes_b$variable)
+
+ok_1_long_yes_b
+
+ok_1_long_yes_final <- merge(x = ok_1_long_yes_a,
+                             y = ok_1_long_yes_b,
+                             all = TRUE,
+                             by = c("GEOID",
+                                    "NAME",
+                                    "variable"))
+
+ok_1_long_yes_final
+
+identical(as.data.frame(ok_1), ok_1_long_yes_final)
+```
 
 
 
@@ -317,3 +435,5 @@ identical(survey_chuan, survey_wide_ok_2_chuan)
 * `https://www.magesblog.com/post/2012-02-09-reshape-function/`
 
 * `https://search.r-project.org/CRAN/refmans/splitstackshape/html/Reshape.html`
+
+* `https://www.mjandrews.org/blog/pivots/`

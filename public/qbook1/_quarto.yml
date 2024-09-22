@@ -25,7 +25,7 @@ book:
         # - cac-lenh-do-thi-su-dung-package-ggplot2.qmd
     - part: co-so-ly-thuyet.qmd
       chapters:
-        - tong-quan-tai-lieu.qmd
+        - tai-lieu-chon-loc.qmd
         - khoang-tin-cay.qmd
         # - phan-tich-anova-2-yeu-to-kieu-rcbd-trong-r.qmd
         - huong-dan-phan-tich-t-test-trong-r.qmd
