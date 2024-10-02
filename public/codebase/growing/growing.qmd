@@ -98,6 +98,11 @@ Model GPL~Poisson~ ước tính tỷ lệ tử vong của cá theo độ tuổi
 
 [`Mainguy, J., & De Andrade Moral, R. (2021). An Improved Method for the Estimation and Comparison of Mortality Rates in Fish from Catch‐Curve Data. North American Journal of Fisheries Management, 41(5), 1436–1453.`](https://longliveturtle.github.io/water/p13.pdf)
 
+
+# Biology
+
+Khái niệm recruitment (biology)[^9]
+
 # Economics
 
 <img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p16.jpg" width="90" height="120"> Marketing analytics sử dụng Excel [@p16]
@@ -206,6 +211,8 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 [^7]: <https://keepass.info/>
 
 [^8]: <https://www.recoll.org/>
+
+[^9]: <https://en.wikipedia.org/wiki/Recruitment_(biology)>
 
 
 
