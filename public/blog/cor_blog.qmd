@@ -1,7 +1,7 @@
 ---
 title: "Thay đổi kích cỡ chữ trong đồ thị correlation"
 author-title: <b>Biên soạn</b>
-author: Duc Nguyen | Founder of <a href="https://www.tuhocr.com/">tuhocr.com</a>
+author: Duc Nguyen | Chuyên đào tạo kỹ năng R
 site-url: https://www.tuhocr.com/
 published-title: <b>Cập nhật</b> 
 date: last-modified
