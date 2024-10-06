@@ -106,6 +106,6 @@ chart.Correlation_check(
 )
 ```
 
-**Download dataset: [cor_ok.rds](https://applyr.netlify.app/blog/cor_ok.rds)**
+**Dataset: [cor_ok.rds](https://applyr.netlify.app/blog/cor_ok.rds)**
 
-**Link trang web: [Thay đổi kích cỡ chữ trong đồ thị correlation](https://applyr.netlify.app/blog/cor_blog.html)**
+**Link: [Thay đổi kích cỡ chữ trong đồ thị correlation](https://applyr.netlify.app/blog/cor_blog.html)**
