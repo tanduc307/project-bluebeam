@@ -119,6 +119,8 @@ Estimating total mortality rates
 
 [`Length-based integrated mixed effects model`](https://github.com/merrillrudd/LIME) | [LIME](https://github.com/tanduc307/LIME)
 
+Mean length-based mortality estimators (MLZ)[^10]
+
 # R in HPC
 
 [`Managing R on HPC systems`](https://hackmd.io/@bbolker/r_hpc)
@@ -146,6 +148,10 @@ Vẽ đồ thị cho biến phân loại sử dụng R [@p12]
 [`R Tutorial https://www.r-tutor.com/`](https://www.r-tutor.com/elementary-statistics)
 
 [`simpleR - Using R for Introductory Statistics`](https://longliveturtle.github.io/water/p10.pdf)
+
+# Reproducible report
+
+Format Quarto[^11]
 
 # Bash programming
 
@@ -183,8 +189,6 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 
 Để backup file giữa các ổ đĩa, sử dụng FreeFileSync[^6]. Sử dụng KeePass[^7] để lưu mật khẩu.
 
-
-
 # Kiến trúc HTML
 
 1. <https://hocwebchuan.com/reference/cssSection/pr_vertical-align.php>
@@ -214,7 +218,9 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 
 [^9]: <https://en.wikipedia.org/wiki/Recruitment_(biology)>
 
+[^10]: <https://git.csic.es/math4fish/ieoinputsa_ss3/-/blob/e4b3c488128136a9599175baf7c777409d65ed91/modelos_datapoor/entregable_1_4-main/RefPts/MLZ/Previous%20runs/Final%20html%20(both%20models)/mlz.Rmd><br>**Tham khảo:**<br>Gedamke, T. and Hoenig, J.M. (2006), Estimating Mortality from Mean Length Data in Nonequilibrium Situations, with Application to the Assessment of Goosefish. Transactions of the American Fisheries Society, 135: 476-487.<br>Then, AY; Hoenig, JM; and Huynh, QC, Estimating fishing and natural mortality rates, and catchability coefficient, from a series of observations on mean length and fishing effort (2018). Ices Journal Of Marine Science, 75(2), 610-620.
 
+[^11]: <https://smithcollege-sds.github.io/sds100/lab_08_formatting.html>
 
 <!-- top -->
 
