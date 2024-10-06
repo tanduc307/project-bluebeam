@@ -1,3 +1,26 @@
+---
+format:
+  html:
+    page-layout: full
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(message = FALSE,  
+                      warning = FALSE,
+                      fig.width = 10,
+                      fig.height = 6)   
+```
+
 ```{r}
 cor_ok <- readRDS("cor_ok.rds")
 
@@ -71,8 +94,8 @@ chart.Correlation_check(
   R = cor_ok,
   histogram = TRUE,
   method = "pearson",
-  cex_text = 3,
-  cex_sign = 3
+  cex_text = 4,
+  cex_sign = 4
 )
 ```
 
