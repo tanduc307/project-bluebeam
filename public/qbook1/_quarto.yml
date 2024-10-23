@@ -42,6 +42,9 @@ book:
         - quy-cach-ghi-ky-hieu-toan-hoc-trong-cong-thuc-xac-suat-thong-ke.qmd
         - tai-lieu-phan-tich-pca.qmd
         - xay-dung-mo-hinh-GAM-trong-r.qmd
+    - part: "Xây dựng mô hình hồi quy"
+      chapters:
+        - sheather2009_chapter1.qmd
     - part: "Kỹ thuật xử lý dữ liệu"
       chapters:
         - huong-dan-convert-tu-csv-qua-tsv-trong-r.qmd

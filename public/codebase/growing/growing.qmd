@@ -88,6 +88,8 @@ Cách vẽ đường cong ROC (Receiver Operating Characteristics)
 
 [`Bài giảng 35 (Dịch tễ học): Cách vẽ đường cong ROC với R`](https://longliveturtle.github.io/water/p14.mp4) | [youtube](https://youtu.be/Ugnebc0rYHo?si=jm6urto5YysB-uY9)
 
+[https://www.medcalc.org/manual/roc-curves.php](https://www.medcalc.org/manual/roc-curves.php)
+
 # Time series in R
 
 <img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p7.jpg" width="90" height="120"> Forecasting economic time series [@p7]
@@ -108,6 +110,12 @@ Khái niệm recruitment (biology)[^9]
 <img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p16.jpg" width="90" height="120"> Marketing analytics sử dụng Excel [@p16]
 
 <img style="vertical-align:bottom;" src="https://longliveturtle.github.io/water/p17.png" width="90" height="120"> Business analytics sử dụng Excel [@p17]
+
+# SEM
+
+`Sleep quality mediating the association of personality traits and quality of life among underground workers and surface workers of Chinese coal mine: A multi-group SEM with latent response variable mediation analysis`
+
+`Mediator of school belongingness and moderator of migration status in the relationship between peer victimization and depression among Chinese children: A multi-group structural equation modeling approach`
 
 # Ước tính trữ lượng thủy sản
 

@@ -1,0 +1,146 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# <b>Chương 1. Giới thiệu</b> 
+
+Nội dung của tài liệu hướng dẫn này bám theo giáo trình `A modern approach to regression with R` [@sheather2009]. Trọng tâm của tài liệu này nói về việc những diễn giải chỉ có ý nghĩa khi dựa trên mô hình phù hợp.
+
+>A key theme throughout the book is that it makes sense to base inferences or conclusions only on valid models. 
+
+Dataset `kicker` là thông tin của 19 cầu thủ bóng bầu dục với tỷ lệ ghi bàn qua từng mùa giải. Cột `FGtM1` là tỷ lệ ghi bàn ở mùa giải trước, còn cột `FGt` là tỷ lệ ghi bàn ở mùa giải sau.
+
+Khi vẽ đồ thị scatter plot ta thấy không có sự tương quan giữa tỷ lệ ghi bàn của các cầu thủ.
+
+```{r}
+kicker <- read.csv("FieldGoals2003to2006.csv",
+                   header = TRUE)
+kicker
+
+kicker$Name <- factor(kicker$Name)
+```
+
+Khi nhìn vào hệ số tương quan -0.139 ta thấy không có sự khác biệt có ý nghĩa thống kê so với 0 (tức là không tương quan) vì p-value là 0.2305 > 0.05.
+
+```{r}
+cor.test(x = kicker$FGtM1,
+    y = kicker$FGt,
+    method = "pearson")
+```
+
+```{r, fig.width=8, fig.height=8}
+par(pty = "s")
+plot(x = kicker$FGtM1,
+     y = kicker$FGt,
+     main = "Unadjusted Correlation = -0.139",
+     xlab = "Field Goal Percentage in Year t-1",
+     ylab = "Field Goal Percentage in Year t")
+```
+
+Tuy nhiên nhận định như vậy là không chính xác vì ta không xét riêng cho từng cầu thủ. Hay nói cách khác, nhận định này dựa trên mô hình không phù hợp.
+
+>In other words this approach is based on an invalid model.
+
+```{r, fig.width=8, fig.height=8}
+col_ok <- c("red",
+             "blue", 
+             "yellow",
+             "green",
+             "cyan",
+             "brown",
+             "gray",
+             "navy",
+             "coral",
+             "purple",
+             "darkgreen",
+             "black",
+             "lightblue",
+             "firebrick",
+             "lightgreen",
+             "darksalmon",
+             "gold",
+             "bisque",
+             "azure")[kicker$Name]
+par(pty = "s")
+plot(x = kicker$FGtM1,
+     y = kicker$FGt,
+     main = "Tương quan của tỷ lệ ghi bàn giữa hai năm liên tiếp",
+     xlab = "Tỷ lệ ghi bàn của năm trước",
+     ylab = "Tỷ lệ ghi bàn của năm sau",
+     col = col_ok,
+     pch = 19)
+```
+
+Phân tích ANOVA cho các biến trong mô hình này ta thấy tương tác giữa `FGtM1:Name` không có ý nghĩa thống kê, trong khi đó `Name` có ý nghĩa thống kê tức là `allow a different intercept for each kicker, but to force the same slope across all kickers.`
+
+```{r}
+fit.1 <- lm(FGt ~ FGtM1 + Name + FGtM1:Name,
+            data = kicker)
+
+anova(fit.1)
+```
+
+```{r}
+fit.2 <- lm(FGt ~ Name + FGtM1,
+            data = kicker)
+
+anova(fit.2)
+
+summary(fit.2)
+```
+
+```{r, fig.width=8, fig.height=8}
+par(pty = "s")
+plot(x = kicker$FGtM1,
+     y = kicker$FGt,
+     main = "Tương quan của tỷ lệ ghi bàn giữa hai năm liên tiếp",
+     xlab = "Tỷ lệ ghi bàn của năm trước",
+     ylab = "Tỷ lệ ghi bàn của năm sau",
+     col = col_ok,
+     pch = 19)
+
+# biến x
+tt <- seq(60, 100,
+          length = 100)
+
+# x nhân với hệ số góc
+slope.piece <- summary(fit.2)$coef[20]*tt
+
+# lấy Adam Vinatieri làm nền nên là 0
+points(x = tt,
+       y = summary(fit.2)$coef[1] + 0 + slope.piece,
+       type = "l",
+       lty = 2,
+       col = unique(col_ok)[1])
+
+# từ David Akers thì có hệ số Name tương ứng
+for (i in 2:19){
+points(x = tt,
+       y = summary(fit.2)$coef[1] + summary(fit.2)$coef[i]+ slope.piece,
+       type = "l",
+       lty = 2,
+       col = unique(col_ok)[i])  
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
