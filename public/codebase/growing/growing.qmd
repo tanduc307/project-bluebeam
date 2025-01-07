@@ -203,6 +203,14 @@ Tải video youtube. Cách sử dụng[^5]: mở `cmd` trên windows sau đó g�
 
 2. Tạo callout (note ghi chú) trong Quarto <https://quarto.org/docs/authoring/callouts.html>
 
+# Free software GNU
+
+1. <https://libreplanet.org/wiki/Main_Page>
+
+2. <https://www.fsf.org/>
+
+3. <https://www.gnu.org/>
+
 # Nguồn
 
 ::: {#refs}
