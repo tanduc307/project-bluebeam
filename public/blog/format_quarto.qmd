@@ -1,0 +1,88 @@
+---
+title: "Format R Markdown và Quarto"
+author-title: <b>Biên soạn</b>
+author: Duc Nguyen | Chuyên đào tạo kỹ năng R
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+format:
+  html:
+    page-layout: full
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+# R Markdown
+
+```{=html}
+
+<code>
+---
+title: 
+author: 
+output:
+  html_document:
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(message = FALSE,     
+                      warning = FALSE) 
+```
+
+</code>
+
+```
+
+# Quarto
+
+```
+
+---
+title: 
+author:
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 8
+    toc-depth: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 8
+    page-layout: full
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 120
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(message = FALSE,  
+                      warning = FALSE)   
+```
+
+```
+
