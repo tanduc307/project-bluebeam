@@ -2,7 +2,7 @@ library(quarto)
 
 quarto:::quarto_render("growing.qmd")
 
-shell(cmd = "staticrypt growing.html -p r -t template.html --short -d .")
+shell(cmd = "npx staticrypt growing.html -p r -t template.html --short -d .")
 
 # --short bỏ đi thông báo password ngắn
 # -d . lưu lại ngay file ở directory
