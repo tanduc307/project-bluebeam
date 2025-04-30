@@ -1,49 +1,3 @@
----
-title: "Thay đổi kích cỡ chữ trong đồ thị correlation"
-author-title: <b>Biên soạn</b>
-author: Duc Nguyen | Chuyên đào tạo kỹ năng R
-site-url: https://www.tuhocr.com/
-published-title: <b>Cập nhật</b> 
-date: last-modified
-date-format: "YYYY MMMM DD"
-format:
-  html:
-    page-layout: full
-    embed-resources: true
-    anchor-sections: true
-    smooth-scroll: true
-engine: knitr
-knitr:
-  opts_chunk:
-    R.options:
-      width: 120
-editor_options: 
-  chunk_output_type: console
----
-
-```{r, echo=FALSE, results='hide'}
-knitr::opts_chunk$set(message = FALSE,  
-                      warning = FALSE,
-                      fig.width = 10,
-                      fig.height = 6)   
-```
-
-```{r}
-cor_ok <- readRDS("cor_ok.rds")
-
-cor_ok <- as.matrix(cor_ok)
-
-cor_ok
-
-library("PerformanceAnalytics")
-PerformanceAnalytics:::chart.Correlation(
-  R = cor_ok,
-  histogram = TRUE,
-  method = "pearson"
-)
-
-# trace(PerformanceAnalytics:::chart.Correlation, edit = TRUE)
-
 chart.Correlation_check <- function(R, histogram = TRUE, method = c(
                                       "pearson", "kendall",
                                       "spearman"
@@ -97,16 +51,3 @@ chart.Correlation_check <- function(R, histogram = TRUE, method = c(
     pairs(x, gap = 0, lower.panel = panel.smooth, upper.panel = panel.cor)
   }
 }
-
-chart.Correlation_check(
-  R = cor_ok,
-  histogram = TRUE,
-  method = "pearson",
-  cex_text = 4,
-  cex_sign = 4
-)
-```
-
-**Dataset: [cor_ok.rds](https://applyr.netlify.app/blog/cor_ok.rds)**
-
-**Link: [Thay đổi kích cỡ chữ trong đồ thị correlation](https://applyr.netlify.app/blog/cor_blog.html)**
