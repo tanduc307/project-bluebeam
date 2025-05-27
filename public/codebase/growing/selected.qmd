@@ -1,0 +1,237 @@
+---
+title: "Tài liệu chọn lọc"
+author-title: <b>Biên soạn</b>
+author: Duc Nguyen | <a href="https://www.tuhocr.com/">www.tuhocr.com</a>
+site-url: https://www.tuhocr.com/
+published-title: <b>Cập nhật</b> 
+date: last-modified
+date-format: "YYYY MMMM DD"
+cover-image: cover.png
+favicon: favicon.png
+bibliography: growing.bib
+format:
+  html:
+    toc: true
+    toc-title: "Mục lục"
+    toc-expand: 6
+    toc-location: left
+    number-sections: true
+    number-depth: 6
+    theme:
+      light: default
+      dark: superhero
+    page-layout: full
+    # code-annotations: below # không thuận tiện cho 2 code chunk
+    embed-resources: true
+    anchor-sections: true
+    smooth-scroll: true
+    link-external-newwindow: true
+    # code-tools:
+      # source: growing.txt
+    # grid:
+    #   sidebar-width: 0px
+    #   body-width: 2000px
+    #   margin-width: 0px
+highlight-style: solarized
+# execute: 
+#   keep-md: true
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 1000
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(error = TRUE,        # suppress errors
+                      message = FALSE,     # suppress messages
+                      warning = FALSE,     # suppress warnings
+                      fig.width = 8,
+                      fig.height = 6,
+                      # results = 'hide',  # suppress code output
+                      echo = TRUE,         # suppress code
+                      # fig.show = 'hide', # suppress plots
+                      cache = TRUE         # enable caching
+                      )        
+
+file <- list.files(pattern="*.bib")
+newfile <- gsub("\\.bib", ".txt", file)
+file.copy(from = file, to = newfile, overwrite = TRUE)
+
+```
+
+<a href="https://class.tuhocr.com/" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Khóa học</a> <a href="https://www.thuviencanhan.com/tuhocr" target="_blank" class="btn btn-primary" role="button"> <i class="bi bi-filetype-html"></i> Thư viện</a> <a href="https://applyr.netlify.app/codebase/growing/huongdan.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> Hướng dẫn</a> 
+
+# Probability and statistics
+
+## Experimental Design for Behavioral and Social Sciences
+
+Khóa học ở trường Carnegie Mellon University do Prof. Howard Seltman biên soạn 
+
+[Source](https://www.stat.cmu.edu/~hseltman/309/) | [Mirror](http://book.thuviencanhan.com:8033/results?query=&dir=tuhocr%2FCourses%2FExperimental+Design+for+Behavioral+and+Social+Sciences&after=&before=&sort=relevancyrating&ascending=0&page=1)
+
+Nội dung:
+
+* Mixed Models 
+* Categorical Outcomes 
+* Within-Subject Designs 
+* Contrasts and Multiple Complarisons 
+* Power 
+* Two-way ANOVA 
+* ANCOVA 
+* Simple Linear Regression 
+* Experimental Design Principles 
+
+<!-- top -->
+
+<button id="scrollBtnTop">
+      <span><i class="bi bi-arrow-up"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtnTop.addEventListener("click", () => scrollTo(scrollToPos, 0));
+ 
+})();  
+</script>
+
+<!-- bottom -->
+
+<button id="scrollBtn">
+      <span><i class="bi bi-arrow-down"></i></span>
+</button>
+
+<script>  
+;(()=>{
+   var lastPos = 0, scrollToPos = document.body.scrollHeight;
+
+   scrollBtn.addEventListener("click", () => scrollTo(0, scrollToPos));
+
+})();  
+</script>
+
+```{=html}
+<style>
+
+.title {
+    margin-bottom: 0;
+    text-align: center;
+    color: #FF007F;
+    font-weight: bold;
+}
+
+
+.toc-active {
+  color: black;
+  font-weight: bold;
+}
+
+
+.quarto-title-meta-heading {
+    margin-bottom: 0;
+    text-align: center;
+    color: #00008B;
+    font-weight: bold;
+}
+
+.quarto-title-meta-contents {
+    margin-bottom: 0;
+    text-align: center;
+    color: #00008B;
+    font-weight: bold;
+}
+
+
+.multiple .column {
+  width: auto;
+  margin: 5px;
+}
+
+.multiple .columns {
+  display: flex;
+}
+
+@media (max-width: 1000px) {
+  .multiple .column {
+    width: auto;
+  }
+
+.multiple .columns {
+   display: flex;
+   flex-direction: column;
+  }
+}
+
+
+
+table.table-bordered{
+    border:1px solid black;
+    margin-top:20px;
+  }
+table.table-bordered > thead > tr > th{
+    border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+}
+
+
+#scrollBtnTop {
+  /*display: none;  Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 80px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: 2px solid #FF007F; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #00000000; /* Set a background color */
+  color: #FF007F; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 10px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 16px; /* Increase font size */
+}
+
+#scrollBtnTop:hover {
+  background-color: #FF007F; /* Add a dark-grey background on hover */
+  color: white;
+}
+
+/* https://codereview.stackexchange.com/questions/266156/scroll-top-bottom-button */
+
+#scrollBtn {
+  /*display: none;  Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: 2px solid #FF007F; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #00000000; /* Set a background color */
+  color: #FF007F; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 10px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 16px; /* Increase font size */
+}
+
+#scrollBtn:hover {
+  background-color: #FF007F; /* Add a dark-grey background on hover */
+  color: white;
+}
+
+.quarto-reader-toggle .bi::before, .quarto-color-scheme-toggle .bi::before {
+      height: 3rem;
+      width: 6rem;
+      background-size: 6rem 3rem;
+    }
+
+</style>
+```
+
+
+
