@@ -70,7 +70,7 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 
 Khóa học ở trường Carnegie Mellon University do Prof. Howard Seltman biên soạn 
 
-[Source](https://www.stat.cmu.edu/~hseltman/309/) | [Mirror](http://book.thuviencanhan.com:8033/results?query=&dir=tuhocr%2FCourses%2FExperimental+Design+for+Behavioral+and+Social+Sciences&after=&before=&sort=relevancyrating&ascending=0&page=1)
+[Source](https://www.stat.cmu.edu/~hseltman/309/) | [Mirror](http://paper.thuviencanhan.com:8033/results?query=&dir=tuhocr%2FCourses%2FExperimental+Design+for+Behavioral+and+Social+Sciences&after=&before=&sort=relevancyrating&ascending=0&page=1)
 
 Nội dung:
 
