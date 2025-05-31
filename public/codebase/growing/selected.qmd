@@ -8,7 +8,7 @@ date: last-modified
 date-format: "YYYY MMMM DD"
 cover-image: cover.png
 favicon: favicon.png
-bibliography: growing.bib
+bibliography: tuhocr.bib
 format:
   html:
     toc: true
@@ -62,7 +62,7 @@ file.copy(from = file, to = newfile, overwrite = TRUE)
 
 ```
 
-<a href="https://class.tuhocr.com/" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Khóa học</a> <a href="https://www.thuviencanhan.com/tuhocr" target="_blank" class="btn btn-primary" role="button"> <i class="bi bi-filetype-html"></i> Thư viện</a> <a href="https://applyr.netlify.app/codebase/growing/huongdan.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> Hướng dẫn</a> 
+<a href="https://class.tuhocr.com/" target="_blank" class="btn btn-success" role="button"> <i class="bi bi-person-lines-fill"></i> Khóa học</a> <a href="https://www.thuviencanhan.com/tuhocr" target="_blank" class="btn btn-primary" role="button"> <i class="bi bi-filetype-html"></i> Thư viện</a> <a href="https://applyr.netlify.app/codebase/growing/tuhocr.txt" target="_blank" class="btn btn-danger" role="button"> <i class="bi bi-file-code"></i> BibTeX</a> 
 
 # Probability and statistics
 
@@ -83,6 +83,12 @@ Nội dung:
 * ANCOVA 
 * Simple Linear Regression 
 * Experimental Design Principles 
+
+# Time series
+
+## Sách của
+
+Tác giả [@Shumway2019]
 
 <!-- top -->
 
